@@ -4,5 +4,7 @@ Create a file `secret.py` with your token:
 # secret.py
 TOKEN = "[YOUR TOKEN HERE]"
 ```
-Next run
+Next run to install the requirements
 `pip install -r requirements.txt`
+
+To run the website use `python app.py` for now.

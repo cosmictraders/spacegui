@@ -2,3 +2,4 @@
 venv/*
 *.pyc
 secret.py
+sandbox.py

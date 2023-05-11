@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}
+Contract - {{ contract.contract_id }}
+{% endblock %}
+{% block body %}
+    <h1 class="center">{{ contract.contract_id }}</h1>
+    <p class="center">{{ contract.deadline }}</p>
+    <p class="left-margin">Accepted: {{ contract.on_accepted }} <span class="material-symbols-outlined">credit_card</span></p>
+    <p class="left-margin">Fulfilled: {{ contract.on_fulfilled }} <span class="material-symbols-outlined">credit_card</span></p>
+{% endblock %}
+{% block navid %}contracts{% endblock %}"

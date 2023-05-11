@@ -26,13 +26,13 @@ Home
     {% for contract in agent.contracts %}
         <div class="card" style="width: 18rem; margin: 17px 10px">
             <div class="card-body">
-                <h5 class="card-title">{{ contract.contract_id }}</h5>
+                <h5 class="card-title"><a href="/contract/{{ contract.contract_id }}">{{ contract.contract_id }}</a></h5>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">{{ contract.deadline }} <span class="material-symbols-outlined">schedule</span></li>
                 <li class="list-group-item">Accepted: {{ contract.on_accepted }} <span class="material-symbols-outlined">credit_card</span></li>
                 <li class="list-group-item">Fulfilled: {{ contract.on_fulfilled }} <span class="material-symbols-outlined">credit_card</span></li>
-                <li class="list-group-item">Status: {% if contract.accepted %}Accepted{% elif contract.fulfilled %}Fulfilled{% else %}Not Accepted{% endif %}</li>
+                <li class="list-group-item">Status: {% if contract.fulfilled %}Fulfilled{% elif contract.accepted %}Accepted{% else %}Not Accepted{% endif %}</li>
             </ul>
         </div>
     {% endfor %}

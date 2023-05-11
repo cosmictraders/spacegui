@@ -3,6 +3,7 @@ import time
 from flask import *
 
 from agent import Agent
+from contract import Contract
 from main import *
 from waypoint import get_waypoints, Waypoint
 
@@ -26,9 +27,7 @@ def contracts():
 @app.route('/contract/<contract_id>')
 def contract(contract_id):
     s = get_session()
-    r = s.get("https://api.spacetraders.io/v2/my/contracts")
-    j = r.json()
-    return render_template('contract.html', contract=j["data"])
+    return render_template('contract.html', contract=Contract(contract_id, s))
 
 
 @app.route('/ships/')
@@ -96,6 +95,7 @@ def systems():
 def system(symbol):
     return render_template("system.html", system=System(symbol, get_session()),
                            waypoints=get_waypoints(symbol, get_session()))
+
 
 @app.route('/waypoint/<symbol>/')
 def waypoint(symbol):

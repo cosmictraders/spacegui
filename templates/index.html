@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}
+Home
+{% endblock %}
+{% block body %}
+    <h1 class="center">{{ agent.symbol }}</h1>
+    <p class="center">{{ agent.credits }} <span class="material-symbols-outlined">credit_card</span></p>
+    <p class="center">{{ agent.headquarters }} <span class="material-symbols-outlined">home</span></p>
+    <h2 class="center">Ships</h2>
+    <div class="row" style="margin-left: 25px">
+    {% for ship in agent.ships %}
+        <div class="card" style="width: 18rem; margin: 17px 10px">
+          <div class="card-body">
+              <h5 class="card-title"><a href="/ship/{{ ship.symbol }}">{{ ship.symbol }}</a></h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">{{ ship.location }} <span class="material-symbols-outlined">location_on</span></li>
+            <li class="list-group-item">{{ ship.status }}</li>
+            <li class="list-group-item">{{ ship.fuel.current }}/{{ ship.fuel.total }} <span class="material-symbols-outlined">local_gas_station</span></li>
+          </ul>
+        </div>
+    {% endfor %}
+    </div>
+    <h2 class="center">Contracts</h2>
+    <div class="row" style="margin-left: 25px">
+    {% for contract in agent.contracts %}
+        <div class="card" style="width: 18rem; margin: 17px 10px">
+            <div class="card-body">
+                <h5 class="card-title">{{ contract.contract_id }}</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">{{ contract.deadline }} <span class="material-symbols-outlined">schedule</span></li>
+                <li class="list-group-item">Accepted: {{ contract.on_accepted }} <span class="material-symbols-outlined">credit_card</span></li>
+                <li class="list-group-item">Fulfilled: {{ contract.on_fulfilled }} <span class="material-symbols-outlined">credit_card</span></li>
+                <li class="list-group-item">Status: {% if contract.accepted %}Accepted{% elif contract.fulfilled %}Fulfilled{% else %}Not Accepted{% endif %}</li>
+            </ul>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}
+{% block navid %}home{% endblock %}"

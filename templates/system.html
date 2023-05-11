@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}
+Ship - {{ system.symbol }}
+{% endblock %}
+{% block body %}
+    <h1 class="center">{{ system.symbol }}</h1>
+    <p>Factions: {{ system.factions }}</p>
+    <h2 class="center">Waypoints</h2>
+     <table class="table table-hover">
+        <tr>
+            <th>Symbol</th>
+            <th>Type</th>
+            <th>Traits</th>
+            <th>Coordinates</th>
+            <th>Factions</th>
+        </tr>
+        {% for waypoint in waypoints %}
+            <tr>
+               <td><a href="/waypoint/{{ waypoint.symbol }}">{{ waypoint.symbol }}</a></td>
+               <td><a href="/waypoint/{{ waypoint.symbol }}">{{ waypoint.waypoint_type }}</a></td>
+               <td>{% for trait in waypoint.traits  %}{{ trait.name }}{{ ", " if not loop.last else "" }}{% endfor %}</td>
+               <td><a href="/waypoint/{{ waypoint.symbol }}">({{ waypoint.x }}, {{ system.y }})</a></td>
+               <td><a href="/waypoint/{{ waypoint.symbol }}">({{ system.factions }})</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+{% block navid %}systems{% endblock %}"

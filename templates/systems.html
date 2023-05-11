@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+Systems
+{% endblock %}
+{% block body %}
+     <table class="table table-hover">
+        <tr>
+            <th>Symbol</th>
+            <th>Number of Waypoints</th>
+            <th>Coordinates</th>
+            <th>Factions</th>
+        </tr>
+        {% for system in systems %}
+            <tr>
+               <td><a href="/system/{{ system.symbol }}">{{ system.symbol }}</a></td>
+               <td><a href="/system/{{ system.symbol }}">{{ system.waypoints.__len__() }}</a></td>
+               <td><a href="/system/{{ system.symbol }}">({{ system.x }}, {{ system.y }})</a></td>
+               <td><a href="/system/{{ system.symbol }}">({{ system.factions }})</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+{% block navid %}systems{% endblock %}"

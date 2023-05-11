@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}
+Ships
+{% endblock %}
+{% block body %}
+     <table class="table table-hover">
+        <tr>
+            <th>Ship</th>
+            <th>Location</th>
+            <th>Status</th>
+        </tr>
+        {% for ship in ships %}
+           <tr>
+               <td><a href="/ship/{{ ship.symbol }}">{{ ship.symbol }}</a></td>
+               <td><a href="/waypoint/{{ ship.location }}">{{ ship.location }}</a></td>
+               <td><a href="/ship/{{ ship.symbol }}">{{ ship.status }}</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+{% block navid %}ships{% endblock %}"

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}
+Ship - {{ symbol }}
+{% endblock %}
+{% block body %}
+     <h1 style="text-align: center"><span id="symbol"></span></h1>
+    <p>Status: <span id="status"></span></p>
+    <p>Location: <span id="location"></span></p>
+    <p>Fuel: <span id="fuel"></span>/<span id="max_fuel"></span></p>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-primary">Extract</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#navigateModal">Navigate</button>
+        <button type="button" class="btn btn-primary" onclick="dock()">Dock</button>
+        <button type="button" class="btn btn-primary" onclick="orbit()">Orbit</button>
+        <button type="button" class="btn btn-primary" onclick="refuel()">Refuel</button>
+    </div>
+    <div class="modal fade" id="navigateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Navigate {{ symbol }}</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+                <div class="mb-3">
+                  <label for="place" class="form-label">Waypoint</label>
+                  <input type="text" class="form-control" id="place">
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="navigate()">Navigate</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    refresh();
+
+    function navigate() {
+        fetch("/ship/{{ symbol }}/navigate?place=" + document.getElementById("place").value);
+        setTimeout(function() {
+            refresh();
+        }, (500));
+    }
+
+    function dock() {
+        fetch("/ship/{{ symbol }}/dock");
+        setTimeout(function() {
+            refresh();
+        }, (500));
+    }
+
+    function orbit() {
+        fetch("/ship/{{ symbol }}/orbit")
+        setTimeout(function() {
+            refresh();
+        }, (500));
+    }
+    function refuel() {
+        fetch("/ship/{{ symbol }}/refuel")
+        setTimeout(function() {
+            refresh();
+        }, (500));
+    }
+
+    async function refresh() {
+        let data = await fetch("/ship/{{ symbol }}/api");
+        let j = await data.json();
+        console.log(j)
+        let symbol = document.getElementById("symbol");
+        symbol.innerHTML = j.symbol;
+        let status = document.getElementById("status");
+        status.innerHTML = j.status;
+        let location = document.getElementById("location");
+        location.innerHTML = j.location;
+        let fuel = document.getElementById("fuel");
+        fuel.innerHTML = j.fuel;
+        let max_fuel = document.getElementById("max_fuel");
+        max_fuel.innerHTML = j.max_fuel;
+    }
+    </script>
+{% endblock %}
+{% block navid %}ships{% endblock %}"

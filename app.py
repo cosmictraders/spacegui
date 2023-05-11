@@ -4,7 +4,7 @@ from flask import *
 
 from agent import Agent
 from main import *
-from waypoint import get_waypoints
+from waypoint import get_waypoints, Waypoint
 
 app = Flask(__name__)
 
@@ -96,6 +96,10 @@ def systems():
 def system(symbol):
     return render_template("system.html", system=System(symbol, get_session()),
                            waypoints=get_waypoints(symbol, get_session()))
+
+@app.route('/waypoint/<symbol>/')
+def waypoint(symbol):
+    return render_template("waypoint.html", waypoint=Waypoint(symbol, get_session()))
 
 
 @app.route('/map/')

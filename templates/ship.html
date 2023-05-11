@@ -3,10 +3,10 @@
 Ship - {{ symbol }}
 {% endblock %}
 {% block body %}
-     <h1 style="text-align: center"><span id="symbol"></span></h1>
-    <p>Status: <span id="status"></span></p>
-    <p>Location: <span id="location"></span></p>
-    <p>Fuel: <span id="fuel"></span>/<span id="max_fuel"></span></p>
+    <h1 style="text-align: center"><span id="symbol"></span></h1>
+    <p class="left-margin">Status: <span id="status"></span></p>
+    <p class="left-margin">Location: <span id="location"></span></p>
+    <p class="left-margin">Fuel: <span id="fuel"></span>/<span id="max_fuel"></span></p>
     <div class="btn-group" role="group" aria-label="Basic example">
         <button type="button" class="btn btn-primary">Extract</button>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#navigateModal">Navigate</button>

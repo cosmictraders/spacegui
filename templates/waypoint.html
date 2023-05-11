@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}
+Waypoint - {{ waypoint.symbol }}
+{% endblock %}
+{% block body %}
+    <h1 class="center">{{ waypoint.symbol }}</h1>
+    <p class="center">{{ waypoint.waypoint_type }}</p>
+    <p class="left-margin">Traits: {% for trait in waypoint.traits  %}{{ trait.name }}{{ ", " if not loop.last else "" }}{% endfor %}</p>
+    <p class="left-margin">Coordinates: ({{ waypoint.x }}, {{ waypoint.y }})</p>
+    <p class="left-margin">Faction: ({{ waypoint.faction }})</p>
+{% endblock %}
+{% block navid %}systems{% endblock %}"

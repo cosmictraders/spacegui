@@ -44,16 +44,30 @@ def accept_contract(contract_id: str):
 
 @app.route('/systems/')
 def systems():
-    page = request.args.get('page', default=1)
+    page = int(request.args.get('page', default=1))
     systems_list, total = list_systems(get_session(), page)
+    li = {1, 2, 3, 4, 5, 249, 250, 251}
+    li.add(page)
+    if page > 1:
+        li.add(page-1)
+    if page < 251:
+        li.add(page+1)
+    li = list(li)
+    new_li = []
+    prev = 0
+    for i in li:
+        if i != (prev + 1):
+            new_li.append("..")
+        new_li.append(i)
+        prev = i
     return render_template('systems.html', systems=systems_list,
-                           page=int(page), pages=total)
+                           page=page, pages=total, li=new_li)
 
 
 @app.route('/system/<symbol>/')
 def system(symbol):
     return render_template("system.html", system=System(symbol, get_session()),
-                           waypoints=get_waypoints(symbol, get_session()))
+                           waypoints=get_all_waypoints(symbol, get_session()))
 
 
 @app.route('/waypoint/<symbol>/')

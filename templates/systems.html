@@ -24,11 +24,6 @@ Systems
             {% if page > 1 %}
             <li class="page-item"><a class="page-link" href="/systems/?page={{ page-1 }}">Previous</a></li>
             {% endif %}
-            {% if i not in [1, 2, 3, 250, 251] %}
-               {% set li = [1,2, 3, "..", page, "..", 250, 251] %}
-            {% else %}
-               {% set li = [1,2, 3, "..", 250, 251] %}
-            {% endif %}
             {% for i in li %}
                 {% if i == page %}
                     <li class="page-item"><a class="page-link active" href="/systems/?page={{ i }}">{{ i }}</a></li>

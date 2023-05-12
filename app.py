@@ -2,12 +2,17 @@ import time
 
 from flask import *
 
-from agent import Agent
-from contract import Contract
-from main import *
-from waypoint import get_waypoints, Waypoint
+from autotraders.contract import get_all_contracts
+from bp.ship import ship_bp
+from autotraders.agent import Agent
+from autotraders.contract import Contract
+from autotraders.waypoint import Waypoint, get_all_waypoints
+from session import get_session
+from autotraders.system import list_systems, System
 
 app = Flask(__name__)
+
+app.register_blueprint(ship_bp)
 
 
 @app.route('/')
@@ -20,8 +25,7 @@ def index():
 @app.route('/contracts/')
 def contracts():
     s = get_session()
-    agent = Agent(s)
-    return render_template('contracts.html', contracts=agent.contracts)
+    return render_template('contracts.html', contracts=get_all_contracts(s))
 
 
 @app.route('/contract/<contract_id>')
@@ -30,65 +34,20 @@ def contract(contract_id):
     return render_template('contract.html', contract=Contract(contract_id, s))
 
 
-@app.route('/ships/')
-def ships():
+@app.route('/contract/<contract_id>/accept')
+def accept_contract(contract_id: str):
     s = get_session()
-    li = [Ship("STARSTAR-1", s), Ship("STARSTAR-2", s), Ship("STARSTAR-3", s)]  # TODO: Don't hardcode
-    return render_template('ships.html', ships=li)
-
-
-@app.route('/ship/<name>')
-def ship(name):
-    return render_template('ship.html', symbol=name)
-
-
-@app.route('/ship/<name>/api')
-def ship_api(name):
-    s = get_session()
-    ship = Ship(name, s)
-    return jsonify({"symbol": ship.symbol, "status": ship.status, "location": ship.location,
-                    "fuel": ship.fuel.current, "max_fuel": ship.fuel.total})
-
-
-@app.route('/ship/<name>/navigate')
-def navigate(name):
-    try:
-        s = get_session()
-        ship = Ship(name, s)
-        ship.move(request.args.get('place'))
-        return jsonify({})
-    except IOError:
-        abort(500)
-
-
-@app.route('/ship/<name>/dock')
-def dock(name):
-    s = get_session()
-    ship = Ship(name, s)
-    ship.dock()
-    return jsonify({})
-
-
-@app.route('/ship/<name>/orbit')
-def orbit(name):
-    s = get_session()
-    ship = Ship(name, s)
-    ship.orbit()
-    return jsonify({})
-
-
-@app.route('/ship/<name>/refuel')
-def refuel(name):
-    s = get_session()
-    ship = Ship(name, s)
-    ship.refuel()
+    c = Contract(contract_id, s)
+    c.accept()
     return jsonify({})
 
 
 @app.route('/systems/')
 def systems():
-    print("here")
-    return render_template('systems.html', systems=list_systems(get_session()))
+    page = request.args.get('page', default=1)
+    systems_list, total = list_systems(get_session(), page)
+    return render_template('systems.html', systems=systems_list,
+                           page=int(page), pages=total)
 
 
 @app.route('/system/<symbol>/')

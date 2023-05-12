@@ -1,43 +1,47 @@
 import time
 
-from main import get_session
-from ships import Ship
+from sdk.ships import Ship
+from session import get_session
 
 s = get_session()
+print("Initializing")
+starstar2 = Ship("STARSTAR-2", s)
+time.sleep(2)
+starstar3 = Ship("STARSTAR-3", s)
+time.sleep(2)
+starstar4 = Ship("STARSTAR-4", s)
+time.sleep(2)
+starstar6 = Ship("STARSTAR-6", s)
+time.sleep(2)
+starstar7 = Ship("STARSTAR-7", s)
+time.sleep(2)
+ships = [starstar2, starstar3, starstar4, starstar6, starstar7]
 while True:
-    starstar2 = Ship("STARSTAR-2", s)
-    starstar3 = Ship("STARSTAR-3", s)
     print("Extracting")
-    try:
-        starstar2.extract()
-        starstar3.extract()
-    except IOError:
-        print("Extracting failed")
-    time.sleep(1)
+    for ship in ships:
+        try:
+            ship.extract()
+        except IOError:
+            print("Extracting failed for " + ship.symbol)
+        time.sleep(1)
     print("Docking")
-    starstar2.dock()
-    starstar3.dock()
-    time.sleep(1)
-    print(starstar2.cargo.inventory)
-    print(starstar3.cargo.inventory)
-    for i in starstar2.cargo.inventory:
-        print("Selling " + i)
-        starstar2.sell(i, starstar2.cargo.inventory[i])
-        time.sleep(0.5)
-    time.sleep(1)
-    for i in starstar3.cargo.inventory:
-        print("Selling " + i)
-        starstar3.sell(i, starstar3.cargo.inventory[i])
-        time.sleep(0.5)
+    for ship in ships:
+        ship.dock()
+        time.sleep(1)
+    for ship in ships:
+        for i in ship.cargo.inventory:
+            print("Selling " + i + " for " + ship.symbol)
+            ship.sell(i, ship.cargo.inventory[i])
+            time.sleep(0.5)
+        time.sleep(3)
     print("Refuelling")
-    starstar2.refuel()
-    time.sleep(1)
-    starstar3.refuel()
-    time.sleep(1)
+    for ship in ships:
+        ship.refuel()
+        time.sleep(1)
     print("Orbiting")
-    starstar2.orbit()
-    time.sleep(1)
-    starstar3.orbit()
+    for ship in ships:
+        ship.orbit()
+        time.sleep(1)
     print("Sleeping")
-    time.sleep(70)
+    time.sleep(60)
     # get_system(s, "X1-DF55")

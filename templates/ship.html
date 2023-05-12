@@ -5,10 +5,13 @@ Ship - {{ symbol }}
 {% block body %}
     <h1 style="text-align: center"><span id="symbol"></span></h1>
     <p class="left-margin">Status: <span id="status"></span></p>
-    <p class="left-margin">Location: <span id="location"></span></p>
+    <p class="left-margin">Location: <a id="location_link"><span id="location"></span></a></p>
     <p class="left-margin">Fuel: <span id="fuel"></span>/<span id="max_fuel"></span></p>
-    <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-primary">Extract</button>
+    <p class="left-margin">Cargo: <span id="cargo_capacity">TODO</span>/<span id="max_cargo"></span></p>
+    <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px" id="cargo">
+    </ul>
+    <div class="btn-group left-margin" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-primary" onclick="extract()">Extract</button>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#navigateModal">Navigate</button>
         <button type="button" class="btn btn-primary" onclick="dock()">Dock</button>
         <button type="button" class="btn btn-primary" onclick="orbit()">Orbit</button>
@@ -36,12 +39,18 @@ Ship - {{ symbol }}
         </div>
       </div>
     </div>
-
     <script>
     refresh();
 
     function navigate() {
         fetch("/ship/{{ symbol }}/navigate?place=" + document.getElementById("place").value);
+        setTimeout(function() {
+            refresh();
+        }, (500));
+    }
+
+    function extract() {
+        fetch("/ship/{{ symbol }}/extract");
         setTimeout(function() {
             refresh();
         }, (500));
@@ -60,6 +69,7 @@ Ship - {{ symbol }}
             refresh();
         }, (500));
     }
+
     function refuel() {
         fetch("/ship/{{ symbol }}/refuel")
         setTimeout(function() {
@@ -71,16 +81,19 @@ Ship - {{ symbol }}
         let data = await fetch("/ship/{{ symbol }}/api");
         let j = await data.json();
         console.log(j)
-        let symbol = document.getElementById("symbol");
-        symbol.innerHTML = j.symbol;
-        let status = document.getElementById("status");
-        status.innerHTML = j.status;
-        let location = document.getElementById("location");
-        location.innerHTML = j.location;
-        let fuel = document.getElementById("fuel");
-        fuel.innerHTML = j.fuel;
-        let max_fuel = document.getElementById("max_fuel");
-        max_fuel.innerHTML = j.max_fuel;
+        document.getElementById("symbol").innerHTML = j.symbol;
+        document.getElementById("status").innerHTML = j.status;
+        document.getElementById("location").innerHTML = j.location;
+        document.getElementById("location_link").href = "/waypoint/" + j.location;
+        document.getElementById("fuel").innerHTML = j.fuel;
+        document.getElementById("max_fuel").innerHTML = j.max_fuel;
+        document.getElementById("max_cargo").innerHTML = j.max_cargo;
+        let cargo = document.getElementById("cargo");
+        let text = ""
+        Object.entries(j.cargo).forEach(([key, value]) => {
+            text += "<li class='list-group-item'>" + key + ": " + value + "</li>"
+        })
+        cargo.innerHTML = text;
     }
     </script>
 {% endblock %}

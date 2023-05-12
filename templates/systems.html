@@ -19,5 +19,29 @@ Systems
             </tr>
         {% endfor %}
     </table>
+    <nav aria-label="Pagination">
+        <ul class="pagination">
+            {% if page > 1 %}
+            <li class="page-item"><a class="page-link" href="/systems/?page={{ page-1 }}">Previous</a></li>
+            {% endif %}
+            {% if i not in [1, 2, 3, 250, 251] %}
+               {% set li = [1,2, 3, "..", page, "..", 250, 251] %}
+            {% else %}
+               {% set li = [1,2, 3, "..", 250, 251] %}
+            {% endif %}
+            {% for i in li %}
+                {% if i == page %}
+                    <li class="page-item"><a class="page-link active" href="/systems/?page={{ i }}">{{ i }}</a></li>
+                {% elif i == ".." %}
+                    <li class="page-item disabled"><a class="page-link" href="/systems/?page={{ i }}">{{ i }}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="/systems/?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page < 251 %}
+                <li class="page-item"><a class="page-link" href="/systems/?page={{ page+1 }}">Next</a></li>
+            {% endif %}
+        </ul>
+    </nav>
 {% endblock %}
 {% block navid %}systems{% endblock %}"

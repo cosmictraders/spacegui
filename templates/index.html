@@ -10,14 +10,21 @@ Home
     <div class="row" style="margin-left: 25px">
     {% for ship in agent.ships %}
         <div class="card" style="width: 18rem; margin: 17px 10px">
-          <div class="card-body">
-              <h5 class="card-title"><a href="/ship/{{ ship.symbol }}">{{ ship.symbol }}</a></h5>
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">{{ ship.location }} <span class="material-symbols-outlined">location_on</span></li>
-            <li class="list-group-item">{{ ship.status }}</li>
-            <li class="list-group-item">{{ ship.fuel.current }}/{{ ship.fuel.total }} <span class="material-symbols-outlined">local_gas_station</span></li>
-          </ul>
+            <div class="card-body">
+                <h5 class="card-title"><a href="/ship/{{ ship.symbol }}">{{ ship.symbol }}</a></h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">{{ ship.frame.name }} <span class="material-symbols-outlined">rocket_launch</span></li>
+                <li class="list-group-item"><a href="/waypoint/{{ ship.location }}">{{ ship.location }} <span class="material-symbols-outlined">location_on</span></a></li>
+                <li class="list-group-item">{{ ship.status }}</li>
+                {% if ship.fuel.total != 0 %}
+                    <li class="list-group-item">
+                        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="{{ ship.fuel.current }}" aria-valuemin="0" aria-valuemax="{{ ship.fuel.total }}">
+                            <div class="progress-bar overflow-visible" style="width: {{ 100*(ship.fuel.current/ship.fuel.total) }}%">Fuel: {{ ship.fuel.current }}/{{ ship.fuel.total }}</div>
+                        </div>
+                    </li>
+                {% endif %}
+            </ul>
         </div>
     {% endfor %}
     </div>

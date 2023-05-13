@@ -10,11 +10,12 @@ Ships
             <th>Status</th>
         </tr>
         {% for ship in ships %}
-           <tr onclick="window.location.href = '/ship/{{ ship.symbol }}'">
-               <td>{{ ship.symbol }}</td>
-               <td>{{ ship.location }}</td>
-               <td>{{ ship.status }}</td>
-           </tr>
+            <tr onclick="window.location.href = '/ship/{{ ship.symbol }}'">
+                <td>{{ ship.symbol }}</td>
+                <td>{{ ship.location }}</td>
+                <td>{{ ship.status }}</td>
+                <td>{{ ship.fuel.current }}/{{ ship.fuel.total }}</td>
+            </tr>
         {% endfor %}
     </table>
 {% endblock %}

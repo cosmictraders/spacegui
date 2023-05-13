@@ -4,7 +4,9 @@ System - {{ system.symbol }}
 {% endblock %}
 {% block body %}
     <h1 class="center">{{ system.symbol }}</h1>
-    <p>Factions: {{ system.factions }}</p>
+    {% if system.factions.__len__() > 0 %}
+    <p>Factions: {% for faction in system.factions %}{{ faction["symbol"] }} {% endfor %}</p>
+    {% endif %}
     <h2 class="center">Waypoints</h2>
      <table class="table table-hover">
         <tr>

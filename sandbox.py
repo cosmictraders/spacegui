@@ -1,7 +1,7 @@
 import time
 
-from sdk.ships import Ship
-from session import get_session
+from autotraders.ships import Ship
+from website.session import get_session
 
 s = get_session()
 print("Initializing")
@@ -38,10 +38,6 @@ while True:
     for ship in ships:
         ship.refuel()
         time.sleep(1)
-    print("Orbiting")
-    for ship in ships:
-        ship.orbit()
-        time.sleep(1)
     print("Sleeping")
-    time.sleep(60)
+    time.sleep(65)
     # get_system(s, "X1-DF55")

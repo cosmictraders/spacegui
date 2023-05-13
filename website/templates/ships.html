@@ -10,11 +10,11 @@ Ships
             <th>Status</th>
         </tr>
         {% for ship in ships %}
-           <tr>
-               <td><a href="/ship/{{ ship.symbol }}">{{ ship.symbol }}</a></td>
-               <td><a href="/waypoint/{{ ship.location }}">{{ ship.location }}</a></td>
-               <td><a href="/ship/{{ ship.symbol }}">{{ ship.status }}</a></td>
-            </tr>
+           <tr onclick="window.location.href = '/ship/{{ ship.symbol }}'">
+               <td>{{ ship.symbol }}</td>
+               <td>{{ ship.location }}</td>
+               <td>{{ ship.status }}</td>
+           </tr>
         {% endfor %}
     </table>
 {% endblock %}

@@ -1,7 +1,7 @@
 from flask import *
 
-from autotraders.ships import Ship, get_all_ships
-from session import get_session
+from autotraders.ship import Ship, get_all_ships
+from website.session import get_session
 
 ship_bp = Blueprint('ship', __name__)
 
@@ -23,7 +23,10 @@ def ship_api(name):
     s = get_session()
     ship = Ship(name, s)
     return jsonify({"symbol": ship.symbol, "status": ship.status, "location": ship.location,
-                    "fuel": ship.fuel.current, "max_fuel": ship.fuel.total, "cargo": ship.cargo.inventory, "max_cargo": ship.cargo.capacity})
+                    "fuel": ship.fuel.current, "max_fuel": ship.fuel.total,
+                    "cargo": ship.cargo.inventory,
+                    "current_cargo": sum([ship.cargo.inventory[d] for d in ship.cargo.inventory]),
+                    "max_cargo": ship.cargo.capacity})
 
 
 @ship_bp.route('/ship/<name>/navigate')
@@ -33,6 +36,28 @@ def navigate(name):
         ship = Ship(name, s)
         ship.move(request.args.get('place'))
         return jsonify({})
+    except IOError as e:
+        return jsonify({"error": "Unknown"})
+
+
+@ship_bp.route('/ship/<name>/jump')
+def jump(name):
+    try:
+        s = get_session()
+        ship = Ship(name, s)
+        ship.jump(request.args.get('place'))
+        return jsonify({})
+    except IOError as e:
+        abort(500)
+
+
+@ship_bp.route('/ship/<name>/warp')
+def warp(name):
+    try:
+        s = get_session()
+        ship = Ship(name, s)
+        ship.warp(request.args.get('place'))
+        return jsonify({})
     except IOError:
         abort(500)
 
@@ -41,8 +66,11 @@ def navigate(name):
 def dock(name):
     s = get_session()
     ship = Ship(name, s)
-    ship.dock()
-    return jsonify({})
+    try:
+        ship.dock()
+        return jsonify({})
+    except IOError:
+        return jsonify({"error": "Failed to dock"})
 
 
 @ship_bp.route('/ship/<name>/orbit')
@@ -67,4 +95,3 @@ def extract(name):
     ship = Ship(name, s)
     ship.extract()
     return jsonify({})
-

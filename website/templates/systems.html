@@ -11,18 +11,20 @@ Systems
             <th>Factions</th>
         </tr>
         {% for system in systems %}
-            <tr>
-               <td><a href="/system/{{ system.symbol }}">{{ system.symbol }}</a></td>
-               <td><a href="/system/{{ system.symbol }}">{{ system.waypoints.__len__() }}</a></td>
-               <td><a href="/system/{{ system.symbol }}">({{ system.x }}, {{ system.y }})</a></td>
-               <td><a href="/system/{{ system.symbol }}">({{ system.factions }})</a></td>
+            <tr onclick="window.location.href = '/system/{{ system.symbol }}'">
+               <td>{{ system.symbol }}</td>
+               <td>{{ system.waypoints.__len__() }}</td>
+               <td>({{ system.x }}, {{ system.y }})</td>
+               <td>({{ system.factions }})</td>
             </tr>
         {% endfor %}
     </table>
     <nav aria-label="Pagination">
-        <ul class="pagination">
+        <ul class="pagination left-margin">
             {% if page > 1 %}
-            <li class="page-item"><a class="page-link" href="/systems/?page={{ page-1 }}">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="/systems/?page={{ page-1 }}">Previous</a></li>
+            {% else %}
+                <li class="page-item disabled"><a class="page-link" href="/systems/#">Previous</a></li>
             {% endif %}
             {% for i in li %}
                 {% if i == page %}
@@ -33,8 +35,10 @@ Systems
                     <li class="page-item"><a class="page-link" href="/systems/?page={{ i }}">{{ i }}</a></li>
                 {% endif %}
             {% endfor %}
-            {% if page < 251 %}
+            {% if page < 250 %}
                 <li class="page-item"><a class="page-link" href="/systems/?page={{ page+1 }}">Next</a></li>
+            {% else %}
+                <li class="page-item disabled"><a class="page-link" href="/systems/#">Next</a></li>
             {% endif %}
         </ul>
     </nav>

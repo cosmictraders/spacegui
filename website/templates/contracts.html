@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+Contracts
+{% endblock %}
+{% block body %}
+     <table class="table table-hover">
+        <tr>
+            <th>ID</th>
+            <th>On Accept</th>
+            <th>On Completion</th>
+            <th>Accepted</th>
+            <th>Completed</th>
+            <th>Deadline</th>
+        </tr>
+        {% for contract in contracts %}
+            <tr onclick="window.location.href = '/contract/{{ contract.contract_id }}'">
+               <td>{{ contract.contract_id }}</td>
+               <td>{{ contract.on_accepted }}</td>
+               <td>{{ contract.on_fulfilled }}</td>
+               <td>{{ contract.accepted }}</td>
+               <td>{{ contract.fulfilled }}</td>
+               <td>{{ contract.deadline }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+{% block navid %}contracts{% endblock %}"

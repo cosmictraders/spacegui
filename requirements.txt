@@ -1,3 +1,4 @@
+asgiref
 flask
 requests
 autotraders

@@ -1,3 +1,5 @@
+import os
+
 from flask import *
 
 from website.bp.contract import contract_bp
@@ -13,4 +15,13 @@ def create_app():
     app.register_blueprint(system_bp)
     app.register_blueprint(contract_bp)
     app.register_blueprint(main_bp)
+
+    @app.route("/favicon.ico")
+    def favicon():
+        return send_from_directory(
+            os.path.join(app.root_path, "static"),
+            "favicon.ico",
+            mimetype="image/vnd.microsoft.icon",
+        )
+
     return app

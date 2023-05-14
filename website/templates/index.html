@@ -15,7 +15,7 @@ Home
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">{{ ship.frame.name }} <span class="material-symbols-outlined">rocket_launch</span></li>
-                <li class="list-group-item"><a href="/waypoint/{{ ship.location }}">{{ ship.location }} <span class="material-symbols-outlined">location_on</span></a></li>
+                <li class="list-group-item"><a href="/waypoint/{{ ship.nav.location }}">{{ ship.nav.location }} <span class="material-symbols-outlined">location_on</span></a></li>
                 <li class="list-group-item">{{ ship.status }}</li>
                 {% if ship.fuel.total != 0 %}
                     {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}

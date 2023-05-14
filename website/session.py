@@ -11,6 +11,7 @@ class BearerAuth(requests.auth.AuthBase):
         r.headers["authorization"] = "Bearer " + self.token
         return r
 
+
 def get_session():
     token = secret.TOKEN
 

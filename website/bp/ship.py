@@ -22,7 +22,7 @@ def ship(name):
 def ship_api(name):
     s = get_session()
     ship = Ship(name, s)
-    return jsonify({"symbol": ship.symbol, "status": ship.status, "location": ship.location,
+    return jsonify({"symbol": ship.symbol, "status": ship.nav.status, "location": ship.nav.location,
                     "fuel": ship.fuel.current, "max_fuel": ship.fuel.total,
                     "cargo": ship.cargo.inventory,
                     "current_cargo": sum([ship.cargo.inventory[d] for d in ship.cargo.inventory]),

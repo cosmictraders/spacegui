@@ -1,5 +1,5 @@
-from autotraders.marketplace import Marketplace
-from autotraders.shipyard import Shipyard
+from autotraders.waypoint_types.marketplace import Marketplace
+from autotraders.waypoint_types.shipyard import Shipyard
 from autotraders.system import list_systems, System
 from autotraders.waypoint import get_all_waypoints, Waypoint
 from flask import *

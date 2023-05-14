@@ -13,10 +13,12 @@ while True:
     for ship in ships:
         try:
             ship.extract()
-        except IOError:
-            print("Extracting failed for " + ship.symbol)
+        except IOError as e:
+            print("Extracting failed for " + ship.symbol + " because " + str(e))
         time.sleep(1)
+    print("Checking to sell")
     for ship in ships:
+        print("Cargo for " + ship.symbol + ": " + str(ship.cargo.inventory))
         for i in ship.cargo.inventory:
             print("Selling " + i + " for " + ship.symbol)
             ship.sell(i, ship.cargo.inventory[i])

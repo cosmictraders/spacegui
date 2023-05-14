@@ -1,3 +1,4 @@
 flask
 requests
 autotraders
+Pillow

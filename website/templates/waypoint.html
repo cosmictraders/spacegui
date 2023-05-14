@@ -34,10 +34,19 @@ Waypoint - {{ waypoint.symbol }}
         <h2 class="center">Shipyard</h2>
         <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
             {% for ship in shipyard.ship_types %}
-                <li class="list-group-item">{{ ship }}</li>
+                <li class="list-group-item">
+                    {{ ship }}<span style="float: right">
+                        <button class="btn btn-primary btn-sm" onclick="buy('{{ ship }}')">Buy</button>
+                    </span>
+                </li>
             {% endfor %}
         </ul>
         </div>
+        <script>
+            function buy(ship) {
+                fetch("/waypoint/{{ waypoint.symbol }}/buy-ship/?ship="+ship)
+            }
+        </script>
     {% endif %}
 {% endblock %}
 {% block navid %}systems{% endblock %}"

@@ -24,3 +24,11 @@ def accept_contract(contract_id: str):
     c = Contract(contract_id, s)
     c.accept()
     return jsonify({})
+
+
+@contract_bp.route("/contract/<contract_id>/fulfill")
+def fulfill_contract(contract_id: str):
+    s = get_session()
+    c = Contract(contract_id, s)
+    c.fulfill()
+    return jsonify({})

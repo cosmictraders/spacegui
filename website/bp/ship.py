@@ -46,7 +46,7 @@ def navigate(name):
         ship.navigate(request.args.get("place"))
         return jsonify({})
     except IOError as e:
-        return jsonify({"error": "Unknown"})
+        return jsonify({"error": "Failed to navigate: " + str(e)})
 
 
 @ship_bp.route("/ship/<name>/jump")
@@ -57,7 +57,7 @@ def jump(name):
         ship.jump(request.args.get("place"))
         return jsonify({})
     except IOError as e:
-        abort(500)
+        return jsonify({"error": "Failed to jump: " + str(e)})
 
 
 @ship_bp.route("/ship/<name>/warp")
@@ -67,8 +67,8 @@ def warp(name):
         ship = Ship(name, s)
         ship.warp(request.args.get("place"))
         return jsonify({})
-    except IOError:
-        abort(500)
+    except IOError as e:
+        return jsonify({"error": "Failed to warp: " + str(e)})
 
 
 @ship_bp.route("/ship/<name>/dock")
@@ -78,29 +78,38 @@ def dock(name):
     try:
         ship.dock()
         return jsonify({})
-    except IOError:
-        return jsonify({"error": "Failed to dock"})
+    except IOError as e:
+        return jsonify({"error": "Failed to dock: " + str(e)})
 
 
 @ship_bp.route("/ship/<name>/orbit")
 def orbit(name):
     s = get_session()
     ship = Ship(name, s)
-    ship.orbit()
-    return jsonify({})
+    try:
+        ship.orbit()
+        return jsonify({})
+    except IOError as e:
+        return jsonify({"error": "Failed to orbit: " + str(e)})
 
 
 @ship_bp.route("/ship/<name>/refuel")
 def refuel(name):
     s = get_session()
     ship = Ship(name, s)
-    ship.refuel()
-    return jsonify({})
+    try:
+        ship.refuel()
+        return jsonify({})
+    except IOError as e:
+        return jsonify({"error": "Failed to refuel: " + str(e)})
 
 
 @ship_bp.route("/ship/<name>/extract")
 def extract(name):
     s = get_session()
     ship = Ship(name, s)
-    ship.extract()
-    return jsonify({})
+    try:
+        ship.extract()
+        return jsonify({})
+    except IOError as e:
+        return jsonify({"error": "Failed to extract: " + str(e)})

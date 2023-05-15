@@ -6,8 +6,9 @@ from website.session import get_session
 s = get_session()
 print("Initializing")
 starstar2 = Ship("STARSTAR-2", s)
+starstar3 = Ship("STARSTAR-3", s)
 time.sleep(2)
-ships = [starstar2]
+ships = [starstar2, starstar3]
 while True:
     print("Extracting")
     for ship in ships:

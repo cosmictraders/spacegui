@@ -7,7 +7,7 @@ from website.session import get_session
 
 s = get_session()
 all_systems = []
-for i in tqdm(range(1, 250)):
+for i in tqdm(range(1, 500)):
     for item in list_systems(s, i)[0]:
         all_systems.append(item)
     time.sleep(1)

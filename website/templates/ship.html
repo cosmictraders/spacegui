@@ -3,7 +3,7 @@
 Ship - {{ symbol }}
 {% endblock %}
 {% block body %}
-    <h1 style="text-align: center"><span id="symbol"></span></h1>
+    <h1 style="text-align: center"><span id="symbol">{{ symbol }}</span></h1>
     <p class="left-margin">Status: <span id="status"></span></p>
     <p class="left-margin">Location: <a id="location_link"><span id="location"></span></a></p>
     <p class="left-margin">Fuel: <span id="fuel"></span>/<span id="max_fuel"></span></p>
@@ -96,7 +96,7 @@ Ship - {{ symbol }}
         let data = await fetch("/ship/{{ symbol }}/api");
         let j = await data.json();
         console.log(j)
-        document.getElementById("symbol").innerHTML = j.symbol;
+        document.getElementById("symbol").innerHTML = "{{ symbol }}";
         document.getElementById("status").innerHTML = j.status;
         document.getElementById("location").innerHTML = j.location;
         document.getElementById("location_link").href = "/waypoint/" + j.location;

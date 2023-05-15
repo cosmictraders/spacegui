@@ -16,7 +16,7 @@ Ships
                 <td>{{ ship.symbol }}</td>
                 <td>{{ ship.nav.location }}</td>
                 <td>{{ ship.nav.status }}</td>
-                <td>{{ ship.cargo.current }}</td>
+                <td>{{ ship.cargo.current }}/{{ ship.cargo.capacity }}</td>
                 <td>{{ ship.fuel.current }}/{{ ship.fuel.total }}</td>
             </tr>
         {% endfor %}

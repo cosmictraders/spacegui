@@ -3,16 +3,19 @@
 Map
 {% endblock %}
 {% block body %}
+    <style>
+        #c {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
      <canvas id="c" width="2000" height="1000"></canvas>
     <script>
 
     const data = JSON.parse(jQuery.ajax({
         url: "/static/systems.json",
-        success: function(html) {
-          strReturn = html;
-        },
-        async:false
+        async: false
     }).responseText)
     var canvas = document.getElementById("c");
     var ctx = canvas.getContext("2d");
@@ -154,7 +157,7 @@ Map
             this.invMatrix[3] = this.matrix[0] / det;
 
             // check for mouse. Do controls and get real position of mouse.
-            if(mouse !== undefined){  // if there is a mouse get the real cavas coordinates of the mouse
+            if(mouse !== undefined){  // if there is a mouse get the real canvas coordinates of the mouse
                 if(mouse.oldX !== undefined && (mouse.buttonRaw & 1)===1){ // check if panning (middle button)
                     var mdx = mouse.x-mouse.oldX; // get the mouse movement
                     var mdy = mouse.y-mouse.oldY;
@@ -211,15 +214,7 @@ Map
         }
     }
 
-    function update(_time) {
-        // update the transform
-        displayTransform.update();
-        // set home transform to clear the screem
-        displayTransform.setHome();
-        ctx.fillStyle = "black";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        // display stuff
-        displayTransform.setTransform();
+    function draw() {
         let zoom = 16/displayTransform.cscale;
         ctx.font = zoom + "px serif";
         for (const system of Object.keys(data)) {
@@ -258,7 +253,7 @@ Map
             }
             ctx.beginPath();
             if (displayTransform.scale < 1) {
-                ctx.arc(data[system].x * 10, data[system].y * 10, 40-40*displayTransform.scale, 0, 2 * Math.PI);
+                ctx.arc(data[system].x * 10, data[system].y * 10, 5 + (100)/(1+Math.pow(Math.E,(100.0*displayTransform.scale-4))), 0, 2 * Math.PI);
             }
             else {
                 ctx.arc(data[system].x * 10, data[system].y * 10, 5, 0, 2 * Math.PI);
@@ -269,19 +264,30 @@ Map
                 ctx.fillText(system, data[system].x * 10 + 5, data[system].y * 10 - 10);
             }
         }
-        {#do we really need this one?#}
+    }
+
+    function update(_time) {
+        // update the transform
+        displayTransform.update();
+        // set home transform to clear the screem
+        displayTransform.setHome();
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // display stuff
+        displayTransform.setTransform();
+        draw();
         if (mouse.buttonRaw === 4) { // right click to return to home
-        {#     displayTransform.x = 0;#}
-        {#     displayTransform.y = 0;#}
-        {#     displayTransform.scale = 1;#}
-        {#     displayTransform.rotate = 0;#}
-        {#     displayTransform.ox = 0;#}
-        {#     displayTransform.oy = 0;#}
+             displayTransform.x = 0;
+             displayTransform.y = 0;
+             displayTransform.scale = 1;
+             displayTransform.rotate = 0;
+             displayTransform.ox = 0;
+             displayTransform.oy = 0;
          }
         // request next frame
         requestAnimationFrame(update);
     }
-    update(); // start it happening
+    update(); // start updates
     </script>
 {% endblock %}
 {% block navid %}map{% endblock %}

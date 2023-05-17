@@ -1,0 +1,23 @@
+[package]
+name = "frontend"
+version = "0.1.0"
+authors = []
+edition = "2021"
+
+[lib]
+path = "./src/rust/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+js-sys = "0.3.62"
+wasm-bindgen = "0.2.85"
+
+[dependencies.web-sys]
+version = "0.3.62"
+features = [
+  'CanvasRenderingContext2d',
+  'Document',
+  'Element',
+  'HtmlCanvasElement',
+  'Window',
+]

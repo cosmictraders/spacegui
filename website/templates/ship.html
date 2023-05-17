@@ -3,11 +3,12 @@
 Ship - {{ symbol }}
 {% endblock %}
 {% block body %}
+    <div id="errors"></div>
     <h1 style="text-align: center"><span id="symbol">{{ symbol }}</span></h1>
     <p class="left-margin">Status: <span id="status"></span></p>
     <p class="left-margin">Location: <a id="location_link"><span id="location"></span></a></p>
     <p class="left-margin">Fuel: <span id="fuel"></span>/<span id="max_fuel"></span></p>
-    <p class="left-margin">Cargo: <span id="cargo_capacity"><span id="current_cargo"></span>/<span id="max_cargo"></span></p>
+    <p class="left-margin">Cargo: <span id="current_cargo"></span>/<span id="max_cargo"></span></p>
     <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px" id="cargo">
     </ul>
     <div class="btn-group left-margin" role="group" aria-label="Basic example">
@@ -43,50 +44,97 @@ Ship - {{ symbol }}
     </div>
     <script>
     refresh();
+    const alertPlaceholder = $("#errors");
+    const appendAlert = (message, type) => {
+      const wrapper = document.createElement('div')
+      wrapper.innerHTML = [
+        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+        `   <div>${message}</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        '</div>'
+      ].join('')
+
+      alertPlaceholder.append(wrapper)
+    }
+
+    async function alertIfErr(resp) {
+        let j = await resp.json();
+        if (j.hasOwnProperty("error")) {
+            appendAlert(j.error, "danger")
+        }
+    }
 
     function navigate() {
-        fetch("/ship/{{ symbol }}/navigate?place=" + document.getElementById("place").value);
+        fetch("/ship/{{ symbol }}/navigate?place=" + document.getElementById("place").value).then(
+            (resp) => {
+                alertIfErr(resp);
+            }
+        );
         setTimeout(function() {
             refresh();
         }, (500));
     }
 
     function jump() {
-        fetch("/ship/{{ symbol }}/jump?place=" + document.getElementById("place").value);
+        fetch("/ship/{{ symbol }}/jump?place=" + document.getElementById("place").value).then(
+            (resp) => {
+                alertIfErr(resp);
+            }
+        );
         setTimeout(function() {
             refresh();
         }, (500));
     }
 
     function warp() {
-        fetch("/ship/{{ symbol }}/warp?place=" + document.getElementById("place").value);
+        fetch("/ship/{{ symbol }}/warp?place=" + document.getElementById("place").value).then(
+            (resp) => {
+                alertIfErr(resp);
+            }
+        );
         setTimeout(function() {
             refresh();
         }, (500));
     }
     function extract() {
-        fetch("/ship/{{ symbol }}/extract");
+        fetch("/ship/{{ symbol }}/extract").then(
+            (resp) => {
+                alertIfErr(resp);
+            }
+        );
         setTimeout(function() {
             refresh();
         }, (500));
     }
 
     function dock() {
-        fetch("/ship/{{ symbol }}/dock");
+        fetch("/ship/{{ symbol }}/dock").then(
+            (resp) => {
+                alertIfErr(resp);
+            }
+        );
         setTimeout(function() {
             refresh();
         }, (500));
     }
 
     function orbit() {
-        fetch("/ship/{{ symbol }}/orbit")
+        fetch("/ship/{{ symbol }}/orbit").then(
+            (resp) => {
+                alertIfErr(resp);
+            }
+        );
         setTimeout(function() {
             refresh();
         }, (500));
     }
 
     function refuel() {
-        fetch("/ship/{{ symbol }}/refuel")
+        fetch("/ship/{{ symbol }}/refuel").then(
+            (resp) => {
+                alertIfErr(resp);
+            }
+        );
         setTimeout(function() {
             refresh();
         }, (500));

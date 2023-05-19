@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}
+Create User
+{% endblock %}
+{% block body %}
+    <div class="alert alert-warning" role="alert">
+        If you already have a user, submitting data here will wipe the db.
+    </div>
+    <h1 class="center">Setup User</h1>
+    <form class="form left-margin">
+        <label class="label" for="token">Enter your token:</label>
+        <input id="token">
+        <button class="btn btn-primary" type="button" onclick="create()">Submit</button>
+    </form>
+    <script>
+        function create() {
+            fetch("/create-user?token=" + document.getElementById("token").value).then(
+                (data) => {
+                    document.location.reload();
+                }
+            )
+        }
+    </script>
+{% endblock %}
+{% block navid %}home{% endblock %}"

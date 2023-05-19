@@ -2,4 +2,5 @@ asgiref
 flask
 requests
 autotraders
+flask_sqlalchemy
 Pillow

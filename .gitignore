@@ -6,3 +6,4 @@ sandbox.py
 website/frontend/node_modules/*
 website/frontend/Cargo.lock
 website/frontend/target/*
+instance/local.db

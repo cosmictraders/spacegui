@@ -15,8 +15,8 @@ system_bp = Blueprint("system", __name__)
 def systems():
     page = int(request.args.get("page", default=1))
     systems_list, total = System.all(get_session(), page)
-    total = math.ceil((total/20))
-    li = {1, 2, 3, 4, 5, total-2, total-1, total}
+    total = math.ceil((total / 20))
+    li = {1, 2, 3, 4, 5, total - 2, total - 1, total}
     li.add(page)
     if page > min(li):
         li.add(page - 1)

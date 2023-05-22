@@ -35,10 +35,13 @@ def get_token():
 def create_token():
     db.drop_all()
     db.create_all()
-    r = requests.post("https://api.spacetraders.io/v2/register", data={
-        "faction": request.args.get("faction").strip().upper(),
-        "symbol": request.args.get("symbol").strip(),
-    })  # TODO add email
+    r = requests.post(
+        "https://api.spacetraders.io/v2/register",
+        data={
+            "faction": request.args.get("faction").strip().upper(),
+            "symbol": request.args.get("symbol").strip(),
+        },
+    )  # TODO add email
     user = User(token=r.json()["data"]["token"])
     db.session.add(user)
     db.session.commit()

@@ -20,7 +20,7 @@ def contract_api(contract_id):
         {
             "deadline": str(contract.deadline),
             "accepted": contract.accepted,
-            "fulfilled": contract.fulfilled
+            "fulfilled": contract.fulfilled,
         }
     )
 

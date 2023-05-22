@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}
+Get Token
+{% endblock %}
+{% block body %}
+    <div class="alert alert-warning" role="alert">
+        If you already have a user, submitting data here will wipe the db.
+    </div>
+    <h1 class="center">Create Token</h1>
+    <form class="form left-margin">
+        <label class="label" for="symbol">Symbol:</label>
+        <input id="symbol">
+        <label class="label" for="faction">Faction:</label>
+        <input id="faction">
+        <button class="btn btn-primary" type="button" onclick="create()">Create</button>
+    </form>
+    <p class="left-margin">Note that this automatically saves the token,
+        it can be always accessed from
+        <a href="/info">the info page</a>.</p>
+    <script>
+        function create() {
+            fetch("/create-token?symbol=" + document.getElementById("symbol").value + "&faction=" + document.getElementById("faction").value).then(
+                (data) => {
+                    document.location.href = "/";
+                }
+            )
+        }
+    </script>
+{% endblock %}
+{% block navid %}home{% endblock %}"

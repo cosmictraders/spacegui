@@ -8,15 +8,16 @@ Create User
     </div>
     <h1 class="center">Setup User</h1>
     <form class="form left-margin">
-        <label class="label" for="token">Enter your token:</label>
+        <label class="label" for="token">Token:</label>
         <input id="token">
-        <button class="btn btn-primary" type="button" onclick="create()">Submit</button>
+        <button class="btn btn-primary" type="button" onclick="create()">Setup</button>
     </form>
+    <a class="left-margin" href="/get-token">Don't have a token?</a>
     <script>
         function create() {
             fetch("/create-user?token=" + document.getElementById("token").value).then(
                 (data) => {
-                    document.location.reload();
+                    document.location.href = "/";
                 }
             )
         }

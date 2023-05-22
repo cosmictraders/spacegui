@@ -35,7 +35,7 @@ Systems
                     <li class="page-item"><a class="page-link" href="/systems/?page={{ i }}">{{ i }}</a></li>
                 {% endif %}
             {% endfor %}
-            {% if page < 250 %}
+            {% if page < pages %}
                 <li class="page-item"><a class="page-link" href="/systems/?page={{ page+1 }}">Next</a></li>
             {% else %}
                 <li class="page-item disabled"><a class="page-link" href="/systems/#">Next</a></li>

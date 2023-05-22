@@ -4,8 +4,69 @@ Contract - {{ contract.contract_id }}
 {% endblock %}
 {% block body %}
     <h1 class="center">{{ contract.contract_id }}</h1>
-    <p class="center">{{ contract.deadline }}</p>
-    <p class="left-margin">Accepted: {{ contract.on_accepted }} <span class="material-symbols-outlined">credit_card</span></p>
-    <p class="left-margin">Fulfilled: {{ contract.on_fulfilled }} <span class="material-symbols-outlined">credit_card</span></p>
+    <p class="center"><span id="deadline"></span></p>
+    <p class="left-margin">Accepted: <span id="on_accepted">{{ contract.on_accepted }}</span> <span class="material-symbols-outlined">credit_card</span></p>
+    <p class="left-margin">Fulfilled: <span id="on_fulfilled">{{ contract.on_fulfilled }}</span> <span class="material-symbols-outlined">credit_card</span></p>
+    <h2 class="center">Details</h2>
+    {% if contract.contract_type == "PROCUREMENT" %}
+        {% for delivery in contract.contract_data %}
+            Deliver {{ delivery.trade_symbol }} to {{ delivery.destination_symbol }}
+            ({{ delivery.units_fulfilled }}/{{ delivery.units_required }}).
+        {% endfor %}
+    {% endif %}
+    <br>
+    <button onclick="accept()" class="btn btn-primary">Accept</button>
+    <button onclick="fulfill()" class="btn btn-primary">Fulfill</button>
+    <script>
+    refresh();
+    const alertPlaceholder = $("#errors");
+    const appendAlert = (message, type) => {
+      const wrapper = document.createElement('div')
+      wrapper.innerHTML = [
+        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+        `   <div>${message}</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        '</div>'
+      ].join('')
+
+      alertPlaceholder.append(wrapper)
+    }
+
+    async function alertIfErr(resp) {
+        let j = await resp.json();
+        if (j.hasOwnProperty("error")) {
+            appendAlert(j.error, "danger")
+        }
+    }
+
+    function accept() {
+        fetch("/contract/{{ contract_id }}/accept").then(
+            (resp) => {
+                alertIfErr(resp);
+            }
+        );
+        setTimeout(function() {
+            refresh();
+        }, (500));
+    }
+
+    function fulfill() {
+        fetch("/contract/{{ contract_id }}/fulfill").then(
+            (resp) => {
+                alertIfErr(resp);
+            }
+        );
+        setTimeout(function() {
+            refresh();
+        }, (500));
+    }
+
+    async function refresh() {
+        let data = await fetch("/contract/{{ contract_id }}/api");
+        let j = await data.json();
+        console.log(j)
+        document.getElementById("deadline").innerHTML = j.deadline;
+    }
+    </script>
 {% endblock %}
 {% block navid %}contracts{% endblock %}"

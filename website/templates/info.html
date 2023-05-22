@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}
+Info
+{% endblock %}
+{% block body %}
+    <h1 class="center">Info</h1>
+    <h2 class="center">Server Info</h2>
+    <p class="left-margin">Version: {{ status.version }}</p>
+    <p class="left-margin">Status: {{ status.status }}</p>
+    <p class="left-margin">Last Reset: {{ status.reset_date }}</p>
+    <h2 class="center">Client Info</h2>
+    <p class="left-margin">Token: {{ token }}</p>
+{% endblock %}
+{% block navid %}home{% endblock %}"

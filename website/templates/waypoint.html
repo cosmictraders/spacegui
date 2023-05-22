@@ -4,14 +4,14 @@ Waypoint - {{ waypoint.symbol }}
 {% endblock %}
 {% block body %}
     <h1 class="center">{{ waypoint.symbol }}</h1>
-    <p class="center">{{ waypoint.waypoint_type }}</p>
+    <p class="center">{{ waypoint.waypoint_type }} of <a href="/system/{{ waypoint.symbol.system }}">{{ waypoint.symbol.system }}</a></p>
     <p class="left-margin">Traits: {% for trait in waypoint.traits  %}{{ trait.name }}{{ ", " if not loop.last else "" }}{% endfor %}</p>
     <p class="left-margin">Coordinates: ({{ waypoint.x }}, {{ waypoint.y }})</p>
     <p class="left-margin">Faction: ({{ waypoint.faction }})</p>
     {% if waypoint.marketplace %}
         <h2 class="center">Marketplace</h2>
         <div class="row">
-            {% if marketplace.imports != []  %}
+            {% if marketplace.imports != [] and marketplace.imports != None  %}
             <div class="col">
                 <h3 class="left-margin">Imports</h3>
                 <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
@@ -21,7 +21,7 @@ Waypoint - {{ waypoint.symbol }}
                 </ul>
             </div>
             {% endif %}
-            {% if marketplace.exports != [] %}
+            {% if marketplace.exports != [] and marketplace.exports != None %}
             <div class="col">
                 <h3 class="left-margin">Exports</h3>
                 <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
@@ -31,7 +31,7 @@ Waypoint - {{ waypoint.symbol }}
                 </ul>
             </div>
             {% endif %}
-            {% if marketplace.trade_goods != None %}
+            {% if marketplace.trade_goods != [] and marketplace.trade_goods != None %}
             <div class="col">
                 <h3 class="left-margin">Trades</h3>
                 <table class="table">

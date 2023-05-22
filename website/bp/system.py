@@ -1,7 +1,9 @@
-from autotraders.waypoint_types.marketplace import Marketplace
-from autotraders.waypoint_types.shipyard import Shipyard
-from autotraders.system import list_systems, System
-from autotraders.waypoint import get_all_waypoints, Waypoint
+import math
+
+from autotraders.map.waypoint_types.marketplace import Marketplace
+from autotraders.map.waypoint_types.shipyard import Shipyard
+from autotraders.map.system import System
+from autotraders.map.waypoint import get_all_waypoints, Waypoint
 from flask import *
 
 from website.session import get_session
@@ -12,8 +14,9 @@ system_bp = Blueprint("system", __name__)
 @system_bp.route("/systems/")
 def systems():
     page = int(request.args.get("page", default=1))
-    systems_list, total = list_systems(get_session(), page)
-    li = {1, 2, 3, 4, 5, 248, 249, 250}
+    systems_list, total = System.all(get_session(), page)
+    total = math.ceil((total/20))
+    li = {1, 2, 3, 4, 5, total-2, total-1, total}
     li.add(page)
     if page > min(li):
         li.add(page - 1)

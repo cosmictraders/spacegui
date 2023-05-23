@@ -10,16 +10,18 @@ Contracts
             <th>On Completion</th>
             <th>Accepted</th>
             <th>Completed</th>
+            <th>Accept Deadline</th>
             <th>Deadline</th>
         </tr>
         {% for contract in contracts %}
             <tr onclick="window.location.href = '/contract/{{ contract.contract_id }}'">
-               <td>{{ contract.contract_id }}</td>
-               <td>{{ contract.on_accepted }}</td>
-               <td>{{ contract.on_fulfilled }}</td>
-               <td>{{ contract.accepted }}</td>
-               <td>{{ contract.fulfilled }}</td>
-               <td>{{ contract.deadline }}</td>
+                <td>{{ contract.contract_id }}</td>
+                <td>{{ contract.on_accepted }}</td>
+                <td>{{ contract.on_fulfilled }}</td>
+                <td>{{ contract.accepted }}</td>
+                <td>{{ contract.fulfilled }}</td>
+                <td>{{ contract.accept_deadline }}</td>
+                <td>{{ contract.deadline }}</td>
             </tr>
         {% endfor %}
     </table>

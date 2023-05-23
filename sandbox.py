@@ -1,15 +1,19 @@
 import time
 
+from autotraders import session
 from autotraders.ship import Ship
-from website.session import get_session
 
-s = get_session()
+import secret
+
+s = session.get_session(secret.TOKEN)
 print("Initializing")
 starstar2 = Ship("STARSTAR-2", s)
-starstar3 = Ship("STARSTAR-3", s)
 time.sleep(2)
-ships = [starstar2, starstar3]
+ships = [starstar2]
 while True:
+    print("Orbiting")
+    for ship in ships:
+        ship.orbit()
     print("Extracting")
     for ship in ships:
         try:

@@ -4,3 +4,5 @@ requests
 autotraders
 flask_sqlalchemy
 Pillow
+pyyaml
+pytz

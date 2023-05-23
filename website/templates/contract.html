@@ -3,10 +3,14 @@
 Contract - {{ contract.contract_id }}
 {% endblock %}
 {% block body %}
+    <div id="errors"></div>
     <h1 class="center">{{ contract.contract_id }}</h1>
-    <p class="center"><span id="deadline"></span></p>
+    <p class="center">Complete By: <span id="deadline"></span></p>
     <p class="left-margin">Accepted: <span id="on_accepted">{{ contract.on_accepted }}</span> <span class="material-symbols-outlined">credit_card</span></p>
     <p class="left-margin">Fulfilled: <span id="on_fulfilled">{{ contract.on_fulfilled }}</span> <span class="material-symbols-outlined">credit_card</span></p>
+    {% if not contract.accepted %}
+        <p class="left-margin">Accept By: {{ contract.accept_deadline }}</p>
+    {% endif %}
     <h2 class="center">Details</h2>
     {% if contract.contract_type == "PROCUREMENT" %}
         {% for delivery in contract.contract_data %}
@@ -40,7 +44,7 @@ Contract - {{ contract.contract_id }}
     }
 
     function accept() {
-        fetch("/contract/{{ contract_id }}/accept").then(
+        fetch("/contract/{{ contract.contract_id }}/accept").then(
             (resp) => {
                 alertIfErr(resp);
             }
@@ -51,7 +55,7 @@ Contract - {{ contract.contract_id }}
     }
 
     function fulfill() {
-        fetch("/contract/{{ contract_id }}/fulfill").then(
+        fetch("/contract/{{ contract.contract_id }}/fulfill").then(
             (resp) => {
                 alertIfErr(resp);
             }
@@ -62,7 +66,7 @@ Contract - {{ contract.contract_id }}
     }
 
     async function refresh() {
-        let data = await fetch("/contract/{{ contract_id }}/api");
+        let data = await fetch("/contract/{{ contract.contract_id }}/api");
         let j = await data.json();
         console.log(j)
         document.getElementById("deadline").innerHTML = j.deadline;

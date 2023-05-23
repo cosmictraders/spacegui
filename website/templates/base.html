@@ -47,6 +47,18 @@
             </div>
         </div>
     </nav>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div id="flash-box" class=flashes>
+        {% for message in messages %}
+            <div class="alert alert-primary alert-dismissible" role="alert">
+                <div>{{ message }}</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
     {% block body %}
     {% endblock %}
     <script>

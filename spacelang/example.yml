@@ -1,0 +1,27 @@
+ships:
+  - "STARSTAR-2"
+  # - "STARSTAR-3"
+  # - 3
+events:
+  execute:
+    - orbit
+    - extract
+    - dock
+    - refuel
+    - sellall
+    - sleep: 70
+    - event: execute
+
+triggers:
+  on_start:
+    - move:
+        destination:
+          - type: "ASTEROID_FIELD"
+    - event: execute
+
+  dynamic:
+    condition:
+      type: greater
+      first:
+        variable: CREDITS
+      second: 100000

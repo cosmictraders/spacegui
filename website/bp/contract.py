@@ -12,7 +12,7 @@ def contracts():
     return render_template("contracts.html", contracts=get_all_contracts(s))
 
 
-@contract_bp.route("/contract/<contract_id>/api")
+@contract_bp.route("/contract/<contract_id>/api/")
 def contract_api(contract_id):
     s = get_session()
     contract = Contract(contract_id, s)
@@ -25,7 +25,7 @@ def contract_api(contract_id):
     )
 
 
-@contract_bp.route("/contract/<contract_id>")
+@contract_bp.route("/contract/<contract_id>/")
 def contract(contract_id):
     s = get_session()
     c = Contract(contract_id, s)

@@ -1,27 +1,32 @@
 ships:
-  - "STARSTAR-2"
-  # - "STARSTAR-3"
-  # - 3
-events:
-  execute:
-    - orbit
-    - extract
-    - dock
-    - refuel
-    - sellall
-    - sleep: 70
-    - event: execute
+  mining:
+    "STARSTAR-2"
+
+actions: # actions are per ship
+  mine: # Definition of the action "mine"
+    steps:
+      - orbit
+      - extract
+      - dock
+      - refuel
+      - sellall
+      - sleep: 70
+      - action:
+        name: execute
 
 triggers:
-  on_start:
-    - move:
-        destination:
-          - type: "ASTEROID_FIELD"
-    - event: execute
+  on_start: # performed when the program is first run
+    mining: # specifies that the ship group "mining" is to be controlled
+      concurrent: true # Run each ship at the same time (default one after another)
+      steps: # what to perform to each ship
+        move:
+          destination:
+            - type: "ASTEROID_FIELD"
+        action: # Execute the action named "mine"
+          name: mine
 
-  dynamic:
-    condition:
-      type: greater
-      first:
-        variable: CREDITS
-      second: 100000
+  condition:
+    type: greater
+    first:
+      variable: CREDITS
+    second: 100000

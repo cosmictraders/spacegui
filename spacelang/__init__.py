@@ -103,16 +103,17 @@ class Runnable:
 
 class File:
     def __init__(self, data):
-        self.ships = data["ships"]
+        self.ship_groups = data["ships"]
         self.events = [Runnable(d, data["events"][d]) for d in data["events"]]
         self.triggers = [Runnable(d, data["triggers"][d]) for d in data["triggers"]]
 
     def run(self, session):
         print("Initializing ship state ...")
         ships = []
-        for ship in self.ships:
-            ships.append(Ship(ship, session))
-            time.sleep(0.5)
+        for group in self.ship_groups:
+            for ship in self.ship_groups[group]:
+                ships.append(Ship(ship, session))
+                time.sleep(0.5)
         contains_onstart = len([trigger for trigger in self.triggers if trigger.name == "on_start"]) == 1
         if contains_onstart:
             on_start = [trigger for trigger in self.triggers if trigger.name == "on_start"][0]

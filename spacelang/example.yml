@@ -1,18 +1,24 @@
 ships:
   mining:
-    "STARSTAR-2"
+    - "STARSTAR-2"
 
 actions: # actions are per ship
   mine: # Definition of the action "mine"
     steps:
-      - orbit
+      - orbit:
+          test: true
       - extract
-      - dock
+      - dock:
+          test: true
+      - move:
+          destination:
+            trait: "MARKETPLACE"
       - refuel
       - sellall
-      - sleep: 70
-      - action:
-        name: execute
+      - move:
+          destination:
+            type: "ASTEROID_FIELD"
+      - refuel
 
 triggers:
   on_start: # performed when the program is first run
@@ -21,12 +27,14 @@ triggers:
       steps: # what to perform to each ship
         move:
           destination:
-            - type: "ASTEROID_FIELD"
+            type: "ASTEROID_FIELD"
         action: # Execute the action named "mine"
           name: mine
+          repeat:
+            interval: 70 # interval in seconds
 
-  condition:
-    type: greater
-    first:
-      variable: CREDITS
-    second: 100000
+#  condition:
+#    type: greater
+#    first:
+#      variable: CREDITS
+#    second: 100000

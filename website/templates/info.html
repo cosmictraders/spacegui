@@ -4,11 +4,31 @@ Info
 {% endblock %}
 {% block body %}
     <h1 class="center">Info</h1>
-    <h2 class="center">Server Info</h2>
-    <p class="left-margin">Version: {{ status.version }}</p>
-    <p class="left-margin">Status: {{ status.status }}</p>
-    <p class="left-margin">Last Reset: {{ status.reset_date }}</p>
-    <h2 class="center">Client Info</h2>
-    <p class="left-margin">Token: {{ token }}</p>
+    <div id="flash-box" class=flashes>
+        {% for message in status.announcements %}
+            <div class="alert alert-primary" role="alert">
+                <div>{{ message.title }} - {{ message.body }}</div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col" style="border-right-color: black; border-right-width: 2px; border-right">
+            <h2 class="center">Server Info</h2>
+            <p class="left-margin">Version: {{ status.version }}</p>
+            <p class="left-margin">Status: {{ status.status }}</p>
+            <p class="left-margin">Last Reset: {{ status.reset_date }}</p>
+            <p class="left-margin">Next Reset: {{ status.next_reset }}</p>
+            <h2 class="center">Links</h2>
+            <ul class="list-group left-margin" style="max-width: 400px; margin-bottom: 10px">
+                {% for link in status.links %}
+                    <a class="list-group-item list-group-item-action" href="{{ link.url }}" target="_blank">{{ link.name }}</a>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col">
+            <h2 class="center">Client Info</h2>
+            <p class="left-margin">Token: <input value="{{ token }}" style="min-width: 500px; max-width: 800px" disabled></p>
+        </div>
+    </div>
 {% endblock %}
 {% block navid %}home{% endblock %}"

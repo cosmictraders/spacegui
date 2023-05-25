@@ -1,11 +1,13 @@
 import pickle
 import time
 from tqdm import tqdm
-from autotraders.system import list_systems
+from autotraders.map.system import list_systems
 
-from website.session import get_session
+from autotraders.session import get_session
 
-s = get_session()
+from secret import TOKEN
+
+s = get_session(TOKEN)
 all_systems = []
 for i in tqdm(range(1, 500)):
     for item in list_systems(s, i)[0]:

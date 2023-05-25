@@ -253,10 +253,10 @@ Map
             }
             ctx.beginPath();
             if (displayTransform.scale < 1) {
-                ctx.arc(data[system].x * 10, data[system].y * 10, 5 + (100)/(1+Math.pow(Math.E,(100.0*displayTransform.scale-4))), 0, 2 * Math.PI);
+                ctx.arc(data[system].x * 10, data[system].y * 10, 20 + (100)/(1+Math.pow(Math.E,(100.0*displayTransform.scale-4))), 0, 2 * Math.PI);
             }
             else {
-                ctx.arc(data[system].x * 10, data[system].y * 10, 5, 0, 2 * Math.PI);
+                ctx.arc(data[system].x * 10, data[system].y * 10, 20, 0, 2 * Math.PI);
             }
             ctx.fill();
             if (displayTransform.scale > 0.5) {

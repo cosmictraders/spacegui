@@ -9,7 +9,7 @@ from secret import TOKEN
 
 s = get_session(TOKEN)
 all_systems = []
-for i in tqdm(range(1, 500)):
+for i in tqdm(range(1, 451)):  # TODO: Fix forced 451
     for item in list_systems(s, i)[0]:
         all_systems.append(item)
     time.sleep(1)

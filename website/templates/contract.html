@@ -6,8 +6,8 @@ Contract - {{ contract.contract_id }}
     <div id="errors"></div>
     <h1 class="center">{{ contract.contract_id }}</h1>
     <p class="center">Complete By: <span id="deadline"></span></p>
-    <p class="left-margin">Accepted: <span id="on_accepted">{{ contract.on_accepted }}</span> <span class="material-symbols-outlined">credit_card</span></p>
-    <p class="left-margin">Fulfilled: <span id="on_fulfilled">{{ contract.on_fulfilled }}</span> <span class="material-symbols-outlined">credit_card</span></p>
+    <p class="left-margin">Accepted: <span id="on_accepted">{{ contract.on_accepted }}</span> <i class="bi bi-credit-card"></i></p>
+    <p class="left-margin">Fulfilled: <span id="on_fulfilled">{{ contract.on_fulfilled }}</span> <i class="bi bi-credit-card"></i></p>
     {% if not contract.accepted %}
         <p class="left-margin">Accept By: {{ contract.accept_deadline }}</p>
     {% endif %}

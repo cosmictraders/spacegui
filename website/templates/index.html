@@ -4,8 +4,8 @@ Home
 {% endblock %}
 {% block body %}
     <h1 class="center">{{ agent.symbol }}</h1>
-    <p class="center">{{ agent.credits }} <span class="material-symbols-outlined">credit_card</span></p>
-    <p class="center">{{ agent.headquarters }} <span class="material-symbols-outlined">home</span></p>
+    <p class="center">{{ agent.credits }} <i class="bi bi-credit-card"></i></p>
+    <p class="center">{{ agent.headquarters }} <i class="bi bi-credit-card"></i></p>
     <h2 class="center">Ships</h2>
     <div class="row" style="margin-left: 25px">
     {% for ship in agent.ships %}
@@ -14,8 +14,8 @@ Home
                 <h5 class="card-title"><a href="/ship/{{ ship.symbol }}">{{ ship.symbol }}</a></h5>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">{{ ship.frame.name }} <span class="material-symbols-outlined">rocket_launch</span></li>
-                <li class="list-group-item"><a href="/waypoint/{{ ship.nav.location }}">{{ ship.nav.location }} <span class="material-symbols-outlined">location_on</span></a></li>
+                <li class="list-group-item">{{ ship.frame.name }} <i class="bi bi-rocket"></i></li>
+                <li class="list-group-item"><a href="/waypoint/{{ ship.nav.location }}">{{ ship.nav.location }} <i class="bi bi-geo-alt"></i></a></li>
                 <li class="list-group-item">{{ ship.status }}</li>
                 {% if ship.fuel.total != 0 %}
                     {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}
@@ -47,9 +47,9 @@ Home
                 <h5 class="card-title"><a href="/contract/{{ contract.contract_id }}">{{ contract.contract_id }}</a></h5>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">{{ contract.deadline }} <span class="material-symbols-outlined">schedule</span></li>
-                <li class="list-group-item">Accepted: {{ contract.on_accepted }} <span class="material-symbols-outlined">credit_card</span></li>
-                <li class="list-group-item">Fulfilled: {{ contract.on_fulfilled }} <span class="material-symbols-outlined">credit_card</span></li>
+                <li class="list-group-item">{{ contract.deadline }} <i class="bi bi-clock"></i></li>
+                <li class="list-group-item">Accepted: {{ contract.on_accepted }} <i class="bi bi-credit-card"></i></li>
+                <li class="list-group-item">Fulfilled: {{ contract.on_fulfilled }} <i class="bi bi-credit-card"></i></li>
                 <li class="list-group-item">Status: {% if contract.fulfilled %}Fulfilled{% elif contract.accepted %}Accepted{% else %}Not Accepted{% endif %}</li>
             </ul>
         </div>

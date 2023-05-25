@@ -18,7 +18,7 @@ for i in data:  # TODO: Waypoints
         "x": i.x,
         "y": i.y,
         "factions": i.factions,
-        "waypoints": []
+        "waypoints": waypoints
     }
 
 print(json.dumps(data_dict, indent=4))

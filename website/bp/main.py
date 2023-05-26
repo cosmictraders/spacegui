@@ -52,7 +52,7 @@ def create_token():
 @main_bp.route("/reset/")
 def reset():
     db.drop_all()
-    flash("Reset", "primary")
+    flash("Reset successful", "primary")
     return redirect("/")
 
 
@@ -81,6 +81,7 @@ def info():
     else:
         t = "No Token"
     return render_template("info.html", status=status, token=t)
+
 
 @main_bp.route("/settings/")
 def settings():

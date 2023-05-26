@@ -85,4 +85,9 @@ def info():
 
 @main_bp.route("/settings/")
 def settings():
-    return render_template("settings.html")
+    users = db.session.execute(db.select(User)).first()
+    if users is not None:
+        t = users[0].token
+    else:
+        t = ""
+    return render_template("settings.html", token=t)

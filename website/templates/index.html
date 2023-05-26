@@ -9,7 +9,7 @@ Home
     <h2 class="center">Ships</h2>
     <div class="row" style="margin-left: 25px">
     {% for ship in agent.ships %}
-        <div class="card" style="width: 18rem; margin: 17px 10px">
+        <div class="card" style="width: 23rem; margin: 17px 10px">
             <div class="card-body">
                 <h5 class="card-title"><a href="/ship/{{ ship.symbol }}">{{ ship.symbol }}</a></h5>
             </div>
@@ -23,6 +23,7 @@ Home
                         <li class="list-group-item">{{ ship.crew.current }} <i class="bi bi-person-fill"></i></li>
                         <li class="list-group-item">{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
                         <li class="list-group-item">{{ ship.engine.speed }} <i class="bi bi-speedometer"></i></li>
+                        <li class="list-group-item">{{ ship.cargo.current }}/{{ ship.cargo.capacity }}  <i class="bi bi-box-seam-fill"></i></li>
                     </ul>
                 </li>
                 {% if ship.fuel.total != 0 %}
@@ -58,8 +59,8 @@ Home
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">{{ contract.deadline }} <i class="bi bi-clock"></i></li>
-                <li class="list-group-item">Accepted: {{ contract.on_accepted }} <i class="bi bi-credit-card"></i></li>
-                <li class="list-group-item">Fulfilled: {{ contract.on_fulfilled }} <i class="bi bi-credit-card"></i></li>
+                <li class="list-group-item">If Accepted: {{ contract.on_accepted }} <i class="bi bi-credit-card"></i></li>
+                <li class="list-group-item">If Fulfilled: {{ contract.on_fulfilled }} <i class="bi bi-credit-card"></i></li>
                 <li class="list-group-item">Status: {% if contract.fulfilled %}Fulfilled{% elif contract.accepted %}Accepted{% else %}Not Accepted{% endif %}</li>
             </ul>
         </div>

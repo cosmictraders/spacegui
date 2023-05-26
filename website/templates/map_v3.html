@@ -200,8 +200,8 @@ Map
 
                 }
                 // get the real mouse position
-                var screenX = (mouse.x - this.cox);
-                var screenY = (mouse.y - this.coy);
+                let screenX = (mouse.x - this.cox);
+                let screenY = (mouse.y - this.coy);
                 this.mouseX = this.cx + (screenX * this.invMatrix[0] + screenY * this.invMatrix[2]);
                 this.mouseY = this.cy + (screenX * this.invMatrix[1] + screenY * this.invMatrix[3]);
                 mouse.rx = this.mouseX;  // add the coordinates to the mouse. r is for real
@@ -242,9 +242,6 @@ Map
             else if (data[system].type === "NEUTRON_STAR") {
                 ctx.fillStyle = "white"
             }
-            else if (data[system].type === "NEUTRON_STAR") {
-                ctx.fillStyle = "white"
-            }
             else if (data[system].type === "UNSTABLE") {
                 ctx.fillStyle = "red"
             }
@@ -253,7 +250,7 @@ Map
             }
             ctx.beginPath();
             if (displayTransform.scale < 1) {
-                ctx.arc(data[system].x * 10, data[system].y * 10, 20 + (100)/(1+Math.pow(Math.E,(100.0*displayTransform.scale-4))), 0, 2 * Math.PI);
+                ctx.arc(data[system].x * 10, data[system].y * 10, 18 + 2/displayTransform.cscale, 0, 2 * Math.PI);
             }
             else {
                 ctx.arc(data[system].x * 10, data[system].y * 10, 20, 0, 2 * Math.PI);
@@ -261,7 +258,7 @@ Map
             ctx.fill();
             if (displayTransform.scale > 0.5) {
                 ctx.fillStyle = "green";
-                ctx.fillText(system, data[system].x * 10 + 5, data[system].y * 10 - 10);
+                ctx.fillText(system + " (" + data[system].num_waypoints + " waypoints)", data[system].x * 10 + 20, data[system].y * 10 - 10);
             }
         }
     }
@@ -269,9 +266,9 @@ Map
     function update(_time) {
         // update the transform
         displayTransform.update();
-        // set home transform to clear the screem
+        // set home transform to clear the screen
         displayTransform.setHome();
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "black"; // make the current viewport black
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         // display stuff
         displayTransform.setTransform();
@@ -284,10 +281,10 @@ Map
              displayTransform.ox = 0;
              displayTransform.oy = 0;
          }
-        // request next frame
+        // register update as the function to call to request the next frame
         requestAnimationFrame(update);
     }
-    update(); // start updates
+    update(); // start canvas updates
     </script>
 {% endblock %}
 {% block navid %}map{% endblock %}

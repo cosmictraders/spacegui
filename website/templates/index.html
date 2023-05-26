@@ -15,9 +15,12 @@ Home
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">{{ ship.frame.name }} <i class="bi bi-rocket"></i></li>
-                <li class="list-group-item">{{ ship.nav.status }}</li>
+                {% if not ship.nav.moving %}
+                    <li class="list-group-item">{{ ship.nav.status }}</li>
+                {% else %}
+                    <li class="list-group-item">{{ ship.nav.status }}, Arrival: {{ ship.nav.route.arrival.strftime('%Y-%m-%d %I:%M:%S %p') }} UTC</li>
+                {% endif %}
                 <li class="list-group-item"><a href="/waypoint/{{ ship.nav.location }}">{{ ship.nav.location }} <i class="bi bi-geo-alt-fill"></i></a></li>
-                <li class="list-group-item">{{ ship.status }}</li>
                 <li class="list-group-item">
                     <ul class="list-group list-group-horizontal">
                         <li class="list-group-item">{{ ship.crew.current }} <i class="bi bi-person-fill"></i></li>
@@ -53,12 +56,13 @@ Home
     <h2 class="center">Contracts</h2>
     <div class="row" style="margin-left: 25px">
     {% for contract in agent.contracts %}
-        <div class="card" style="width: 18rem; margin: 17px 10px">
+        <div class="card" style="width: 23rem; margin: 17px 10px">
             <div class="card-body">
                 <h5 class="card-title"><a href="/contract/{{ contract.contract_id }}">{{ contract.contract_id }}</a></h5>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">{{ contract.deadline }} <i class="bi bi-clock"></i></li>
+                <li class="list-group-item">Accept By: {{ contract.accept_deadline.strftime('%Y-%m-%d %I:%M:%S %p') }} <i class="bi bi-clock"></i></li>
+                <li class="list-group-item">Deadline: {{ contract.deadline.strftime('%Y-%m-%d %I:%M:%S %p') }} <i class="bi bi-clock"></i></li>
                 <li class="list-group-item">If Accepted: {{ contract.on_accepted }} <i class="bi bi-credit-card"></i></li>
                 <li class="list-group-item">If Fulfilled: {{ contract.on_fulfilled }} <i class="bi bi-credit-card"></i></li>
                 <li class="list-group-item">Status: {% if contract.fulfilled %}Fulfilled{% elif contract.accepted %}Accepted{% else %}Not Accepted{% endif %}</li>

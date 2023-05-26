@@ -1,5 +1,4 @@
 import pickle
-import time
 from tqdm import tqdm
 from autotraders.map.system import list_systems
 
@@ -12,6 +11,5 @@ all_systems = []
 for i in tqdm(range(1, 451)):  # TODO: Fix forced 451
     for item in list_systems(s, i)[0]:
         all_systems.append(item)
-    time.sleep(1)
 print("Writing ...")
 pickle.dump(all_systems, open("data.pickle", "wb"))

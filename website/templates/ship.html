@@ -1,15 +1,23 @@
 {% extends 'base.html' %}
 {% block title %}
-Ship - {{ symbol }}
+Ship - {{ ship.symbol }}
 {% endblock %}
 {% block body %}
     <div id="errors"></div>
-    <h1 style="text-align: center"><span id="symbol">{{ symbol }}</span></h1>
-    <p class="left-margin">Status: <span id="status"></span></p>
-    <p class="left-margin">Location: <a id="location_link"><span id="location"></span></a></p>
-    <p class="left-margin">Fuel: <span id="fuel"></span>/<span id="max_fuel"></span></p>
-    <p class="left-margin">Cargo: <span id="current_cargo"></span>/<span id="max_cargo"></span></p>
+    <h1 style="text-align: center"><span id="symbol">{{ ship.symbol }}</span></h1>
+    <p class="left-margin">Status: <span id="status">{{ ship.nav.status }}</span></p>
+    <p class="left-margin">Location: <a id="location_link" href="/waypoint/{{ ship.nav.location }}"><span id="location">{{ ship.nav.location }}</span></a></p>
+    <ul class="list-group list-group-horizontal left-margin" style="margin-bottom: 10px;">
+        <li class="list-group-item">{{ ship.crew.current }} <i class="bi bi-person-fill"></i></li>
+        <li class="list-group-item">{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
+        <li class="list-group-item">{{ ship.engine.speed }} <i class="bi bi-speedometer"></i></li>
+        <li class="list-group-item"><span id="current_cargo">{{ ship.cargo.current }}</span>/<span id="max_cargo">{{ ship.cargo.capacity }}</span>  <i class="bi bi-box-seam-fill"></i></li>
+        <li class="list-group-item"><span id="fuel">{{ ship.fuel.current }}</span>/<span id="max_fuel">{{ ship.fuel.total }}</span> <i class="bi bi-fuel-pump"></i></li>
+    </ul>
     <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px" id="cargo">
+        {% for c in ship.cargo.inventory %}
+            <li class='list-group-item'>{{ c }}: {{ ship.cargo.inventory[c] }}</li>
+        {% endfor %}
     </ul>
     <div class="btn-group left-margin" role="group" aria-label="Basic example">
         <button type="button" class="btn btn-primary" onclick="extract()">Extract</button>
@@ -42,8 +50,55 @@ Ship - {{ symbol }}
         </div>
       </div>
     </div>
+
+    <div class="row left-margin">
+        <div class="col">
+            <h2 class="center">Modules</h2>
+            <ul class="list-group" style="max-width: 800px;margin-bottom: 10px" id="cargo">
+                <li class="list-group-item">{{ ship.frame.name }} : {{ ship.frame.description }}
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item">{{ ship.frame.requirements.crew }} <i class="bi bi-person-fill"></i></li>
+                        <li class="list-group-item">{{ ship.frame.requirements.power }} <i class="bi bi-lightning-charge-fill"></i></li>
+                    </ul>
+                </li>
+                <li class="list-group-item">{{ ship.engine.name }} (Speed: {{ ship.engine.speed }}): {{ ship.engine.description }}
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item">{{ ship.engine.requirements.crew }} <i class="bi bi-person-fill"></i></li>
+                        <li class="list-group-item">{{ ship.engine.requirements.power }} <i class="bi bi-lightning-charge-fill"></i></li>
+                    </ul>
+                </li>
+                <li class="list-group-item">{{ ship.reactor.name }}: {{ ship.reactor.description }}
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item">{{ ship.reactor.requirements.crew }} <i class="bi bi-person-fill"></i></li>
+                        <li class="list-group-item">-{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
+                    </ul>
+                </li>
+                {% for module in ship.modules %}
+                    <li class="list-group-item">{{ module.name }}: {{ module.description }}
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item">{{ module.requirements.crew }} <i class="bi bi-person-fill"></i></li>
+                        <li class="list-group-item">{{ module.requirements.power }} <i class="bi bi-lightning-charge-fill"></i></li>
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+        <div class="col">
+            <h2 class="center">Mounts</h2>
+            <ul class="list-group" style="max-width: 800px;margin-bottom: 10px" id="cargo">
+                {% for mount in ship.mounts %}
+                    <li class="list-group-item">{{ mount.name }}: {{ mount.description }}
+                        <ul class="list-group list-group-horizontal">
+                            <li class="list-group-item">{{ mount.requirements.crew }} <i class="bi bi-person-fill"></i></li>
+                            <li class="list-group-item">{{ mount.requirements.power }} <i class="bi bi-lightning-charge-fill"></i></li>
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
     <script>
-    refresh();
     const alertPlaceholder = $("#errors");
     const appendAlert = (message, type) => {
       const wrapper = document.createElement('div')
@@ -65,7 +120,7 @@ Ship - {{ symbol }}
     }
 
     function navigate() {
-        fetch("/ship/{{ symbol }}/navigate?place=" + document.getElementById("place").value).then(
+        fetch("/ship/{{ ship.symbol }}/navigate?place=" + document.getElementById("place").value).then(
             (resp) => {
                 alertIfErr(resp);
             }
@@ -76,7 +131,7 @@ Ship - {{ symbol }}
     }
 
     function jump() {
-        fetch("/ship/{{ symbol }}/jump?place=" + document.getElementById("place").value).then(
+        fetch("/ship/{{ ship.symbol }}/jump?place=" + document.getElementById("place").value).then(
             (resp) => {
                 alertIfErr(resp);
             }
@@ -87,7 +142,7 @@ Ship - {{ symbol }}
     }
 
     function warp() {
-        fetch("/ship/{{ symbol }}/warp?place=" + document.getElementById("place").value).then(
+        fetch("/ship/{{ ship.symbol }}/warp?place=" + document.getElementById("place").value).then(
             (resp) => {
                 alertIfErr(resp);
             }
@@ -97,7 +152,7 @@ Ship - {{ symbol }}
         }, (500));
     }
     function extract() {
-        fetch("/ship/{{ symbol }}/extract").then(
+        fetch("/ship/{{ ship.symbol }}/extract").then(
             (resp) => {
                 alertIfErr(resp);
             }
@@ -108,7 +163,7 @@ Ship - {{ symbol }}
     }
 
     function dock() {
-        fetch("/ship/{{ symbol }}/dock").then(
+        fetch("/ship/{{ ship.symbol }}/dock").then(
             (resp) => {
                 alertIfErr(resp);
             }
@@ -119,7 +174,7 @@ Ship - {{ symbol }}
     }
 
     function orbit() {
-        fetch("/ship/{{ symbol }}/orbit").then(
+        fetch("/ship/{{ ship.symbol }}/orbit").then(
             (resp) => {
                 alertIfErr(resp);
             }
@@ -130,7 +185,7 @@ Ship - {{ symbol }}
     }
 
     function refuel() {
-        fetch("/ship/{{ symbol }}/refuel").then(
+        fetch("/ship/{{ ship.symbol }}/refuel").then(
             (resp) => {
                 alertIfErr(resp);
             }
@@ -141,10 +196,9 @@ Ship - {{ symbol }}
     }
 
     async function refresh() {
-        let data = await fetch("/ship/{{ symbol }}/api");
+        let data = await fetch("/ship/{{ ship.symbol }}/api");
         let j = await data.json();
         console.log(j)
-        document.getElementById("symbol").innerHTML = "{{ symbol }}";
         document.getElementById("status").innerHTML = j.status;
         document.getElementById("location").innerHTML = j.location;
         document.getElementById("location_link").href = "/waypoint/" + j.location;

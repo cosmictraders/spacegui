@@ -9,16 +9,18 @@ ship_bp = Blueprint("ship", __name__)
 @ship_bp.route("/ships/")
 def ships():
     s = get_session()
-    li = get_all_ships(s)
+    li, _ = Ship.all(s)
     return render_template("ships.html", ships=li)
 
 
-@ship_bp.route("/ship/<name>")
+@ship_bp.route("/ship/<name>/")
 def ship(name):
-    return render_template("ship.html", symbol=name)
+    s = get_session()
+    ship = Ship(name, s)
+    return render_template("ship.html", ship=ship)
 
 
-@ship_bp.route("/ship/<name>/api")
+@ship_bp.route("/ship/<name>/api/")
 def ship_api(name):
     s = get_session()
     ship = Ship(name, s)
@@ -60,7 +62,7 @@ def jump(name):
         return jsonify({"error": "Failed to jump: " + str(e)})
 
 
-@ship_bp.route("/ship/<name>/warp")
+@ship_bp.route("/ship/<name>/warp/")
 def warp(name):
     try:
         s = get_session()
@@ -71,7 +73,7 @@ def warp(name):
         return jsonify({"error": "Failed to warp: " + str(e)})
 
 
-@ship_bp.route("/ship/<name>/dock")
+@ship_bp.route("/ship/<name>/dock/")
 def dock(name):
     s = get_session()
     ship = Ship(name, s)
@@ -82,7 +84,7 @@ def dock(name):
         return jsonify({"error": "Failed to dock: " + str(e)})
 
 
-@ship_bp.route("/ship/<name>/orbit")
+@ship_bp.route("/ship/<name>/orbit/")
 def orbit(name):
     s = get_session()
     ship = Ship(name, s)
@@ -93,7 +95,7 @@ def orbit(name):
         return jsonify({"error": "Failed to orbit: " + str(e)})
 
 
-@ship_bp.route("/ship/<name>/refuel")
+@ship_bp.route("/ship/<name>/refuel/")
 def refuel(name):
     s = get_session()
     ship = Ship(name, s)
@@ -104,7 +106,7 @@ def refuel(name):
         return jsonify({"error": "Failed to refuel: " + str(e)})
 
 
-@ship_bp.route("/ship/<name>/extract")
+@ship_bp.route("/ship/<name>/extract/")
 def extract(name):
     s = get_session()
     ship = Ship(name, s)

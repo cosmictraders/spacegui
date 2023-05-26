@@ -20,8 +20,8 @@ Contracts
                 <td>{{ contract.on_fulfilled }}</td>
                 <td>{{ contract.accepted }}</td>
                 <td>{{ contract.fulfilled }}</td>
-                <td>{{ contract.accept_deadline }}</td>
-                <td>{{ contract.deadline }}</td>
+                <td>{{ contract.accept_deadline.strftime('%Y-%m-%d %I:%M:%S %p') }}</td>
+                <td>{{ contract.deadline.strftime('%Y-%m-%d %I:%M:%S %p') }}</td>
             </tr>
         {% endfor %}
     </table>

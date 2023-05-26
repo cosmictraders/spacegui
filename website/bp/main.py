@@ -67,9 +67,9 @@ def create_user():
     return jsonify({})
 
 
-@main_bp.route("/map-v3/")
+@main_bp.route("/map/")
 def map_v3():
-    return render_template("map_v3.html")
+    return render_template("map.html")
 
 
 @main_bp.route("/info/")

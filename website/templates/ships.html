@@ -8,6 +8,9 @@ Ships
             <th>Ship</th>
             <th>Location</th>
             <th>Status</th>
+            <th>Departure Location</th>
+            <th>Departure Time</th>
+            <th>Arrival Time</th>
             <th>Cargo</th>
             <th>Fuel</th>
         </tr>
@@ -16,6 +19,9 @@ Ships
                 <td>{{ ship.symbol }}</td>
                 <td>{{ ship.nav.location }}</td>
                 <td>{{ ship.nav.status }}</td>
+                <td>{{ ship.nav.route.departure }}</td>
+                <td>{{ ship.nav.route.departure_time.strftime('%Y-%m-%d %I:%M:%S %p') }}</td>
+                <td>{{ ship.nav.route.arrival.strftime('%Y-%m-%d %I:%M:%S %p') }}</td>
                 <td>{{ ship.cargo.current }}/{{ ship.cargo.capacity }}</td>
                 <td>{{ ship.fuel.current }}/{{ ship.fuel.total }}</td>
             </tr>

@@ -45,14 +45,15 @@ def create_token():
     user = User(token=r.json()["data"]["token"])
     db.session.add(user)
     db.session.commit()
-    print("added")
+    flash("Added User", "success")
     return jsonify({})
 
 
 @main_bp.route("/reset/")
 def reset():
     db.drop_all()
-    return "Done!"
+    flash("Reset", "primary")
+    return redirect("/")
 
 
 @main_bp.route("/create-user/")
@@ -62,7 +63,7 @@ def create_user():
     user = User(token=request.args.get("token").strip())
     db.session.add(user)
     db.session.commit()
-    print("added")
+    flash("Added User", "success")
     return jsonify({})
 
 
@@ -80,3 +81,7 @@ def info():
     else:
         t = "No Token"
     return render_template("info.html", status=status, token=t)
+
+@main_bp.route("/settings/")
+def settings():
+    return render_template("settings.html")

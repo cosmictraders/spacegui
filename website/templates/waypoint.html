@@ -61,18 +61,18 @@ Waypoint - {{ waypoint.symbol }}
         {% if shipyard.ships != None and shipyard.ships != [] %}
             <div class="col">
                 <h2 class="center">Ship Details</h2>
-            <ul class="list-group left-margin" style="max-width: 600px;margin-bottom: 10px">
+            <div class="left-margin" style="max-width: 600px;margin-bottom: 10px">
                 {% for ship in shipyard.ships %}
-                    <li class="list-group-item">
                     <ul class="list-group list-group-horizontal">
-                        <li class="list-group-item" style="min-width: 250px; max-width: 250px">{{ ship.ship_type }}</li>
-                        <li class="list-group-item" style="width: 100px">{{ ship.frame.fuel_capacity }} <i class="bi bi-fuel-pump"></i></li>
-                        <li class="list-group-item" style="width: 80px">{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
-                        <li class="list-group-item" style="width: 80px">{{ ship.engine.speed }} <i class="bi bi-speedometer"></i></li>
+                        <li class="list-group-item" style="min-width: 250px">{{ ship.ship_type }}</li>
+                        <li class="list-group-item" style="min-width: 125px">{{ ship.purchase_price }} <i class="bi bi-credit-card"></i></li>
+                        <li class="list-group-item" style="min-width: 100px">{{ ship.frame.fuel_capacity }} <i class="bi bi-fuel-pump"></i></li>
+                        <li class="list-group-item" style="min-width: 80px">{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
+                        <li class="list-group-item" style="min-width: 80px">{{ ship.engine.speed }} <i class="bi bi-speedometer"></i></li>
+                        <li class="list-group-item" style="min-width: 75px"><button class="btn btn-primary btn-sm" onclick="buy('{{ ship.ship_type }}')">Buy</button></li>
                     </ul>
-                    </li>
                 {% endfor %}
-            </ul>
+            </div>
             </div>
         {% else %}
                 <div class="col">

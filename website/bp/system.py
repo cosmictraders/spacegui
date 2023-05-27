@@ -38,10 +38,11 @@ def systems():
 
 @system_bp.route("/system/<symbol>/")
 def system(symbol):
+    s = get_session()
     return render_template(
         "system.html",
-        system=System(symbol, get_session()),
-        waypoints=get_all_waypoints(symbol, get_session()),
+        system=System(symbol, s),
+        waypoints=get_all_waypoints(symbol, s)[0],
     )
 
 

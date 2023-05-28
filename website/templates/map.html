@@ -93,7 +93,7 @@ Map
         coy: 0,
         cscale: 1,
         crotate: 0,
-        dx: 0,  // deltat values
+        dx: 0,  // deltat values (change in _)
         dy: 0,
         dox: 0,
         doy: 0,
@@ -250,7 +250,7 @@ Map
             }
             ctx.beginPath();
             if (displayTransform.scale < 1) {
-                ctx.arc(data[system].x * 10, data[system].y * 10, 18 + 2/displayTransform.cscale, 0, 2 * Math.PI);
+                ctx.arc(data[system].x * 10, data[system].y * 10, 18 + 2 / displayTransform.cscale, 0, 2 * Math.PI);
             }
             else {
                 ctx.arc(data[system].x * 10, data[system].y * 10, 20, 0, 2 * Math.PI);
@@ -285,7 +285,6 @@ Map
         // register update as the function to call to request the next frame
         requestAnimationFrame(update);
     }
-    console.log("here")
     displayTransform.update();
     displayTransform.setHome();
     ctx.fillStyle = "black"; // make the current viewport black

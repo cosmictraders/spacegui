@@ -13,7 +13,9 @@ def create_app():
     app = Flask(__name__)
     # configure the SQLite database, relative to the app instance folder
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///local.db"
-    app.config["SECRET_KEY"] = "secret@!%(@!%!@)*(#$)*$@!)*@!%)*@!)*&%@!132509831207549035213028579674138"
+    app.config[
+        "SECRET_KEY"
+    ] = "secret@!%(@!%!@)*(#$)*$@!)*@!%)*@!)*&%@!132509831207549035213028579674138"
     # initialize the app with the extension
     db.init_app(app)
 

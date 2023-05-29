@@ -1,22 +1,23 @@
 from flask import *
 
-from autotraders.ship import Ship, get_all_ships
+from autotraders.ship import Ship
 from website.session import get_session
+from website.wrappers import token_required
 
 ship_bp = Blueprint("ship", __name__)
 
 
 @ship_bp.route("/ships/")
-def ships():
-    s = get_session()
-    li, _ = Ship.all(s)
+@token_required
+def ships(session):
+    li, _ = Ship.all(session)
     return render_template("ships.html", ships=li)
 
 
 @ship_bp.route("/ship/<name>/")
-def ship(name):
-    s = get_session()
-    ship = Ship(name, s)
+@token_required
+def ship(name, session):
+    ship = Ship(name, session)
     return render_template("ship.html", ship=ship)
 
 

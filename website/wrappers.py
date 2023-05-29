@@ -6,8 +6,9 @@ from website.session import get_session
 
 def minify(func):
     def wrap(*args, **kwargs):
-        result = func(*args, **kwargs) # TODO: Fix
+        result = func(*args, **kwargs)  # TODO: Fix
         return result
+
     wrap.__name__ = func.__name__
     wrap.__doc__ = func.__doc__
     return wrap
@@ -25,6 +26,7 @@ def token_required(func):
             print(e)
             db.create_all()
             return render_template("setup.html")
+
     wrap.__name__ = func.__name__
     wrap.__doc__ = func.__doc__
     return wrap

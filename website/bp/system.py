@@ -6,7 +6,6 @@ from autotraders.map.system import System
 from autotraders.map.waypoint import get_all_waypoints, Waypoint
 from flask import *
 
-from website.session import get_session
 from website.wrappers import token_required
 
 system_bp = Blueprint("system", __name__)
@@ -39,34 +38,36 @@ def systems(session):
 
 
 @system_bp.route("/system/<symbol>/")
-def system(symbol):
-    s = get_session()
+@token_required
+def system(symbol, session):
     return render_template(
         "system.html",
-        system=System(symbol, s),
-        waypoints=get_all_waypoints(symbol, s)[0],
+        system=System(symbol, session),
+        waypoints=get_all_waypoints(symbol, session)[0],
     )
 
 
 @system_bp.route("/waypoint/<symbol>/")
-def waypoint(symbol):
-    w = Waypoint(symbol, get_session())
+@token_required
+def waypoint(symbol, session):
+    w = Waypoint(symbol, session)
     if w.marketplace:
-        m = Marketplace(symbol, get_session())
+        m = Marketplace(symbol, session)
     else:
         m = None
     if w.shipyard:
-        s = Shipyard(symbol, get_session())
+        s = Shipyard(symbol, session)
     else:
         s = None
     return render_template("waypoint.html", waypoint=w, marketplace=m, shipyard=s)
 
 
 @system_bp.route("/waypoint/<symbol>/buy-ship/")
-def buy_ship(symbol):
-    w = Waypoint(symbol, get_session())
+@token_required
+def buy_ship(symbol, session):
+    w = Waypoint(symbol, session)
     if w.shipyard:
-        s = Shipyard(symbol, get_session())
+        s = Shipyard(symbol, session)
         s.purchase(request.args.get("ship"))
         return jsonify({})
     else:

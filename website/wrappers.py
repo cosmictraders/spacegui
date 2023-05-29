@@ -20,4 +20,6 @@ def token_required(func):
             print(e)
             db.create_all()
             return render_template("setup.html")
+    wrap.__name__ = func.__name__
+    wrap.__doc__ = func.__doc__
     return wrap

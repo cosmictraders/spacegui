@@ -6,3 +6,4 @@ flask_sqlalchemy
 Pillow
 pyyaml
 pytz
+minify-html

@@ -4,20 +4,15 @@ from autotraders.agent import Agent
 from flask import *
 
 from website.model import db, User
-from website.session import get_session
+from website.wrappers import token_required
 
 main_bp = Blueprint("main", __name__)
 
 
 @main_bp.route("/", methods=["GET"])
-def index():
-    try:
-        s = get_session()
-    except Exception as e:
-        print(e)
-        db.create_all()
-        return render_template("setup.html")
-    agent = Agent(s)
+@token_required
+def index(session):
+    agent = Agent(session)
     return render_template("index.html", agent=agent)
 
 

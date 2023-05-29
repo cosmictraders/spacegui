@@ -7,14 +7,16 @@ from autotraders.map.waypoint import get_all_waypoints, Waypoint
 from flask import *
 
 from website.session import get_session
+from website.wrappers import token_required
 
 system_bp = Blueprint("system", __name__)
 
 
 @system_bp.route("/systems/")
-def systems():
+@token_required
+def systems(session):
     page = int(request.args.get("page", default=1))
-    systems_list, total = System.all(get_session(), page)
+    systems_list, total = System.all(session, page)
     total = math.ceil((total / 20))
     li = {1, 2, 3, 4, 5, total - 2, total - 1, total}
     li.add(page)

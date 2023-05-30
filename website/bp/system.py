@@ -6,12 +6,13 @@ from autotraders.map.system import System
 from autotraders.map.waypoint import get_all_waypoints, Waypoint
 from flask import *
 
-from website.wrappers import token_required
+from website.wrappers import token_required, minify_html
 
 system_bp = Blueprint("system", __name__)
 
 
 @system_bp.route("/systems/")
+@minify_html
 @token_required
 def systems(session):
     page = int(request.args.get("page", default=1))
@@ -38,6 +39,7 @@ def systems(session):
 
 
 @system_bp.route("/system/<symbol>/")
+@minify_html
 @token_required
 def system(symbol, session):
     return render_template(
@@ -48,6 +50,7 @@ def system(symbol, session):
 
 
 @system_bp.route("/waypoint/<symbol>/")
+@minify_html
 @token_required
 def waypoint(symbol, session):
     w = Waypoint(symbol, session)
@@ -63,6 +66,7 @@ def waypoint(symbol, session):
 
 
 @system_bp.route("/waypoint/<symbol>/buy-ship/")
+@minify_html
 @token_required
 def buy_ship(symbol, session):
     w = Waypoint(symbol, session)

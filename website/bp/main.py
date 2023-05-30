@@ -4,12 +4,13 @@ from autotraders.agent import Agent
 from flask import *
 
 from website.model import db, User
-from website.wrappers import token_required
+from website.wrappers import token_required, minify_html
 
 main_bp = Blueprint("main", __name__)
 
 
 @main_bp.route("/", methods=["GET"])
+@minify_html
 @token_required
 def index(session):
     agent = Agent(session)
@@ -17,17 +18,20 @@ def index(session):
 
 
 @main_bp.route("/setup/")
+@minify_html
 def setup():
     return render_template("setup.html")
 
 
 @main_bp.route("/create-token/")
+@minify_html
 def create_token():
     return render_template("create_token.html")
 
 
 @main_bp.route("/create-token-api/")
-def create_token():
+@minify_html
+def create_token_api():
     db.drop_all()
     db.create_all()
     r = requests.post(
@@ -46,6 +50,7 @@ def create_token():
 
 
 @main_bp.route("/reset/")
+@minify_html
 def reset():
     db.drop_all()
     flash("Reset successful", "primary")
@@ -53,6 +58,7 @@ def reset():
 
 
 @main_bp.route("/create-user/")
+@minify_html
 def create_user():
     db.drop_all()
     db.create_all()
@@ -64,11 +70,13 @@ def create_user():
 
 
 @main_bp.route("/map/")
+@minify_html
 def map_v3():
     return render_template("map.html")
 
 
 @main_bp.route("/info/")
+@minify_html
 def info():
     status = autotraders.get_status()
     users = db.session.execute(db.select(User)).first()
@@ -80,6 +88,7 @@ def info():
 
 
 @main_bp.route("/settings/")
+@minify_html
 def settings():
     users = db.session.execute(db.select(User)).first()
     if users is not None:

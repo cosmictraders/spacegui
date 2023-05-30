@@ -2,12 +2,13 @@ from flask import *
 
 from autotraders.ship import Ship
 from website.session import get_session
-from website.wrappers import token_required
+from website.wrappers import token_required, minify_html
 
 ship_bp = Blueprint("ship", __name__)
 
 
 @ship_bp.route("/ships/")
+@minify_html
 @token_required
 def ships(session):
     li, _ = Ship.all(session)
@@ -15,6 +16,7 @@ def ships(session):
 
 
 @ship_bp.route("/ship/<name>/")
+@minify_html
 @token_required
 def ship(name, session):
     ship = Ship(name, session)
@@ -116,6 +118,7 @@ def extract(name):
         return jsonify({})
     except IOError as e:
         return jsonify({"error": "Failed to extract: " + str(e)})
+
 
 @ship_bp.route("/ship/<name>/jettison/<symbol>")
 def jettison(name, symbol):

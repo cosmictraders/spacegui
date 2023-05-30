@@ -1,19 +1,19 @@
 from autotraders.faction.contract import Contract, get_all_contracts
 from flask import *
 
-from website.wrappers import token_required
+from website.wrappers import token_required, minify_html
 
 contract_bp = Blueprint("contract", __name__)
 
 
 @contract_bp.route("/contracts/")
+@minify_html
 @token_required
 def contracts(session):
     return render_template("contracts.html", contracts=get_all_contracts(session))
 
 
 @contract_bp.route("/contract/<contract_id>/api/")
-@token_required
 def contract_api(contract_id, session):
     contract = Contract(contract_id, session)
     return jsonify(
@@ -26,6 +26,7 @@ def contract_api(contract_id, session):
 
 
 @contract_bp.route("/contract/<contract_id>/")
+@minify_html
 @token_required
 def contract(contract_id, session):
     c = Contract(contract_id, session)
@@ -33,7 +34,6 @@ def contract(contract_id, session):
 
 
 @contract_bp.route("/contract/<contract_id>/accept")
-@token_required
 def accept_contract(contract_id: str, session):
     try:
         c = Contract(contract_id, session)
@@ -44,7 +44,6 @@ def accept_contract(contract_id: str, session):
 
 
 @contract_bp.route("/contract/<contract_id>/fulfill")
-@token_required
 def fulfill_contract(contract_id: str, session):
     try:
         c = Contract(contract_id, session)

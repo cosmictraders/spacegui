@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-Get Token
+Create Token
 {% endblock %}
 {% block body %}
     <div class="alert alert-warning" role="alert">
@@ -21,7 +21,7 @@ Get Token
         <a href="/info">the info page</a>.</p>
     <script>
         function create() {
-            fetch("/create-token?symbol=" + $("#symbol").val() + "&faction=" + $("#faction").val() + "&email=" + $("#email").val()).then(
+            fetch("/create-token-api?symbol=" + $("#symbol").val() + "&faction=" + $("#faction").val() + "&email=" + $("#email").val()).then(
                 (_) => {
                     document.location.href = "/";
                 }

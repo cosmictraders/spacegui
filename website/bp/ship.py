@@ -116,3 +116,13 @@ def extract(name):
         return jsonify({})
     except IOError as e:
         return jsonify({"error": "Failed to extract: " + str(e)})
+
+@ship_bp.route("/ship/<name>/jettison/<symbol>")
+def jettison(name, symbol):
+    s = get_session()
+    ship = Ship(name, s)
+    try:
+        ship.jettison(symbol, 1)
+        return jsonify({})
+    except IOError as e:
+        return jsonify({"error": "Failed to jettison: " + str(e)})

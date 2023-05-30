@@ -16,10 +16,12 @@ Ship - {{ ship.symbol }}
     </ul>
     <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px" id="cargo">
         {% for c in ship.cargo.inventory %}
-            <li class='list-group-item'>{{ c }}: {{ ship.cargo.inventory[c] }}</li>
+            <li class='list-group-item'>
+                {{ c }}: {{ ship.cargo.inventory[c] }}
+            </li>
         {% endfor %}
     </ul>
-    <div class="btn-group left-margin" role="group" aria-label="Basic example">
+    <div class="btn-group left-margin" role="group" aria-label="Ship Controls">
         <button type="button" class="btn btn-primary" onclick="extract()">Extract</button>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#navigateModal">Navigate</button>
         <button type="button" class="btn btn-primary" onclick="dock()">Dock</button>
@@ -27,28 +29,39 @@ Ship - {{ ship.symbol }}
         <button type="button" class="btn btn-primary" onclick="refuel()">Refuel</button>
     </div>
     <div class="modal fade" id="navigateModal" tabindex="-1" aria-labelledby="NavigateModal" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="NavigateModal">Navigate {{ symbol }}</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form>
-                <div class="mb-3">
-                  <label for="place" class="form-label">Waypoint</label>
-                  <input type="text" class="form-control" id="place">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="NavigateModal">Navigate {{ symbol }}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="jump()">Jump</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="warp()">Warp</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="navigate()">Navigate</button>
-          </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row g-3">
+                            <div class="col">
+                                <label for="place" class="form-label">Waypoint</label>
+                                <input type="text" class="form-control" id="place">
+                            </div>
+{#                            <div class="col">#}
+{#                                <label for="navigation-mode" class="form-label">Navigation Mode</label>#}
+{#                                <select class="form-select" aria-label="Navigation Mode" id="navigation-mode">#}
+{#                                    <option value="CRUISE" selected>Cruise</option>#}
+{#                                    <option value="DRIFT">Drift</option>#}
+{#                                    <option value="BURN">Burn</option>#}
+{#                                    <option value="STEALTH">Stealth</option>#}
+{#                                </select>#}
+{#                            </div>#}
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="jump()">Jump</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="warp()">Warp</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="navigate()">Navigate</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
     <div class="row left-margin" style="margin-top: 50px">

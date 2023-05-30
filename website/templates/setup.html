@@ -12,7 +12,7 @@ Create User
         <input id="token">
         <button class="btn btn-primary" type="button" onclick="create()">Setup</button>
     </form>
-    <a class="left-margin" href="/get-token">Don't have a token?</a>
+    <a class="left-margin" href="/create-token">Don't have a token?</a>
     <script>
         function create() {
             fetch("/create-user?token=" + document.getElementById("token").value).then(

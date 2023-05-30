@@ -21,12 +21,12 @@ def setup():
     return render_template("setup.html")
 
 
-@main_bp.route("/get-token/")
-def get_token():
-    return render_template("get_token.html")
-
-
 @main_bp.route("/create-token/")
+def create_token():
+    return render_template("create_token.html")
+
+
+@main_bp.route("/create-token-api/")
 def create_token():
     db.drop_all()
     db.create_all()
@@ -87,3 +87,9 @@ def settings():
     else:
         t = ""
     return render_template("settings.html", token=t)
+
+
+@main_bp.route("/settings-api/")
+def settings_api():
+    users = db.session.execute(db.select(User)).first()
+    pass

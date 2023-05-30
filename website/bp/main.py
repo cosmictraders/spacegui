@@ -35,8 +35,9 @@ def create_token():
         data={
             "faction": request.args.get("faction").strip().upper(),
             "symbol": request.args.get("symbol").strip(),
+            "email": request.args.get("email").strip(),
         },
-    )  # TODO add email
+    )
     user = User(token=r.json()["data"]["token"])
     db.session.add(user)
     db.session.commit()

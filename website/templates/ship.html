@@ -199,13 +199,13 @@ Ship - {{ ship.symbol }}
         let data = await fetch("/ship/{{ ship.symbol }}/api");
         let j = await data.json();
         console.log(j)
-        document.getElementById("status").innerHTML = j.status;
+        $("#status").html(j.status);
         document.getElementById("location").innerHTML = j.location;
         document.getElementById("location_link").href = "/waypoint/" + j.location;
-        document.getElementById("fuel").innerHTML = j.fuel;
-        document.getElementById("max_fuel").innerHTML = j.max_fuel;
-        document.getElementById("current_cargo").innerHTML = j.current_cargo;
-        document.getElementById("max_cargo").innerHTML = j.max_cargo;
+        $("#fuel").html(j.fuel);
+        $("#max_fuel").html(j.max_fuel);
+        $("#current_cargo").html(j.current_cargo);
+        $("#max_cargo").html(j.max_cargo);
         let cargo = document.getElementById("cargo");
         let text = ""
         Object.entries(j.cargo).forEach(([key, value]) => {

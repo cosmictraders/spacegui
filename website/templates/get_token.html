@@ -9,9 +9,11 @@ Get Token
     <h1 class="center">Create Token</h1>
     <form class="form left-margin">
         <label class="label" for="symbol">Symbol:</label>
-        <input id="symbol">
+        <input id="symbol" required>
         <label class="label" for="faction">Faction:</label>
-        <input id="faction">
+        <input id="faction" required>
+        <label class="label" for="email">Email:</label>
+        <input id="email" type="email">
         <button class="btn btn-primary" type="button" onclick="create()">Create</button>
     </form>
     <p class="left-margin">Note that this automatically saves the token,
@@ -19,8 +21,8 @@ Get Token
         <a href="/info">the info page</a>.</p>
     <script>
         function create() {
-            fetch("/create-token?symbol=" + document.getElementById("symbol").value + "&faction=" + document.getElementById("faction").value).then(
-                (data) => {
+            fetch("/create-token?symbol=" + $("#symbol").val() + "&faction=" + $("#faction").val() + "&email=" + $("#email").val()).then(
+                (_) => {
                     document.location.href = "/";
                 }
             )

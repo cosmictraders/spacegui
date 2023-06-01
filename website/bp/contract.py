@@ -14,6 +14,7 @@ def contracts(session):
 
 
 @contract_bp.route("/contract/<contract_id>/api/")
+@token_required
 def contract_api(contract_id, session):
     contract = Contract(contract_id, session)
     return jsonify(

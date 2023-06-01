@@ -19,7 +19,7 @@ def contract_api(contract_id, session):
     contract = Contract(contract_id, session)
     return jsonify(
         {
-            "deadline": str(contract.deadline),
+            "deadline": str(contract.deadline.strftime('%Y-%m-%d %I:%M:%S %p')),
             "accepted": contract.accepted,
             "fulfilled": contract.fulfilled,
         }

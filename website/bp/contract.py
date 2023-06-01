@@ -34,6 +34,7 @@ def contract(contract_id, session):
 
 
 @contract_bp.route("/contract/<contract_id>/accept")
+@token_required
 def accept_contract(contract_id: str, session):
     try:
         c = Contract(contract_id, session)
@@ -44,6 +45,7 @@ def accept_contract(contract_id: str, session):
 
 
 @contract_bp.route("/contract/<contract_id>/fulfill")
+@token_required
 def fulfill_contract(contract_id: str, session):
     try:
         c = Contract(contract_id, session)

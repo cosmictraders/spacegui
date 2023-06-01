@@ -6,7 +6,10 @@ Ship - {{ ship.symbol }}
     <div id="errors"></div>
     <h1 style="text-align: center"><span id="symbol">{{ ship.symbol }}</span></h1>
     <p class="left-margin">Status: <span id="status">{{ ship.nav.status }}</span></p>
-    <p class="left-margin">Location: <a id="location_link" href="/waypoint/{{ ship.nav.location }}"><span id="location">{{ ship.nav.location }}</span></a></p>
+    <p class="left-margin">Location:
+        <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><span id="waypoint">{{ ship.nav.location }}</span></a>
+        , a part of
+        <a id="system_link" href="/system/{{ ship.nav.location.system }}"><span id="system">{{ ship.nav.location.system }}</span></a></p>
     <ul class="list-group list-group-horizontal left-margin" style="margin-bottom: 10px;">
         <li class="list-group-item">{{ ship.crew.current }} <i class="bi bi-person-fill"></i></li>
         <li class="list-group-item">{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
@@ -234,8 +237,10 @@ Ship - {{ ship.symbol }}
         let j = await data.json();
         console.log(j)
         $("#status").html(j.status);
-        document.getElementById("location").innerHTML = j.location;
-        document.getElementById("location_link").href = "/waypoint/" + j.location;
+        document.getElementById("waypoint").innerHTML = j.location;
+        document.getElementById("waypoint_link").href = "/waypoint/" + j.location;
+        document.getElementById("system").innerHTML = j.system;
+        document.getElementById("system_link").href = "/system/" + j.system;
         $("#fuel").html(j.fuel);
         $("#max_fuel").html(j.max_fuel);
         $("#current_cargo").html(j.current_cargo);

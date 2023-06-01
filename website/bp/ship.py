@@ -32,6 +32,7 @@ def ship_api(name):
             "symbol": ship.symbol,
             "status": ship.nav.status,
             "location": str(ship.nav.location),
+            "system": str(ship.nav.location.system),
             "fuel": ship.fuel.current,
             "max_fuel": ship.fuel.total,
             "cargo": ship.cargo.inventory,

@@ -3,7 +3,7 @@ import math
 from autotraders.map.waypoint_types.marketplace import Marketplace
 from autotraders.map.waypoint_types.shipyard import Shipyard
 from autotraders.map.system import System
-from autotraders.map.waypoint import get_all_waypoints, Waypoint
+from autotraders.map.waypoint import Waypoint
 from flask import *
 
 from website.wrappers import token_required, minify_html
@@ -45,7 +45,7 @@ def system(symbol, session):
     return render_template(
         "system.html",
         system=System(symbol, session),
-        waypoints=get_all_waypoints(symbol, session)[0],
+        waypoints=Waypoint.all(symbol, session)[0],
     )
 
 

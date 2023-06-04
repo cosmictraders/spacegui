@@ -1,4 +1,4 @@
-from autotraders.faction.contract import Contract, get_all_contracts
+from autotraders.faction.contract import Contract
 from flask import *
 
 from website.wrappers import token_required, minify_html
@@ -10,7 +10,8 @@ contract_bp = Blueprint("contract", __name__)
 @minify_html
 @token_required
 def contracts(session):
-    return render_template("contracts.html", contracts=get_all_contracts(session))
+    c, _ = Contract.all(session)
+    return render_template("contracts.html", contracts=c)
 
 
 @contract_bp.route("/contract/<contract_id>/api/")

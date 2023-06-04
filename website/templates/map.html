@@ -214,40 +214,23 @@ Map
         }
     };
 
+    const colorMap = {
+        "RED_STAR": "red",
+        "ORANGE_STAR": "orange",
+        "WHITE_DWARF": "white",
+        "YOUNG_STAR": "yellow",
+        "BLACK_HOLE": "grey",
+        "HYPERGIANT": "red", // repeated
+        "NEUTRON_STAR": "white", // repeated
+        "UNSTABLE": "red" // repeated
+    }
+
+
     function draw() {
         let zoom = 16/displayTransform.cscale;
         ctx.font = zoom + "px serif";
         for (const system of Object.keys(data)) {
-            if (data[system].type === "RED_STAR") {
-                ctx.fillStyle = "red";
-            }
-            else if (data[system].type === "ORANGE_STAR") {
-                ctx.fillStyle = "orange";
-            }
-            else if (data[system].type === "BLUE_STAR") {
-                ctx.fillStyle = "blue";
-            }
-            else if (data[system].type === "WHITE_DWARF") {
-                ctx.fillStyle = "white";
-            }
-            else if (data[system].type === "YOUNG_STAR") {
-                ctx.fillStyle = "yellow";
-            }
-            else if (data[system].type === "BLACK_HOLE") {
-                ctx.fillStyle = "grey"
-            }
-            else if (data[system].type === "HYPERGIANT") {
-                ctx.fillStyle = "red"
-            }
-            else if (data[system].type === "NEUTRON_STAR") {
-                ctx.fillStyle = "white"
-            }
-            else if (data[system].type === "UNSTABLE") {
-                ctx.fillStyle = "red"
-            }
-            else {
-                ctx.fillStyle = "green";
-            }
+            ctx.fillStyle = colorMap[data[system].type] || "green"
             ctx.beginPath();
             if (displayTransform.scale < 1) {
                 ctx.arc(data[system].x * 10, data[system].y * 10, 18 + 2 / displayTransform.cscale, 0, 2 * Math.PI);
@@ -262,6 +245,7 @@ Map
             }
         }
     }
+    var stillTime = 0;
 
     function update(_time) {
         // update the transform
@@ -272,6 +256,15 @@ Map
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         // display stuff
         displayTransform.setTransform();
+        if (displayTransform.quiet || (mouse.buttonRaw & 2)){
+            stillTime += 1;
+            if(stillTime > MOUSE_STILL_TIME || (mouse.buttonRaw & 2)){
+                stillTime = 0;
+                displayTransform.fitView(0,0,img.width,img.height,"fit")
+            }
+        } else{
+            stillTime = 0;
+        }
         if (mouse.buttonRaw === 4) { // right click to return to home
             displayTransform.x = 0;
             displayTransform.y = 0;

@@ -16,9 +16,8 @@ system_bp = Blueprint("system", __name__)
 @token_required
 def systems(session):
     page = int(request.args.get("page", default=1))
-    systems_list, total = System.all(session, page)
-    total = math.ceil((total / 20))
-    li = {1, 2, 3, 4, 5, total - 2, total - 1, total}
+    systems_list = System.all(session, page)
+    li = {1, 2, 3, 4, 5, systems_list.pages - 2, systems_list.pages - 1, systems_list.pages}
     li.add(page)
     if page > min(li):
         li.add(page - 1)
@@ -34,7 +33,7 @@ def systems(session):
         new_li.append(i)
         prev = i
     return render_template(
-        "systems.html", systems=systems_list, page=page, pages=total, li=new_li
+        "systems.html", systems=systems_list, page=page, li=new_li
     )
 
 

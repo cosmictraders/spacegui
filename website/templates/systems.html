@@ -10,7 +10,7 @@ Systems
             <th>Coordinates</th>
             <th>Factions</th>
         </tr>
-        {% for system in systems %}
+        {% for system in systems[page] %}
             <tr onclick="window.location.href = '/system/{{ system.symbol }}'">
                <td>{{ system.symbol }}</td>
                <td>{{ system.waypoints.__len__() }}</td>
@@ -35,7 +35,7 @@ Systems
                     <li class="page-item"><a class="page-link" href="/systems/?page={{ i }}">{{ i }}</a></li>
                 {% endif %}
             {% endfor %}
-            {% if page < pages %}
+            {% if page < systems.pages %}
                 <li class="page-item"><a class="page-link" href="/systems/?page={{ page+1 }}">Next</a></li>
             {% else %}
                 <li class="page-item disabled"><a class="page-link" href="/systems/#">Next</a></li>

@@ -8,7 +8,7 @@ Home
     <p class="center">{{ agent.headquarters }} <i class="bi bi-credit-card"></i></p>
     <h2 class="center">Ships</h2>
     <div class="row" style="margin-left: 25px">
-    {% for ship in agent.ships %}
+    {% for ship in agent.ships[1] %}
         <div class="card" style="width: 23rem; margin: 17px 10px">
             <div class="card-body">
                 <h5 class="card-title"><a href="/ship/{{ ship.symbol }}">{{ ship.symbol }}</a></h5>
@@ -55,7 +55,7 @@ Home
     </div>
     <h2 class="center">Contracts</h2>
     <div class="row" style="margin-left: 25px">
-    {% for contract in agent.contracts %}
+    {% for contract in agent.contracts[1] %}
         <div class="card" style="width: 23rem; margin: 17px 10px">
             <div class="card-body">
                 <h5 class="card-title"><a href="/contract/{{ contract.contract_id }}">{{ contract.contract_id }}</a></h5>

@@ -10,7 +10,7 @@ contract_bp = Blueprint("contract", __name__)
 @minify_html
 @token_required
 def contracts(session):
-    c, _ = Contract.all(session)
+    c = Contract.all(session)
     return render_template("contracts.html", contracts=c)
 
 

@@ -14,7 +14,7 @@ Ships
             <th>Cargo</th>
             <th>Fuel</th>
         </tr>
-        {% for ship in ships %}
+        {% for ship in ships[1] %}
             <tr onclick="window.location.href = '/ship/{{ ship.symbol }}'">
                 <td>{{ ship.symbol }}</td>
                 <td>{{ ship.nav.location }}</td>

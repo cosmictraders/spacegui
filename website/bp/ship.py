@@ -11,7 +11,7 @@ ship_bp = Blueprint("ship", __name__)
 @minify_html
 @token_required
 def ships(session):
-    li, _ = Ship.all(session)
+    li = Ship.all(session)
     return render_template("ships.html", ships=li)
 
 

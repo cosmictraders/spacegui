@@ -13,7 +13,7 @@ Contracts
             <th>Accept Deadline</th>
             <th>Deadline</th>
         </tr>
-        {% for contract in contracts %}
+        {% for contract in contracts[1] %}
             <tr onclick="window.location.href = '/contract/{{ contract.contract_id }}'">
                 <td>{{ contract.contract_id }}</td>
                 <td>{{ contract.on_accepted }}</td>

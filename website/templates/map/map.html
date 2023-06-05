@@ -9,8 +9,23 @@ Map
             height: 100%;
         }
     </style>
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-     <canvas id="c" width="2000" height="1000"></canvas>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <canvas id="c" width="2000" height="1000"></canvas>
+{#    <div data-bs-theme="dark">#}
+{#        <h1 class="left-margin">Key</h1>#}
+{#        <ul class="list-group left-margin">#}
+{#            <li class="list-group-item" style="color: red">RED_STAR: red</li>#}
+{#            <li class="list-group-item" style="color: orange">ORANGE_STAR: orange</li>#}
+{#            <li class="list-group-item" style="color: white">WHITE_DWARF: white</li>#}
+{#            <li class="list-group-item" style="color: yellow">YOUNG_STAR: yellow</li>#}
+{#            <li class="list-group-item" style="color: grey">BLACK_HOLE: grey</li>#}
+{#            <li class="list-group-item" style="color: blue">BLUE_STAR: blue</li>#}
+{#            <li class="list-group-item" style="color: red">HYPERGIANT: red // repeated</li>#}
+{#            <li class="list-group-item" style="color: white">NEUTRON_STAR: white // repeated</li>#}
+{#            <li class="list-group-item" style="color: blue">UNSTABLE: blue // repeated</li>#}
+{#            <li class="list-group-item" style="color: green">OTHER: green</li>#}
+{#        </ul>#}
+{#    </div>#}
     <script>
         const data = JSON.parse(jQuery.ajax({
             url: "/static/systems.json",
@@ -250,8 +265,6 @@ Map
                     }
                 }
             }
-            ctx.globalAlpha = 0.5;
-            ctx.globalAlpha = 1;
         }
 
         function update(_time) {
@@ -287,7 +300,6 @@ Map
             console.log(-displayTransform.matrix[4], displayTransform.matrix[5])
         });
         displayTransform.setTransform();
-        draw();
         update(); // start canvas updates
     </script>
 {% endblock %}

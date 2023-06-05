@@ -10,7 +10,7 @@ Systems
             <th>Coordinates</th>
             <th>Factions</th>
         </tr>
-        {% for system in systems[page] %}
+        {% for system in systems.current() %}
             <tr onclick="window.location.href = '/system/{{ system.symbol }}'">
                <td>{{ system.symbol }}</td>
                <td>{{ system.waypoints.__len__() }}</td>
@@ -21,13 +21,13 @@ Systems
     </table>
     <nav aria-label="Pagination">
         <ul class="pagination left-margin">
-            {% if page > 1 %}
-                <li class="page-item"><a class="page-link" href="/systems/?page={{ page-1 }}">Previous</a></li>
+            {% if systems.page > 1 %}
+                <li class="page-item"><a class="page-link" href="/systems/?page={{ systems.page-1 }}">Previous</a></li>
             {% else %}
                 <li class="page-item disabled"><a class="page-link" href="/systems/#">Previous</a></li>
             {% endif %}
             {% for i in li %}
-                {% if i == page %}
+                {% if i == systems.page %}
                     <li class="page-item"><a class="page-link active" href="/systems/?page={{ i }}">{{ i }}</a></li>
                 {% elif i == ".." %}
                     <li class="page-item disabled"><a class="page-link" href="/systems/?page={{ i }}">{{ i }}</a></li>
@@ -35,8 +35,8 @@ Systems
                     <li class="page-item"><a class="page-link" href="/systems/?page={{ i }}">{{ i }}</a></li>
                 {% endif %}
             {% endfor %}
-            {% if page < systems.pages %}
-                <li class="page-item"><a class="page-link" href="/systems/?page={{ page+1 }}">Next</a></li>
+            {% if systems.page < systems.pages %}
+                <li class="page-item"><a class="page-link" href="/systems/?page={{ systems.page+1 }}">Next</a></li>
             {% else %}
                 <li class="page-item disabled"><a class="page-link" href="/systems/#">Next</a></li>
             {% endif %}

@@ -33,7 +33,7 @@ def systems(session):
         new_li.append(i)
         prev = i
     return render_template(
-        "systems.html", systems=systems_list, page=page, li=new_li
+        "systems.html", systems=systems_list, li=new_li
     )
 
 

@@ -18,6 +18,8 @@ Map
         }).responseText)
         const canvas = document.getElementById("c");
         const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "black"; // make the current viewport black
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         const mouse = {
             x: 0,
             y: 0,
@@ -54,7 +56,7 @@ Map
             } else if (event.type === "mousewheel") {
                 event.preventDefault()
                 mouse.w = event.wheelDelta;
-            } else if (event.type === "DOMMouseScroll") { // FF you pedantic doffus
+            } else if (event.type === "DOMMouseScroll") { // firefox
                mouse.w = -event.detail;
             }
 
@@ -68,7 +70,7 @@ Map
             e.addEventListener('mouseout', mouseMove);
             e.addEventListener('mouseover', mouseMove);
             e.addEventListener('mousewheel', mouseMove);
-            e.addEventListener('DOMMouseScroll', mouseMove); // fire fox
+            e.addEventListener('DOMMouseScroll', mouseMove); //firefox
 
             e.addEventListener("contextmenu", function (e) {
                 e.preventDefault();
@@ -219,9 +221,10 @@ Map
             "WHITE_DWARF": "white",
             "YOUNG_STAR": "yellow",
             "BLACK_HOLE": "grey",
+            "BLUE_STAR": "blue",
             "HYPERGIANT": "red", // repeated
             "NEUTRON_STAR": "white", // repeated
-            "UNSTABLE": "blue"
+            "UNSTABLE": "blue" // repeated
         }
 
 
@@ -229,8 +232,8 @@ Map
             let zoom = 16/displayTransform.cscale;
             ctx.font = zoom + "px serif";
             for (const system of Object.keys(data)) {
-                if (-displayTransform.matrix[4]-canvas.width/displayTransform.matrix[0] < data[system].x * 10) { // x coord (5 is y)
-                    if (-displayTransform.matrix[5]-canvas.height/displayTransform.matrix[0] < data[system].y * 10) {
+                if (-displayTransform.matrix[4]-canvas.width/displayTransform.matrix[0] < data[system].x * 10 && -displayTransform.matrix[4]+canvas.width/displayTransform.matrix[0] > data[system].x * 10) { // x coord (5 is y)
+                    if (-displayTransform.matrix[5]-canvas.height/displayTransform.matrix[0] < data[system].y * 10 && -displayTransform.matrix[5]+canvas.height/displayTransform.matrix[0] > data[system].y * 10) {
                         ctx.fillStyle = colorMap[data[system].type] || "green"
                         ctx.beginPath();
                         if (displayTransform.scale < 1) {
@@ -240,12 +243,15 @@ Map
                         }
                         ctx.fill();
                         if (displayTransform.scale > 0.5) {
+                            ctx.globalAlpha = 0.8;
                             ctx.fillStyle = "green";
                             ctx.fillText(system + " (" + data[system].num_waypoints + " waypoints)", data[system].x * 10 + 20, data[system].y * 10 - 10);
                         }
                     }
                 }
             }
+            ctx.globalAlpha = 0.5;
+            ctx.globalAlpha = 1;
         }
 
         function update(_time) {
@@ -280,8 +286,6 @@ Map
             {#console.log(pos)#}
             console.log(-displayTransform.matrix[4], displayTransform.matrix[5])
         });
-        ctx.fillStyle = "black"; // make the current viewport black
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
         displayTransform.setTransform();
         draw();
         update(); // start canvas updates

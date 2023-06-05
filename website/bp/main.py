@@ -72,7 +72,7 @@ def create_user():
 @main_bp.route("/map/")
 @minify_html
 def map_v3():
-    return render_template("map.html")
+    return render_template("map/map.html")
 
 
 @main_bp.route("/info/")
@@ -101,4 +101,14 @@ def settings():
 @main_bp.route("/settings-api/")
 def settings_api():
     users = db.session.execute(db.select(User)).first()
-    pass
+    return jsonify({})
+
+
+@main_bp.route("/automations/")
+def automations():
+    return render_template("automations.html")
+
+
+@main_bp.route("/automation/<name>/")
+def automation(name):
+    return "TBD"

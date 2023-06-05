@@ -33,7 +33,7 @@ def systems(session):
         new_li.append(i)
         prev = i
     return render_template(
-        "systems.html", systems=systems_list, li=new_li
+        "map/systems.html", systems=systems_list, li=new_li
     )
 
 
@@ -42,7 +42,7 @@ def systems(session):
 @token_required
 def system(symbol, session):
     return render_template(
-        "system.html",
+        "map/system.html",
         system=System(symbol, session),
         waypoints=Waypoint.all(symbol, session)[0],
     )
@@ -61,7 +61,7 @@ def waypoint(symbol, session):
         s = Shipyard(symbol, session)
     else:
         s = None
-    return render_template("waypoint.html", waypoint=w, marketplace=m, shipyard=s)
+    return render_template("map/waypoint.html", waypoint=w, marketplace=m, shipyard=s)
 
 
 @system_bp.route("/waypoint/<symbol>/buy-ship/")

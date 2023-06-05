@@ -9,7 +9,8 @@ Ship - {{ ship.symbol }}
     <p class="left-margin">Location:
         <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><span id="waypoint">{{ ship.nav.location }}</span></a>
         , a part of
-        <a id="system_link" href="/system/{{ ship.nav.location.system }}"><span id="system">{{ ship.nav.location.system }}</span></a></p>
+        <a id="system_link" href="/system/{{ ship.nav.location.system }}"><span id="system">{{ ship.nav.location.system }}</span></a>
+    </p>
     <ul class="list-group list-group-horizontal left-margin" style="margin-bottom: 10px;">
         <li class="list-group-item">{{ ship.crew.current }} <i class="bi bi-person-fill"></i></li>
         <li class="list-group-item">{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
@@ -45,15 +46,15 @@ Ship - {{ ship.symbol }}
                                 <label for="place" class="form-label">Waypoint</label>
                                 <input type="text" class="form-control" id="place">
                             </div>
-{#                            <div class="col">#}
-{#                                <label for="navigation-mode" class="form-label">Navigation Mode</label>#}
-{#                                <select class="form-select" aria-label="Navigation Mode" id="navigation-mode">#}
-{#                                    <option value="CRUISE" selected>Cruise</option>#}
-{#                                    <option value="DRIFT">Drift</option>#}
-{#                                    <option value="BURN">Burn</option>#}
-{#                                    <option value="STEALTH">Stealth</option>#}
-{#                                </select>#}
-{#                            </div>#}
+                            <div class="col">
+                                <label for="navigation-mode" class="form-label">Navigation Mode <span class="badge bg-warning">WIP</span></label>
+                                <select class="form-select" aria-label="Navigation Mode" id="navigation-mode" disabled>
+                                    <option value="CRUISE" selected>Cruise</option>
+                                    <option value="DRIFT">Drift</option>
+                                    <option value="BURN">Burn</option>
+                                    <option value="STEALTH">Stealth</option>
+                                </select>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -136,122 +137,122 @@ Ship - {{ ship.symbol }}
         </div>
     </div>
     <script>
-    const alertPlaceholder = $("#errors");
-    const appendAlert = (message, type) => {
-      const wrapper = document.createElement('div')
-      wrapper.innerHTML = [
-        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-        `   <div>${message}</div>`,
-        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-        '</div>'
-      ].join('')
+        const alertPlaceholder = $("#errors");
+        const appendAlert = (message, type) => {
+          const wrapper = document.createElement('div')
+          wrapper.innerHTML = [
+            `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+            `   <div>${message}</div>`,
+            '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+            '</div>'
+          ].join('')
 
-      alertPlaceholder.append(wrapper)
-    }
-
-    async function alertIfErr(resp) {
-        let j = await resp.json();
-        if (j.hasOwnProperty("error")) {
-            appendAlert(j.error, "danger")
+          alertPlaceholder.append(wrapper)
         }
-    }
 
-    function navigate() {
-        fetch("/ship/{{ ship.symbol }}/navigate?place=" + document.getElementById("place").value).then(
-            (resp) => {
-                alertIfErr(resp);
+        async function alertIfErr(resp) {
+            let j = await resp.json();
+            if (j.hasOwnProperty("error")) {
+                appendAlert(j.error, "danger")
             }
-        );
-        setTimeout(function() {
-            refresh();
-        }, (500));
-    }
+        }
 
-    function jump() {
-        fetch("/ship/{{ ship.symbol }}/jump?place=" + document.getElementById("place").value).then(
-            (resp) => {
-                alertIfErr(resp);
-            }
-        );
-        setTimeout(function() {
-            refresh();
-        }, (500));
-    }
+        function navigate() {
+            fetch("/ship/{{ ship.symbol }}/navigate?place=" + document.getElementById("place").value + "&mode=" + $("#navigation-mode").val()).then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
 
-    function warp() {
-        fetch("/ship/{{ ship.symbol }}/warp?place=" + document.getElementById("place").value).then(
-            (resp) => {
-                alertIfErr(resp);
-            }
-        );
-        setTimeout(function() {
-            refresh();
-        }, (500));
-    }
-    function extract() {
-        fetch("/ship/{{ ship.symbol }}/extract").then(
-            (resp) => {
-                alertIfErr(resp);
-            }
-        );
-        setTimeout(function() {
-            refresh();
-        }, (500));
-    }
+        function jump() {
+            fetch("/ship/{{ ship.symbol }}/jump?place=" + document.getElementById("place").value).then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
 
-    function dock() {
-        fetch("/ship/{{ ship.symbol }}/dock").then(
-            (resp) => {
-                alertIfErr(resp);
-            }
-        );
-        setTimeout(function() {
-            refresh();
-        }, (500));
-    }
+        function warp() {
+            fetch("/ship/{{ ship.symbol }}/warp?place=" + document.getElementById("place").value).then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
+        function extract() {
+            fetch("/ship/{{ ship.symbol }}/extract").then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
 
-    function orbit() {
-        fetch("/ship/{{ ship.symbol }}/orbit").then(
-            (resp) => {
-                alertIfErr(resp);
-            }
-        );
-        setTimeout(function() {
-            refresh();
-        }, (500));
-    }
+        function dock() {
+            fetch("/ship/{{ ship.symbol }}/dock").then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
 
-    function refuel() {
-        fetch("/ship/{{ ship.symbol }}/refuel").then(
-            (resp) => {
-                alertIfErr(resp);
-            }
-        );
-        setTimeout(function() {
-            refresh();
-        }, (500));
-    }
+        function orbit() {
+            fetch("/ship/{{ ship.symbol }}/orbit").then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
 
-    async function refresh() {
-        let data = await fetch("/ship/{{ ship.symbol }}/api");
-        let j = await data.json();
-        console.log(j)
-        $("#status").html(j.status);
-        document.getElementById("waypoint").innerHTML = j.location;
-        document.getElementById("waypoint_link").href = "/waypoint/" + j.location;
-        document.getElementById("system").innerHTML = j.system;
-        document.getElementById("system_link").href = "/system/" + j.system;
-        $("#fuel").html(j.fuel);
-        $("#max_fuel").html(j.max_fuel);
-        $("#current_cargo").html(j.current_cargo);
-        $("#max_cargo").html(j.max_cargo);
-        let cargo = document.getElementById("cargo");
-        let text = ""
-        Object.entries(j.cargo).forEach(([key, value]) => {
-            text += "<li class='list-group-item'>" + key + ": " + value + "</li>"
-        })
-        cargo.innerHTML = text;
-    }
+        function refuel() {
+            fetch("/ship/{{ ship.symbol }}/refuel").then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
+
+        async function refresh() {
+            let data = await fetch("/ship/{{ ship.symbol }}/api");
+            let j = await data.json();
+            console.log(j)
+            $("#status").html(j.status);
+            document.getElementById("waypoint").innerHTML = j.location;
+            document.getElementById("waypoint_link").href = "/waypoint/" + j.location;
+            document.getElementById("system").innerHTML = j.system;
+            document.getElementById("system_link").href = "/system/" + j.system;
+            $("#fuel").html(j.fuel);
+            $("#max_fuel").html(j.max_fuel);
+            $("#current_cargo").html(j.current_cargo);
+            $("#max_cargo").html(j.max_cargo);
+            let cargo = document.getElementById("cargo");
+            let text = ""
+            Object.entries(j.cargo).forEach(([key, value]) => {
+                text += "<li class='list-group-item'>" + key + ": " + value + "</li>"
+            })
+            cargo.innerHTML = text;
+        }
     </script>
 {% endblock %}
 {% block navid %}ships{% endblock %}

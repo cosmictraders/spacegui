@@ -1,6 +1,6 @@
 flask
 requests
-autotraders
+autotraders==1.4.1
 flask_sqlalchemy
 Pillow
 pyyaml

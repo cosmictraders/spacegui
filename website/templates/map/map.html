@@ -229,23 +229,24 @@ Map
             let zoom = 16/displayTransform.cscale;
             ctx.font = zoom + "px serif";
             for (const system of Object.keys(data)) {
-                if (-displayTransform.matrix[4]-1000/displayTransform.matrix[0] < data[system].x * 10) { // x coord (5 is y)
-                    ctx.fillStyle = colorMap[data[system].type] || "green"
-                    ctx.beginPath();
-                    if (displayTransform.scale < 1) {
-                        ctx.arc(data[system].x * 10, data[system].y * 10, 18 + 2 / displayTransform.cscale, 0, 2 * Math.PI);
-                    } else {
-                        ctx.arc(data[system].x * 10, data[system].y * 10, 20, 0, 2 * Math.PI);
-                    }
-                    ctx.fill();
-                    if (displayTransform.scale > 0.5) {
-                        ctx.fillStyle = "green";
-                        ctx.fillText(system + " (" + data[system].num_waypoints + " waypoints)", data[system].x * 10 + 20, data[system].y * 10 - 10);
+                if (-displayTransform.matrix[4]-canvas.width/displayTransform.matrix[0] < data[system].x * 10) { // x coord (5 is y)
+                    if (-displayTransform.matrix[5]-canvas.height/displayTransform.matrix[0] < data[system].y * 10) {
+                        ctx.fillStyle = colorMap[data[system].type] || "green"
+                        ctx.beginPath();
+                        if (displayTransform.scale < 1) {
+                            ctx.arc(data[system].x * 10, data[system].y * 10, 18 + 2 / displayTransform.cscale, 0, 2 * Math.PI);
+                        } else {
+                            ctx.arc(data[system].x * 10, data[system].y * 10, 20, 0, 2 * Math.PI);
+                        }
+                        ctx.fill();
+                        if (displayTransform.scale > 0.5) {
+                            ctx.fillStyle = "green";
+                            ctx.fillText(system + " (" + data[system].num_waypoints + " waypoints)", data[system].x * 10 + 20, data[system].y * 10 - 10);
+                        }
                     }
                 }
             }
         }
-        var stillTime = 0;
 
         function update(_time) {
             // update the transform
@@ -256,15 +257,6 @@ Map
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             // display stuff
             displayTransform.setTransform();
-            if (displayTransform.quiet || (mouse.buttonRaw & 2)){
-                stillTime += 1;
-                if(stillTime > MOUSE_STILL_TIME || (mouse.buttonRaw & 2)){
-                    stillTime = 0;
-                    displayTransform.fitView(0,0,img.width,img.height,"fit")
-                }
-            } else{
-                stillTime = 0;
-            }
             if (mouse.buttonRaw === 4) { // right click to return to home
                 displayTransform.x = 0;
                 displayTransform.y = 0;

@@ -1,6 +1,11 @@
 {% macro render_ship_display(ship) -%}
         <h1 style="text-align: center"><span id="symbol">{{ ship.symbol }}</span></h1>
-        <p class="left-margin">Status: <span id="status">{{ ship.nav.status }}</span></p>
+        {% if not ship.nav.moving %}
+            <p class="left-margin">Status: {{ ship.nav.status }}</p>
+        {% else %}
+            <p class="left-margin">Status: {{ ship.nav.status }} with flight mode "{{ ship.nav.flight_mode }}"
+                <br>ETA: {{ ship.nav.route.arrival.strftime('%Y-%m-%d %I:%M:%S %p') }} UTC</p>
+        {% endif %}
         <p class="left-margin">Location:
             <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><span id="waypoint">{{ ship.nav.location }}</span></a>
             , a part of

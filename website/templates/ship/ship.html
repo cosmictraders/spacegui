@@ -219,7 +219,7 @@ Ship - {{ ship.symbol }}
 
         async function refresh() {
             let data = await fetch("/ship/{{ ship.symbol }}/api");
-            $("#ship-display").innerHTML(data);
+            $("#ship-display").html(await data.text());
         }
     </script>
 {% endblock %}

@@ -19,8 +19,8 @@ Contract - {{ contract.contract_id }}
         {% endfor %}
     {% endif %}
     <br>
-    <button onclick="accept()" class="btn btn-primary">Accept</button>
-    <button onclick="fulfill()" class="btn btn-primary">Fulfill</button>
+    <button onclick="accept()" class="btn btn-primary" {% if contract.accepted %}disabled{% endif %}>Accept</button>
+    <button onclick="fulfill()" class="btn btn-primary" {% if contract.fulfilled %}disabled{% endif %}>Fulfill</button>
     <script>
     refresh();
     const alertPlaceholder = $("#errors");

@@ -47,9 +47,9 @@ Ship - {{ ship.symbol }}
                                 <input type="text" class="form-control" id="place">
                             </div>
                             <div class="col">
-                                <label for="navigation-mode" class="form-label">Navigation Mode <span class="badge bg-warning">WIP</span></label>
-                                <select class="form-select" aria-label="Navigation Mode" id="navigation-mode" disabled>
-                                    <option value="CRUISE" selected>Cruise</option>
+                                <label for="navigation-mode" class="form-label">Navigation Mode</label>
+                                <select class="form-select" aria-label="Navigation Mode" id="navigation-mode">
+                                    <option value="CRUISE">Cruise</option>
                                     <option value="DRIFT">Drift</option>
                                     <option value="BURN">Burn</option>
                                     <option value="STEALTH">Stealth</option>
@@ -138,6 +138,7 @@ Ship - {{ ship.symbol }}
     </div>
     <script>
         const alertPlaceholder = $("#errors");
+        document.getElementById("navigation-mode").value = "{{ ship.nav.flight_mode }}";
         const appendAlert = (message, type) => {
           const wrapper = document.createElement('div')
           wrapper.innerHTML = [

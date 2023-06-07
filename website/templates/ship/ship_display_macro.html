@@ -1,5 +1,6 @@
 {% macro render_ship_display(ship) -%}
-        <h1 style="text-align: center"><span id="symbol">{{ ship.symbol }}</span></h1>
+        <h1 class="center">{{ ship.symbol }}</h1>
+        <p class="center">{{ ship.registration.role }}</p>
         {% if not ship.nav.moving %}
             <p class="left-margin">Status: {{ ship.nav.status }}</p>
         {% else %}
@@ -11,18 +12,39 @@
             , a part of
             <a id="system_link" href="/system/{{ ship.nav.location.system }}"><span id="system">{{ ship.nav.location.system }}</span></a>
         </p>
+        {% if ship.fuel.total != 0 %}
+            {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}
+                {% set pb_color = "bg-success" %}
+            {% elif 100*(ship.fuel.current/ship.fuel.total) > 40 %}
+                {% set pb_color = "bg-warning" %}
+            {% else %}
+                {% set pb_color = "bg-danger" %}
+            {% endif %}
+            <div class="left-margin" style="max-width: 400px; margin-bottom: 20px">
+            <div class="progress" role="progressbar" aria-label="labeled fuel bar" aria-valuenow="{{ ship.fuel.current }}" aria-valuemin="0" aria-valuemax="{{ ship.fuel.total }}">
+            <div class="progress-bar {{ pb_color }} overflow-visible" style="width: {{ 100*(ship.fuel.current/ship.fuel.total) }}%">
+                <span>{{ ship.fuel.current }}/{{ ship.fuel.total }} <i class="bi bi-fuel-pump"></i></span>
+            </div>
+            </div>
+            </div>
+            {% else %}
+            <p class="left-margin">No Fuel</p>
+        {% endif %}
         <ul class="list-group list-group-horizontal left-margin" style="margin-bottom: 10px;">
             <li class="list-group-item">{{ ship.crew.current }} <i class="bi bi-person-fill"></i></li>
             <li class="list-group-item">{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
             <li class="list-group-item">{{ ship.engine.speed }} <i class="bi bi-speedometer"></i></li>
             <li class="list-group-item"><span id="current_cargo">{{ ship.cargo.current }}</span>/<span id="max_cargo">{{ ship.cargo.capacity }}</span>  <i class="bi bi-box-seam-fill"></i></li>
-            <li class="list-group-item"><span id="fuel">{{ ship.fuel.current }}</span>/<span id="max_fuel">{{ ship.fuel.total }}</span> <i class="bi bi-fuel-pump"></i></li>
         </ul>
-        <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px" id="cargo">
+        <div class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px" id="cargo">
             {% for c in ship.cargo.inventory %}
-                <li class='list-group-item'>
-                    {{ c }}: {{ ship.cargo.inventory[c] }}
-                </li>
+                <div class='list-group-item'>
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ c.symbol }}</h5>
+                        <p class="mb-1 small">{{ c.quantity }} Units</p>
+                    </div>
+                    <p class="mb-1">{{ c.description }}</p>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
 {%- endmacro %}

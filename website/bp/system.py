@@ -41,10 +41,12 @@ def systems(session):
 @minify_html
 @token_required
 def system(symbol, session):
+    waypoints = Waypoint.all(session, symbol)
+    print(waypoints)
     return render_template(
         "map/system.html",
         system=System(symbol, session),
-        waypoints=Waypoint.all(symbol, session)[0],
+        waypoints=waypoints[1],
     )
 
 

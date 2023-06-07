@@ -9,7 +9,7 @@
         {% endif %}
         <p class="left-margin">Location:
             <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><span id="waypoint">{{ ship.nav.location }}</span></a>
-            , a part of
+            , a waypoint of
             <a id="system_link" href="/system/{{ ship.nav.location.system }}"><span id="system">{{ ship.nav.location.system }}</span></a>
         </p>
         {% if ship.fuel.total != 0 %}

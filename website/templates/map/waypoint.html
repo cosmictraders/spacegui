@@ -5,7 +5,16 @@ Waypoint - {{ waypoint.symbol }}
 {% block body %}
     <h1 class="center">{{ waypoint.symbol }}</h1>
     <p class="center">{{ waypoint.waypoint_type }} of <a href="/system/{{ waypoint.symbol.system }}">{{ waypoint.symbol.system }}</a></p>
-    <p class="left-margin">Traits: {% for trait in waypoint.traits  %}{{ trait.name }}{{ ", " if not loop.last else "" }}{% endfor %}</p>
+    {% if waypoint.traits.__len__() > 0 %}
+        <h2 class="center">Traits</h2>
+        <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
+            {% for trait in waypoint.traits %}
+                <li class="list-group-item">{{ trait.name }}: {{ trait.description }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="left-margin">No Traits</p>
+    {% endif %}
     <p class="left-margin">Coordinates: ({{ waypoint.x }}, {{ waypoint.y }})</p>
     <p class="left-margin">Faction: ({{ waypoint.faction }})</p>
     {% if waypoint.marketplace %}

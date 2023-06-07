@@ -5,7 +5,7 @@
             <p class="left-margin">Status: {{ ship.nav.status }}</p>
         {% else %}
             <p class="left-margin">Status: {{ ship.nav.status }} with flight mode "{{ ship.nav.flight_mode }}"
-                <br>ETA: {{ ship.nav.route.arrival.strftime('%Y-%m-%d %I:%M:%S %p') }} UTC</p>
+                <br>ETA: {{ macros.time_display(ship.nav.route.arrival) }}</p>
         {% endif %}
         <p class="left-margin">Location:
             <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><span id="waypoint">{{ ship.nav.location }}</span></a>

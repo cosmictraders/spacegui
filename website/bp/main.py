@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 import autotraders
 import requests
 from autotraders.agent import Agent
@@ -75,18 +77,6 @@ def map_v3():
     return render_template("map/map.html")
 
 
-@main_bp.route("/info/")
-@minify_html
-def info():
-    status = autotraders.get_status()
-    users = db.session.execute(db.select(User)).first()
-    if users is not None:
-        t = users[0].token
-    else:
-        t = "No Token"
-    return render_template("info.html", status=status, token=t)
-
-
 @main_bp.route("/settings/")
 @minify_html
 def settings():
@@ -95,7 +85,8 @@ def settings():
         t = users[0].token
     else:
         t = ""
-    return render_template("settings.html", token=t)
+    return render_template("settings.html", status=autotraders.get_status(), token=t,
+                           tz=datetime.now(timezone.utc).astimezone().tzinfo)
 
 
 @main_bp.route("/settings-api/")

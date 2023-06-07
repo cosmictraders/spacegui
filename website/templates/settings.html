@@ -3,36 +3,63 @@
 Settings
 {% endblock %}
 {% block body %}
-    <h1 class="center">Settings <span class="badge bg-warning">WIP</span></h1>
-    <form class="left-margin row g-3">
-        <div class="col-md-6">
-            <label for="token" class="form-label">Token</label>
-            <input type="text" class="form-control" id="token" value="{{ token }}">
-        </div>
-        <div class="col-md-6">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="themeRadios" id="system" value="system" checked>
-                <label class="form-check-label" for="system">
-                    System
-                </label>
+    <h1 class="center">Settings</h1>
+    <div id="flash-box" class=flashes>
+        {% for message in status.announcements %}
+            <div class="alert alert-info" role="alert">
+                <div>{{ message.title }} - {{ message.body }}</div>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="themeRadios" id="light" value="light">
-                <label class="form-check-label" for="light">
-                    Light
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="themeRadios" id="dark" value="dark">
-                <label class="form-check-label" for="dark">
-                    Dark
-                </label>
-            </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col" style="border-right-color: black; border-right-width: 2px;">
+            <h2 class="center">Server Info</h2>
+            <p class="left-margin">Version: {{ status.version }}</p>
+            <p class="left-margin">Status: {{ status.status }}</p>
+            <p class="left-margin">Last Reset: {{ macros.time_display(status.reset_date) }}</p>
+            <p class="left-margin">Next Reset: {{ macros.time_display(status.next_reset) }}</p>
+            <h2 class="center">Links</h2>
+            <ul class="list-group  list-group-flush left-margin" style="max-width: 400px; margin-bottom: 10px">
+                {% for link in status.links %}
+                    <li class="list-group-item list-group-item-action"><a href="{{ link.url }}" target="_blank">{{ link.name }}</a></li>
+                {% endfor %}
+            </ul>
         </div>
-        <div class="col-12">
-            <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+        <div class="col">
+            <h2 class="center">Client Settings</h2>
+            <form class="left-margin row g-3">
+                <div class="col-md-6">
+                    <label for="token" class="form-label">Token</label>
+                    <input type="text" class="form-control" id="token" value="{{ token }}">
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="themeRadios" id="system" value="system" checked>
+                        <label class="form-check-label" for="system">
+                            System
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="themeRadios" id="light" value="light">
+                        <label class="form-check-label" for="light">
+                            Light
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="themeRadios" id="dark" value="dark">
+                        <label class="form-check-label" for="dark">
+                            Dark
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button type="button" class="btn btn-primary" onclick="save()" disabled>Save</button>
+                </div>
+            </form>
+            <p>Timezone: {{ tz }}</p>
+            <button class="btn btn-danger" onclick="window.location.href = '/reset/'">Reset (Deletes your Token)</button>
         </div>
-    </form>
+    </div>
     <script>
         function save() {
 

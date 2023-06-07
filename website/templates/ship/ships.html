@@ -20,8 +20,8 @@ Ships
                 <td>{{ ship.nav.location }}</td>
                 <td>{{ ship.nav.status }}</td>
                 <td>{{ ship.nav.route.departure }}</td>
-                <td>{{ ship.nav.route.departure_time.strftime('%Y-%m-%d %I:%M:%S %p') }}</td>
-                <td>{{ ship.nav.route.arrival.strftime('%Y-%m-%d %I:%M:%S %p') }}</td>
+                <td>{{ macros.time_display(ship.nav.route.departure_time) }}</td>
+                <td>{{ macros.time_display(ship.nav.route.arrival) }}</td>
                 <td>{{ ship.cargo.current }}/{{ ship.cargo.capacity }}</td>
                 <td>{{ ship.fuel.current }}/{{ ship.fuel.total }}</td>
             </tr>

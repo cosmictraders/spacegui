@@ -27,21 +27,7 @@ def ship(name, session):
 def ship_api(name):
     s = get_session()
     ship = Ship(name, s)
-    return jsonify(
-        {
-            "symbol": ship.symbol,
-            "status": ship.nav.status,
-            "location": str(ship.nav.location),
-            "system": str(ship.nav.location.system),
-            "fuel": ship.fuel.current,
-            "max_fuel": ship.fuel.total,
-            "cargo": ship.cargo.inventory,
-            "current_cargo": sum(
-                [ship.cargo.inventory[d] for d in ship.cargo.inventory]
-            ),
-            "max_cargo": ship.cargo.capacity,
-        }
-    )
+    return render_template("ship/ship_api.html", ship=ship)
 
 
 @ship_bp.route("/ship/<name>/navigate")

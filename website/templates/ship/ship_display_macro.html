@@ -1,0 +1,23 @@
+{% macro render_ship_display(ship) -%}
+        <h1 style="text-align: center"><span id="symbol">{{ ship.symbol }}</span></h1>
+        <p class="left-margin">Status: <span id="status">{{ ship.nav.status }}</span></p>
+        <p class="left-margin">Location:
+            <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><span id="waypoint">{{ ship.nav.location }}</span></a>
+            , a part of
+            <a id="system_link" href="/system/{{ ship.nav.location.system }}"><span id="system">{{ ship.nav.location.system }}</span></a>
+        </p>
+        <ul class="list-group list-group-horizontal left-margin" style="margin-bottom: 10px;">
+            <li class="list-group-item">{{ ship.crew.current }} <i class="bi bi-person-fill"></i></li>
+            <li class="list-group-item">{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
+            <li class="list-group-item">{{ ship.engine.speed }} <i class="bi bi-speedometer"></i></li>
+            <li class="list-group-item"><span id="current_cargo">{{ ship.cargo.current }}</span>/<span id="max_cargo">{{ ship.cargo.capacity }}</span>  <i class="bi bi-box-seam-fill"></i></li>
+            <li class="list-group-item"><span id="fuel">{{ ship.fuel.current }}</span>/<span id="max_fuel">{{ ship.fuel.total }}</span> <i class="bi bi-fuel-pump"></i></li>
+        </ul>
+        <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px" id="cargo">
+            {% for c in ship.cargo.inventory %}
+                <li class='list-group-item'>
+                    {{ c }}: {{ ship.cargo.inventory[c] }}
+                </li>
+            {% endfor %}
+        </ul>
+{%- endmacro %}

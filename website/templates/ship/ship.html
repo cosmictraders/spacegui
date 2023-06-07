@@ -141,6 +141,17 @@ Ship - {{ ship.symbol }}
             }, (500));
         }
 
+        function jettison(symbol) {
+            fetch("/ship/{{ ship.symbol }}/jettison/" + symbol).then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
+
         async function refresh() {
             let data = await fetch("/ship/{{ ship.symbol }}/api");
             $("#ship-display").html(await data.text());

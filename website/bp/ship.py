@@ -118,3 +118,25 @@ def jettison(name, symbol):
         return jsonify({})
     except IOError as e:
         return jsonify({"error": "Failed to jettison: " + str(e)})
+
+
+@ship_bp.route("/ship/<name>/transfer/<symbol>")
+def transfer(name, symbol):
+    s = get_session()
+    ship = Ship(name, s)
+    try:
+        ship.jettison(symbol, 1)
+        return jsonify({})
+    except IOError as e:
+        return jsonify({"error": "Failed to transfer cargo: " + str(e)})
+
+
+@ship_bp.route("/ship/<name>/sell/<symbol>")
+def sell(name, symbol):
+    s = get_session()
+    ship = Ship(name, s)
+    try:
+        ship.jettison(symbol, 1)
+        return jsonify({})
+    except IOError as e:
+        return jsonify({"error": "Failed to sell: " + str(e)})

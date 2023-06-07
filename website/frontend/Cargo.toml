@@ -1,24 +1,15 @@
 [package]
-name = "frontend"
+name = "map"
 version = "0.1.0"
 authors = []
 edition = "2021"
 
-[lib]
-path = "./src/rust/lib.rs"
-crate-type = ["cdylib"]
+[[bin]]
+name = "map"
+path = "./src/rust/main.rs"
 
 [dependencies]
-ureq = "2.6.2"
-js-sys = "0.3.62"
-wasm-bindgen = "0.2.85"
-
-[dependencies.web-sys]
-version = "0.3.63"
-features = [
-  "CanvasRenderingContext2d",
-  "Document",
-  "Element",
-  "HtmlCanvasElement",
-  "Window",
-]
+iced = { version = "0.9.0", features = ["canvas"] }
+iced_web = "0.4.0"
+serde = "1.0"
+serde_json = "1.0"

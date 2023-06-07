@@ -45,22 +45,27 @@
                     </div>
                     <p class="mb-1">{{ c.description }}</p>
                     <div class="btn-group" role="group" aria-label="Cargo Actions">
-                        <button type="button" class="btn btn-success" disabled>Sell</button>
-                        <button type="button" class="btn btn-primary" disabled>Transfer</button>
-                        <button type="button" class="btn btn-danger" disabled>Jettison</button>
+                        <button type="button" class="btn btn-success" onclick="sell('{{ c.symbol }}')" disabled>Sell</button>
+                        <button type="button" class="btn btn-primary" onclick="transfer('{{ c.symbol }}')" disabled>Transfer</button>
+                        <button type="button" class="btn btn-danger" onclick="jettison('{{ c.symbol }}')" disabled>Jettison</button>
                     </div>
                 </div>
             {% endfor %}
         </div>
         <div class="btn-group left-margin" role="group" aria-label="Ship Controls">
-            <button type="button" class="btn btn-primary" onclick="extract()">Extract</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#navigateModal">Navigate</button>
+            <button type="button" class="btn btn-primary" onclick="extract()" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}>Extract</button>
+            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#navigateModal">Navigate</button>
             {% if ship.nav.status != "DOCKED" %}
                 <button type="button" class="btn btn-primary" onclick="dock()">Dock</button>
             {% else %}
-                <button type="button" class="btn btn-primary" onclick="orbit()">Orbit</button>
+                <button type="button" class="btn btn-primary" onclick="dock()" disabled>Dock</button>
             {% endif %}
-            <button type="button" class="btn btn-primary" onclick="refuel()">Refuel</button>
+            {% if ship.nav.status != "IN_ORBIT" %}
+                <button type="button" class="btn btn-primary" onclick="orbit()">Orbit</button>
+            {% else %}
+                <button type="button" class="btn btn-primary" onclick="orbit()" disabled>Orbit</button>
+            {% endif %}
+            <button type="button" class="btn btn-primary" onclick="refuel()" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}>Refuel</button>
         </div>
         <div class="row left-margin" style="margin-top: 50px">
             <div class="col">

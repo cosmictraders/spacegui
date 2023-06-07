@@ -23,10 +23,10 @@ Home
                 <li class="list-group-item"><a href="/waypoint/{{ ship.nav.location }}">{{ ship.nav.location }} <i class="bi bi-geo-alt-fill"></i></a></li>
                 <li class="list-group-item">
                     <ul class="list-group list-group-horizontal">
-                        <li class="list-group-item">{{ ship.crew.current }} <i class="bi bi-person-fill"></i></li>
-                        <li class="list-group-item">{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
-                        <li class="list-group-item">{{ ship.engine.speed }} <i class="bi bi-speedometer"></i></li>
-                        <li class="list-group-item">{{ ship.cargo.current }}/{{ ship.cargo.capacity }}  <i class="bi bi-box-seam-fill"></i></li>
+                        <li class="list-group-item list-group-item-info">{{ ship.crew.current }} <i class="bi bi-person-fill"></i></li>
+                        <li class="list-group-item list-group-item-warning">{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
+                        <li class="list-group-item list-group-item-success">{{ ship.engine.speed }} <i class="bi bi-speedometer"></i></li>
+                        <li class="list-group-item list-group-item-primary">{{ ship.cargo.current }}/{{ ship.cargo.capacity }}  <i class="bi bi-box-seam-fill"></i></li>
                     </ul>
                 </li>
                 {% if ship.fuel.total != 0 %}

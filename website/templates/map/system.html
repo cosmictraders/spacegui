@@ -20,7 +20,7 @@ System - {{ system.symbol }}
             <tr>
                <td><a href="/waypoint/{{ waypoint.symbol }}">{{ waypoint.symbol }}</a></td>
                <td><a href="/waypoint/{{ waypoint.symbol }}">{{ waypoint.waypoint_type }}</a></td>
-               <td>{{ macros.pretty_list(waypoint.traits, "name") }}{% endfor %}</td>
+               <td>{{ macros.pretty_list(waypoint.traits, "name") }}</td>
                <td><a href="/waypoint/{{ waypoint.symbol }}">({{ waypoint.x }}, {{ waypoint.y }})</a></td>
                <td><a href="/waypoint/{{ waypoint.symbol }}">({{ waypoint.faction }})</a></td>
             </tr>

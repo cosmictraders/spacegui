@@ -45,9 +45,9 @@
                     </div>
                     <p class="mb-1">{{ c.description }}</p>
                     <div class="btn-group" role="group" aria-label="Cargo Actions">
-                        <button type="button" class="btn btn-success" onclick="sell('{{ c.symbol }}')" disabled>Sell</button>
-                        <button type="button" class="btn btn-primary" onclick="transfer('{{ c.symbol }}')" disabled>Transfer</button>
-                        <button type="button" class="btn btn-danger" onclick="jettison('{{ c.symbol }}')" disabled>Jettison</button>
+                        <button type="button" class="btn btn-success" onclick="sell('{{ c.symbol }}', 1)" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}>Sell</button>
+                        <button type="button" class="btn btn-primary" onclick="transfer('{{ c.symbol }}', 1)" disabled>Transfer</button>
+                        <button type="button" class="btn btn-danger" onclick="jettison('{{ c.symbol }}', 1)">Jettison</button>
                     </div>
                 </div>
             {% endfor %}

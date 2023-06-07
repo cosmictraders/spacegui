@@ -141,8 +141,19 @@ Ship - {{ ship.symbol }}
             }, (500));
         }
 
-        function jettison(symbol) {
+        function jettison(symbol, quantity) { // TODO: Add quantity support
             fetch("/ship/{{ ship.symbol }}/jettison/" + symbol).then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
+
+        function sell(symbol, quantity) {
+            fetch("/ship/{{ ship.symbol }}/sell/" + symbol).then(
                 (resp) => {
                     alertIfErr(resp);
                 }

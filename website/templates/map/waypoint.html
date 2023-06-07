@@ -7,11 +7,16 @@ Waypoint - {{ waypoint.symbol }}
     <p class="center">{{ waypoint.waypoint_type }} of <a href="/system/{{ waypoint.symbol.system }}">{{ waypoint.symbol.system }}</a></p>
     {% if waypoint.traits.__len__() > 0 %}
         <h2 class="center">Traits</h2>
-        <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
+        <div class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
             {% for trait in waypoint.traits %}
-                <li class="list-group-item">{{ trait.name }}: {{ trait.description }}</li>
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ trait.name }}</h5>
+                    </div>
+                    <p class="mb-1">{{ trait.description }}</p>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
         <p class="left-margin">No Traits</p>
     {% endif %}

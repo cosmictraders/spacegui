@@ -12,7 +12,7 @@ ship_bp = Blueprint("ship", __name__)
 @token_required
 def ships(session):
     li = Ship.all(session)
-    return render_template("ships.html", ships=li)
+    return render_template("ship/ships.html", ships=li)
 
 
 @ship_bp.route("/ship/<name>/")
@@ -20,7 +20,7 @@ def ships(session):
 @token_required
 def ship(name, session):
     ship = Ship(name, session)
-    return render_template("ship.html", ship=ship)
+    return render_template("ship/ship.html", ship=ship)
 
 
 @ship_bp.route("/ship/<name>/api/")

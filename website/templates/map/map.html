@@ -291,14 +291,6 @@ Map
         }
         displayTransform.update();
         displayTransform.setHome();
-        canvas.addEventListener('click', (e) => {
-            const pos = {
-                x: e.clientX,
-                y: e.clientY
-            };
-            {#console.log(pos)#}
-            console.log(-displayTransform.matrix[4], displayTransform.matrix[5])
-        });
         displayTransform.setTransform();
         update(); // start canvas updates
     </script>

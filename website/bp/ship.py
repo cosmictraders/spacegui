@@ -50,7 +50,7 @@ def navigate(name):
         s = get_session()
         ship = Ship(name, s)
         if ship.nav.flight_mode != request.args.get("mode", ship.nav.flight_mode):
-            pass # TODO: Set flight mode
+            ship.patch_navigation(request.args.get("mode", ship.nav.flight_mode))
         ship.navigate(request.args.get("place"))
         return jsonify({})
     except IOError as e:

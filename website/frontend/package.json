@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@wasm-tool/wasm-pack-plugin": "^1.7.0",
     "text-encoding": "^0.7.0",
     "webpack": "^5.82.1",
     "webpack-cli": "^5.1.1",

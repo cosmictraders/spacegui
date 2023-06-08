@@ -1,5 +1,3 @@
-import math
-
 from autotraders.map.waypoint_types.marketplace import Marketplace
 from autotraders.map.waypoint_types.shipyard import Shipyard
 from autotraders.map.system import System

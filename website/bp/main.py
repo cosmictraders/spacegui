@@ -78,15 +78,28 @@ def map_v3():
     return render_template("map/map.html")
 
 
+def rich_format(s):
+    if "https://" in s:
+        splt = s.split("https://")
+        new_s = splt[0] + "<a href=https://" + splt[1] + ">https://" + splt[1] + "</a>"
+        return new_s
+    return s
+
+
 @main_bp.route("/settings/")
 @minify_html
 def settings():
     users = db.session.execute(db.select(User)).first()
+    status = autotraders.get_status()
+    server_announcements = status.announcements
+    announcements = []
+    for server_announcement in server_announcements:
+        announcements.append(server_announcement.title + " - " + rich_format(server_announcement.body))
     if users is not None:
         t = users[0].token
     else:
         t = ""
-    return render_template("settings.html", status=autotraders.get_status(), token=t,
+    return render_template("settings.html", announcements=announcements, status=status, token=t,
                            tz=datetime.now(timezone.utc).astimezone().tzinfo)
 
 
@@ -113,4 +126,4 @@ def automations():
 
 @main_bp.route("/automation/<name>/")
 def automation(name):
-    return "TBD"
+    return "In Development\nname: " + name

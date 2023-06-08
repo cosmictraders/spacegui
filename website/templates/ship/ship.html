@@ -6,42 +6,7 @@ Ship - {{ ship.symbol }}
 {% block body %}
     <div id="errors"></div>
     <div id="ship-display">
-        {{ display.render_ship_display(ship) }}
-    </div>
-    <div class="modal fade" id="navigateModal" tabindex="-1" aria-labelledby="NavigateModal" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="NavigateModal">Navigate {{ symbol }}</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="row g-3">
-                            <div class="col">
-                                <label for="place" class="form-label">Waypoint</label>
-                                <input type="text" class="form-control" id="place">
-                            </div>
-                            <div class="col">
-                                <label for="navigation-mode" class="form-label">Navigation Mode</label>
-                                <select class="form-select" aria-label="Navigation Mode" id="navigation-mode">
-                                    <option value="CRUISE">Cruise</option>
-                                    <option value="DRIFT">Drift</option>
-                                    <option value="BURN">Burn</option>
-                                    <option value="STEALTH">Stealth</option>
-                                </select>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="jump()">Jump</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="warp()">Warp</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="navigate()">Navigate</button>
-                </div>
-            </div>
-        </div>
+        {{ display.render_ship_display(ship, waypoint_options) }}
     </div>
     <script>
         const alertPlaceholder = $("#errors");

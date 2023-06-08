@@ -20,14 +20,16 @@ def ships(session):
 @token_required
 def ship(name, session):
     ship = Ship(name, session)
-    return render_template("ship/ship.html", ship=ship)
+    j = json.load(open("./website/static/systems.json"))
+    return render_template("ship/ship.html", ship=ship, waypoint_options=j.keys())
 
 
 @ship_bp.route("/ship/<name>/api/")
 def ship_api(name):
     s = get_session()
     ship = Ship(name, s)
-    return render_template("ship/ship_api.html", ship=ship)
+    j = json.load(open("./website/static/systems.json"))
+    return render_template("ship/ship_api.html", ship=ship, waypoint_options=j.keys())
 
 
 @ship_bp.route("/ship/<name>/navigate")

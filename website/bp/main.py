@@ -15,6 +15,7 @@ main_bp = Blueprint("main", __name__)
 @minify_html
 @token_required
 def index(session):
+    print(session.auth.token)
     agent = Agent(session)
     return render_template("index.html", agent=agent)
 
@@ -92,7 +93,17 @@ def settings():
 @main_bp.route("/settings-api/")
 def settings_api():
     users = db.session.execute(db.select(User)).first()
-    return jsonify({})
+    t = users[0].token
+    updated = []
+    input_token = request.args.get("token", t).strip(" ").strip("\"").strip("\'")
+    if input_token not in [t, "", " "]:
+        if len(input_token) < 5:
+            return jsonify({"error": "Token too short"})
+        else:
+            users[0].token = request.args.get("token", t)
+            db.session.commit()
+            updated.append("token")
+    return jsonify({"updated": updated})
 
 
 @main_bp.route("/automations/")

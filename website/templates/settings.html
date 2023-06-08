@@ -33,27 +33,28 @@ Settings
                     <input type="text" class="form-control" id="token" value="{{ token }}">
                 </div>
                 <div class="col-md-6">
+                    <p>Theme</p>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="themeRadios" id="system" value="system" checked>
+                        <input class="form-check-input" type="radio" name="themeRadios" id="system" value="system" onclick="setThemePreference('system')">
                         <label class="form-check-label" for="system">
                             System
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="themeRadios" id="light" value="light">
+                        <input class="form-check-input" type="radio" name="themeRadios" id="light" value="light" onclick="setThemePreference('light')">
                         <label class="form-check-label" for="light">
                             Light
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="themeRadios" id="dark" value="dark">
+                        <input class="form-check-input" type="radio" name="themeRadios" id="dark" value="dark" onclick="setThemePreference('dark')">
                         <label class="form-check-label" for="dark">
                             Dark
                         </label>
                     </div>
                 </div>
                 <div class="col-12">
-                    <button type="button" class="btn btn-primary" onclick="save()" disabled>Save</button>
+                    <button type="button" class="btn btn-primary" onclick="save()">Save Token</button>
                 </div>
             </form>
             <p>Timezone: {{ tz }}</p>
@@ -61,8 +62,39 @@ Settings
         </div>
     </div>
     <script>
-        function save() {
+        if (localStorage.getItem("theme") === "light") {
+            $("#light").select()
+        }
+        else if (localStorage.getItem("theme") === "dark") {
+            $("#dark").select()
+        }
+        else {
+            $("#system").select()
+        }
 
+        const getPreferredTheme = () => { // TODO: Remove duplicate code
+            if (localStorage.getItem('theme')) {
+                return localStorage.getItem('theme')
+            }
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+
+        const setTheme = function (theme) {
+            if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-bs-theme', 'dark')
+            } else {
+                document.documentElement.setAttribute('data-bs-theme', theme)
+            }
+        }
+
+        function setThemePreference(theme) {
+            console.log("Set theme to " + theme);
+            localStorage.setItem("theme", theme);
+            setTheme(getPreferredTheme());
+        }
+        async function save() {
+            let resp = await fetch("/settings-api/?token=" + $("#token").val());
+            console.log(await resp.text());
         }
     </script>
 {% endblock %}

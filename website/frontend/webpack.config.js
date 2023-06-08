@@ -6,7 +6,6 @@ module.exports = {
     mode: 'development',
     entry: {
         'main': './src/js/main.js',
-        'canvas': './src/js/map.js'
     },
     output: {
         path: path.resolve(__dirname, "..", 'static'),

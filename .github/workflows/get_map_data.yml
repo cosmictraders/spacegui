@@ -16,6 +16,7 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install tqdm
       - name: Generate Data
         run: python3 get_all_data.py
       - name: Upload data

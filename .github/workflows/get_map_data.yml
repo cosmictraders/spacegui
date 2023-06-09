@@ -1,24 +1,25 @@
-  on:
-    workflow_dispatch:
-    schedule:
-      - cron: '0 12 * * *'
+name: Get Map Data
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 12 * * *'
 
-  jobs:
-    get_data:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v3
-        - name: Setup Python
-          uses: actions/setup-python@v4.5.0
-        - name: Install Dependencies
-          run: |
-            python3 -m pip install --upgrade pip
-            pip install -r requirements.txt
-        - name: Generate Data
-          run: python3 get_all_data.py
-        - name: Upload data
-          uses: actions/upload-artifact@v3
-          with:
-            name: data
-            path: data.pickle
+jobs:
+  get_data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4.5.0
+      - name: Install Dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Generate Data
+        run: python3 get_all_data.py
+      - name: Upload data
+        uses: actions/upload-artifact@v3
+        with:
+          name: data
+          path: data.pickle

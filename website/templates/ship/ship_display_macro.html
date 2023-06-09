@@ -53,7 +53,6 @@
         {% endfor %}
     </div>
     <div class="btn-group left-margin" role="group" aria-label="Ship Controls">
-        <button type="button" class="btn btn-primary" onclick="extract()" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}>Extract</button>
         <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#navigateModal">Move</button>
         {% if ship.nav.status != "DOCKED" %}
             <button type="button" class="btn btn-primary" onclick="dock()">Dock</button>
@@ -66,6 +65,7 @@
             <button type="button" class="btn btn-primary" onclick="orbit()" disabled>Orbit</button>
         {% endif %}
         <button type="button" class="btn btn-primary" onclick="refuel()" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}>Refuel</button>
+        <button type="button" class="btn btn-primary" onclick="extract()" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}>Extract</button>
         <button type="button" class="btn btn-secondary" onclick="refresh()"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
     </div>
     <div class="row left-margin" style="margin-top: 50px">

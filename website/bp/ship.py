@@ -42,7 +42,7 @@ def ship_api(name):
 def navigate(name):
     try:
         s = get_session()
-        ship = Ship(name, s)
+        ship = Ship(name, s, data={})
         if ship.nav.flight_mode != request.args.get("mode", ship.nav.flight_mode):
             ship.patch_navigation(request.args.get("mode", ship.nav.flight_mode))
         ship.navigate(request.args.get("place"))
@@ -55,7 +55,7 @@ def navigate(name):
 def jump(name):
     try:
         s = get_session()
-        ship = Ship(name, s)
+        ship = Ship(name, s, data={})
         ship.jump(request.args.get("place"))
         return jsonify({})
     except IOError as e:
@@ -66,7 +66,7 @@ def jump(name):
 def warp(name):
     try:
         s = get_session()
-        ship = Ship(name, s)
+        ship = Ship(name, s, data={})
         ship.warp(request.args.get("place"))
         return jsonify({})
     except IOError as e:
@@ -76,7 +76,7 @@ def warp(name):
 @ship_bp.route("/ship/<name>/dock/")
 def dock(name):
     s = get_session()
-    ship = Ship(name, s)
+    ship = Ship(name, s, data={})
     try:
         ship.dock()
         return jsonify({})
@@ -87,7 +87,7 @@ def dock(name):
 @ship_bp.route("/ship/<name>/orbit/")
 def orbit(name):
     s = get_session()
-    ship = Ship(name, s)
+    ship = Ship(name, s, data={})
     try:
         ship.orbit()
         return jsonify({})
@@ -98,7 +98,7 @@ def orbit(name):
 @ship_bp.route("/ship/<name>/refuel/")
 def refuel(name):
     s = get_session()
-    ship = Ship(name, s)
+    ship = Ship(name, s, data={})
     try:
         ship.refuel()
         return jsonify({})
@@ -109,7 +109,7 @@ def refuel(name):
 @ship_bp.route("/ship/<name>/extract/")
 def extract(name):
     s = get_session()
-    ship = Ship(name, s)
+    ship = Ship(name, s, data={})
     try:
         ship.extract()
         return jsonify({})
@@ -120,7 +120,7 @@ def extract(name):
 @ship_bp.route("/ship/<name>/jettison/<symbol>")
 def jettison(name, symbol):
     s = get_session()
-    ship = Ship(name, s)
+    ship = Ship(name, s, data={})
     try:
         ship.jettison(symbol, 1)
         return jsonify({})
@@ -131,7 +131,7 @@ def jettison(name, symbol):
 @ship_bp.route("/ship/<name>/transfer/<symbol>")
 def transfer(name, symbol):
     s = get_session()
-    ship = Ship(name, s)
+    ship = Ship(name, s, data={})
     try:
         ship.jettison(symbol, 1)
         return jsonify({})
@@ -142,7 +142,7 @@ def transfer(name, symbol):
 @ship_bp.route("/ship/<name>/sell/<symbol>")
 def sell(name, symbol):
     s = get_session()
-    ship = Ship(name, s)
+    ship = Ship(name, s, data={})
     try:
         ship.jettison(symbol, 1)
         return jsonify({})

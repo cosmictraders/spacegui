@@ -21,7 +21,10 @@ def ships(session):
 def ship(name, session):
     ship = Ship(name, session)
     j = json.load(open("./website/static/systems.json"))
-    return render_template("ship/ship.html", ship=ship, waypoint_options=j.keys())
+    li: list[str] = list(j.keys())
+    waypoints_raw = j[ship.nav.location.system]["waypoints"]
+    waypoints = [f'{waypoint} ({waypoints_raw[waypoint]["type"]})' for waypoint in waypoints_raw]
+    return render_template("ship/ship.html", ship=ship, waypoint_options=waypoints + li)
 
 
 @ship_bp.route("/ship/<name>/api/")
@@ -29,7 +32,10 @@ def ship_api(name):
     s = get_session()
     ship = Ship(name, s)
     j = json.load(open("./website/static/systems.json"))
-    return render_template("ship/ship_api.html", ship=ship, waypoint_options=j.keys())
+    li: list[str] = list(j.keys())
+    waypoints_raw = j[ship.nav.location.system]["waypoints"]
+    waypoints = [f'{waypoint} ({waypoints_raw[waypoint]["type"]})' for waypoint in waypoints_raw]
+    return render_template("ship/ship_api.html", ship=ship, waypoint_options=waypoints + li)
 
 
 @ship_bp.route("/ship/<name>/navigate")

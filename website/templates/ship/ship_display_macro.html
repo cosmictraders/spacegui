@@ -66,6 +66,7 @@
             <button type="button" class="btn btn-primary" onclick="orbit()" disabled>Orbit</button>
         {% endif %}
         <button type="button" class="btn btn-primary" onclick="refuel()" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}>Refuel</button>
+        <button type="button" class="btn btn-secondary" onclick="refresh()"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
     </div>
     <div class="row left-margin" style="margin-top: 50px">
         <div class="col">

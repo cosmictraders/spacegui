@@ -18,7 +18,7 @@ jobs:
           pip install -r requirements.txt
           pip install tqdm
       - name: Save Secret
-          echo "TOKEN = \"{{ secrets.TOKEN }}\"" >> file.txt
+        run: echo "TOKEN = \"{{ secrets.TOKEN }}\"" >> file.txt
       - name: Generate Data
         run: python3 get_all_data.py
       - name: Upload data

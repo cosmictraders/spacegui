@@ -52,7 +52,6 @@ def create_token_api():
 
 
 @main_bp.route("/reset/")
-@minify_html
 def reset():
     db.drop_all()
     flash("Reset successful", "primary")

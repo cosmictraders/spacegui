@@ -26,3 +26,8 @@ jobs:
         with:
           name: data
           path: data.pickle
+      - name: Upload data
+        uses: actions/upload-artifact@v3
+        with:
+          name: Better data
+          path: better_data.pickle

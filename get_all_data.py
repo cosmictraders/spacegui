@@ -12,3 +12,7 @@ for i in tqdm(range(1, all_systems.pages+1)):
     all_systems.next()
 print("Writing ...")
 pickle.dump(all_systems.stitch(), open("data.pickle", "wb"))
+all_systems_stitch = all_systems.stitch()
+for system in all_systems:
+    system.update()
+pickle.dump(all_systems.stitch(), open("better_data.pickle", "wb"))

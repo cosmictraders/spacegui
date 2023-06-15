@@ -130,28 +130,9 @@ def automation(name):
     return render_template("automation.html", name=name)
 
 
-def matches(query, s):
-    if query in s:
-        return True
-    return False
-
-
-def fuzzy_in(item, query, pos):
-    is_in = False
-    if len(query) > pos:
-        is_in = is_in or item == query[pos]
-        if pos != 0:
-            is_in = is_in or item == query[pos - 1]
-        elif pos < len(query) - 1:
-            is_in = is_in or item == query[pos + 1]
-    else:
-        is_in = is_in or item == query[-1]
-    return is_in
-
-
 def weight(query, s):
     weight = difflib.SequenceMatcher(None, query, s).ratio()
-    return weight*2-1
+    return weight * 2 - 1
 
 
 @main_bp.route("/search/")
@@ -178,6 +159,6 @@ def search(session):
     else:
         ships = []
         for item in ship_data:
-            if matches(query, item.symbol):
+            if weight(query, item.symbol) > 0:
                 ships.append(item)
     return render_template("search.html", query=query, map=amap, ships=ships)

@@ -3,29 +3,47 @@
 Ships
 {% endblock %}
 {% block body %}
-     <table class="table table-hover">
-        <tr>
-            <th>Ship</th>
-            <th>Location</th>
-            <th>Status</th>
-            <th>Departure Location</th>
-            <th>Departure Time</th>
-            <th>Arrival Time</th>
-            <th>Cargo</th>
-            <th>Fuel</th>
-        </tr>
-        {% for ship in ships[1] %}
-            <tr onclick="window.location.href = '/ship/{{ ship.symbol }}'">
-                <td>{{ ship.symbol }}</td>
-                <td>{{ ship.nav.location }}</td>
-                <td>{{ ship.nav.status }}</td>
-                <td>{{ ship.nav.route.departure }}</td>
-                <td>{{ macros.time_display(ship.nav.route.departure_time) }}</td>
-                <td>{{ macros.time_display(ship.nav.route.arrival) }}</td>
-                <td>{{ ship.cargo.current }}/{{ ship.cargo.capacity }}</td>
-                <td>{{ ship.fuel.current }}/{{ ship.fuel.total }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+     <div class="list-group list-group-flush left-margin">
+            {% for ship in ships[1] %}
+                <div class="list-group-item list-group-item-action" onclick="window.location.href = '/ship/{{ ship.symbol }}'">
+                    <div class="row justify-content-between">
+                        <div class="col-md-auto"><h5 class="mb-1"><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}</h5></div>
+                        <div class="col-md-auto"><p>{{ ship.registration.role }}</p></div>
+                    </div>
+                    <div class="row gx-5 justify-content-between">
+                        <div class="col-md-auto">{{ ship.nav.status }}</div>
+                        <div class="col-md-auto"><a href="/waypoint/{{ ship.nav.route.departure }}">{{ ship.nav.route.departure }} <i class="bi bi-geo-alt-fill"></i></a></div>
+                        {% if ship.fuel.total != 0 %}
+                            {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}
+                                {% set pb_color = "bg-success" %}
+                            {% elif 100*(ship.fuel.current/ship.fuel.total) > 40 %}
+                                {% set pb_color = "bg-warning" %}
+                            {% else %}
+                                {% set pb_color = "bg-danger" %}
+                            {% endif %}
+                            <div class="col-md-auto">
+                                <div class="progress" role="progressbar" aria-label="labeled fuel bar" aria-valuenow="{{ ship.fuel.current }}" aria-valuemin="0" aria-valuemax="{{ ship.fuel.total }}">
+                                    <div class="progress-bar {{ pb_color }} overflow-visible" style="width: {{ 100*(ship.fuel.current/ship.fuel.total) }}%">
+                                        <span>{{ ship.fuel.current }}/{{ ship.fuel.total }} <i class="bi bi-fuel-pump"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-md-auto">
+                                No Fuel Tank
+                            </div>
+                        {% endif %}
+                        <div class="col-md-auto">
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item list-group-item-info">{{ ship.crew.current }} <i class="bi bi-person-fill"></i></li>
+                                <li class="list-group-item list-group-item-warning">{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
+                                <li class="list-group-item list-group-item-success">{{ ship.engine.speed }} <i class="bi bi-speedometer"></i></li>
+                                <li class="list-group-item list-group-item-primary">{{ ship.cargo.current }}/{{ ship.cargo.capacity }} <i class="bi bi-box-seam-fill"></i></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+     </div>
 {% endblock %}
 {% block navid %}ships{% endblock %}

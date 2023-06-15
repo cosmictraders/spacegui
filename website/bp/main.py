@@ -126,7 +126,7 @@ def automations():
 
 @main_bp.route("/automation/<name>/")
 def automation(name):
-    return "In Development\nname: " + name
+    return render_template("automation.html", name=name)
 
 
 def matches(query, s):

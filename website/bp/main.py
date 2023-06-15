@@ -1,3 +1,4 @@
+import difflib
 import pickle
 from datetime import datetime, timezone
 
@@ -149,15 +150,8 @@ def fuzzy_in(item, query, pos):
 
 
 def weight(query, s):
-    val = 0.0
-    increment = 1 / len(s)
-    lower_query = query.lower()
-    for count, item in enumerate(s.lower()):
-        if fuzzy_in(item, lower_query, count):
-            val += increment  # TODO: better weighting algo
-        else:
-            val -= increment
-    return val
+    weight = difflib.SequenceMatcher(None, query, s).ratio()
+    return weight*2-1
 
 
 @main_bp.route("/search/")
@@ -169,9 +163,9 @@ def search(session):
     for item in system_data:
         if weight(query, str(item.symbol)) > 0:
             unweighted_map.append((item, weight(query, str(item.symbol))))
-        for waypoint in item.waypoints:
-            if weight(query, str(waypoint.symbol)) != 0:
-                unweighted_map.append((waypoint, weight(query, str(waypoint.symbol))))
+            for waypoint in item.waypoints:
+                if weight(query, str(waypoint.symbol)) != 0:
+                    unweighted_map.append((waypoint, weight(query, str(waypoint.symbol))))
     smap = sorted(unweighted_map, key=lambda x: x[1], reverse=True)
     amap = []
     for item, _ in smap:

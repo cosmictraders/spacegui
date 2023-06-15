@@ -1,8 +1,10 @@
+import pickle
 from datetime import datetime, timezone
 
 import autotraders
 import requests
 from autotraders.agent import Agent
+from autotraders.ship import Ship
 from flask import *
 
 from website.model import db, User
@@ -125,3 +127,63 @@ def automations():
 @main_bp.route("/automation/<name>/")
 def automation(name):
     return "In Development\nname: " + name
+
+
+def matches(query, s):
+    if query in s:
+        return True
+    return False
+
+
+def fuzzy_in(item, query, pos):
+    is_in = False
+    if len(query) > pos:
+        is_in = is_in or item == query[pos]
+        if pos != 0:
+            is_in = is_in or item == query[pos - 1]
+        elif pos < len(query) - 1:
+            is_in = is_in or item == query[pos + 1]
+    else:
+        is_in = is_in or item == query[-1]
+    return is_in
+
+
+def weight(query, s):
+    val = 0.0
+    increment = 1 / len(s)
+    lower_query = query.lower()
+    for count, item in enumerate(s.lower()):
+        if fuzzy_in(item, lower_query, count):
+            val += increment  # TODO: better weighting algo
+        else:
+            val -= increment
+    return val
+
+
+@main_bp.route("/search/")
+@token_required
+def search(session):
+    query = request.args.get("query")
+    system_data = pickle.load(open("./data.pickle", "rb"))
+    unweighted_map = []
+    for item in system_data:
+        if weight(query, str(item.symbol)) > 0:
+            unweighted_map.append((item, weight(query, str(item.symbol))))
+        for waypoint in item.waypoints:
+            if weight(query, str(waypoint.symbol)) != 0:
+                unweighted_map.append((waypoint, weight(query, str(waypoint.symbol))))
+    smap = sorted(unweighted_map, key=lambda x: x[1], reverse=True)
+    amap = []
+    for item, _ in smap:
+        amap.append(item)
+    if len(amap) > 105:
+        amap = amap[:100]
+    ship_data = Ship.all(session)[1]
+    if "ship" in query:
+        ships = ship_data
+    else:
+        ships = []
+        for item in ship_data:
+            if matches(query, item.symbol):
+                ships.append(item)
+    return render_template("search.html", query=query, map=amap, ships=ships)

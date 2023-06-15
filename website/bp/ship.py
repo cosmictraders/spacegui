@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from flask import *
 
 from autotraders.ship import Ship
@@ -24,7 +26,7 @@ def ship(name, session):
     li: list[str] = list(j.keys())
     waypoints_raw = j[ship.nav.location.system]["waypoints"]
     waypoints = [f'{waypoint} ({waypoints_raw[waypoint]["type"]})' for waypoint in waypoints_raw]
-    return render_template("ship/ship.html", ship=ship, waypoint_options=waypoints + li)
+    return render_template("ship/ship.html", ship=ship, waypoint_options=waypoints + li, now=datetime.now(timezone.utc))
 
 
 @ship_bp.route("/ship/<name>/api/")
@@ -35,14 +37,14 @@ def ship_api(name):
     li: list[str] = list(j.keys())
     waypoints_raw = j[ship.nav.location.system]["waypoints"]
     waypoints = [f'{waypoint} ({waypoints_raw[waypoint]["type"]})' for waypoint in waypoints_raw]
-    return render_template("ship/ship_api.html", ship=ship, waypoint_options=waypoints + li)
+    return render_template("ship/ship_api.html", ship=ship, waypoint_options=waypoints + li, now=datetime.now(timezone.utc))
 
 
 @ship_bp.route("/ship/<name>/navigate")
 def navigate(name):
     try:
         s = get_session()
-        ship = Ship(name, s, data={})
+        ship = Ship(name, s)
         if ship.nav.flight_mode != request.args.get("mode", ship.nav.flight_mode):
             ship.patch_navigation(request.args.get("mode", ship.nav.flight_mode))
         ship.navigate(request.args.get("place"))

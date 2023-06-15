@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}
+Search
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <h1 class="center">Search Results for {{ query }} <span class="badge bg-info">BETA</span></h1>
+    </div>
+    <div class="row">
+
+    </div>
+    <div class="row">
+        <div class="list-group list-group-flush left-margin" style="max-width: 70%;">
+            {% for ship in ships %}
+                <div class="list-group-item list-group-item-action" onclick="window.location.href = '/ship/{{ ship.symbol }}'">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}</h5>
+                        <p>{{ ship.registration.role }}</p>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p class="mb-1">{{ ship.frame.description }}</p>
+                        <p class="mb-1">{{ ship.nav.status }}</p>
+                        <ul class="list-group list-group-horizontal">
+                            <li class="list-group-item list-group-item-info">{{ ship.crew.current }} <i class="bi bi-person-fill"></i></li>
+                            <li class="list-group-item list-group-item-warning">{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
+                            <li class="list-group-item list-group-item-success">{{ ship.engine.speed }} <i class="bi bi-speedometer"></i></li>
+                            <li class="list-group-item list-group-item-primary">{{ ship.cargo.current }}/{{ ship.cargo.capacity }} <i class="bi bi-box-seam-fill"></i></li>
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+            {% for item in map %}
+                {% if item.__class__.__name__ == "System" %}
+                    <div class="list-group-item list-group-item-action" onclick="window.location.href = '/system/{{ item.symbol }}'">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1"><i class="bi bi-stars"></i> {{ item.__class__.__name__ }} {{ item.symbol }}</h5>
+        {#                        Hack #}
+                            <p>{{ item.star_type }}</p>
+
+                        </div>
+                        <p class="mb-1">{{ item.waypoints.__len__() }} waypoints</p>
+                    </div>
+                {# TODO: Fix hacks #}
+                {% else %}
+                    <div class="list-group-item list-group-item-action" onclick="window.location.href = '/system/{{ item.symbol }}'">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1"><i class="bi bi-stars"></i> {{ item.__class__.__name__ }} {{ item.symbol }}</h5>
+        {#                        Hack #}
+                            <p>{{ item.waypoint_type }}</p>
+
+                        </div>
+                        <p class="mb-1">{{ item.orbitals.__len__() }} orbitals</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+    // TODO: fix literal hack
+    $("#search-box").val("{{ query }}");
+    </script>
+{% endblock %}
+{% block navid %}search-bar{% endblock %}

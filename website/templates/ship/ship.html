@@ -6,7 +6,7 @@ Ship - {{ ship.symbol }}
 {% block body %}
     <div id="errors"></div>
     <div id="ship-display">
-        {{ display.render_ship_display(ship, waypoint_options) }}
+        {{ display.render_ship_display(ship, waypoint_options, now) }}
     </div>
     <script>
         const alertPlaceholder = $("#errors");
@@ -126,6 +126,21 @@ Ship - {{ ship.symbol }}
             setTimeout(function() {
                 refresh();
             }, (500));
+        }
+
+        function timer(element, start, on_end, original) {
+            console.log(start)
+            if (start === 0) {
+                element.innerHTML = original
+                on_end()
+            }
+            else {
+                element.innerHTML = start
+                setTimeout(function () {
+                        timer(element, start - 1, on_end, original);
+                    }, 1000
+                )
+            }
         }
 
         async function refresh() {

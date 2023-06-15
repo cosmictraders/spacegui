@@ -1,11 +1,11 @@
-{% macro render_ship_display(ship, waypoint_options) -%}
+{% macro render_ship_display(ship, waypoint_options, now) -%}
     <h1 class="center">{{ ship.symbol }}</h1>
     <p class="center">{{ ship.registration.role }}</p>
     {% if not ship.nav.moving %}
         <p class="left-margin">Status: {{ ship.nav.status }}</p>
     {% else %}
         <p class="left-margin">Status: {{ ship.nav.status }} with flight mode "{{ ship.nav.flight_mode }}"
-            <br>ETA: {{ macros.time_display(ship.nav.route.arrival) }}</p>
+            <br>ETA: <span onload="timer(this, {{ (now - ship.nav.route.arrival).total_seconds() }}, refresh, this.innerHTML)" id="eta"></span></p>
     {% endif %}
     <p class="left-margin">Location:
         <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><span id="waypoint">{{ ship.nav.location }}</span></a>

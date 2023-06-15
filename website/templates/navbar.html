@@ -22,8 +22,23 @@
         </ul>
         <ul class="navbar-nav d-flex">
             <li class="d-flex nav-item" style="float: right">
+                <form role="search" class="d-flex">
+                    <input class="form-control" type="search" placeholder="Search" id="search-box" aria-label="Search" value="">
+                    <button class="btn btn-success" onclick="search()" id="searchbutton" type="button"><i class="bi bi-search"></i></button>
+                </form>
                 <a id="settings" class="nav-link" href="/settings/"><i class="bi bi-gear-fill"></i> Settings</a>
             </li>
         </ul>
     </div>
 </nav>
+<script>
+    $('#search-box').keypress(function(event) {
+        if (event.keyCode === 13 || event.which === 13) {
+            search();
+            event.preventDefault();
+        }
+    });
+    function search() {
+        this.window.location.href = "/search?query=" + $("#search-box").val();
+    }
+</script>

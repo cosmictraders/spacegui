@@ -3,5 +3,5 @@
 {%- endmacro %}
 
 {% macro time_display(time) -%}
-    {{ time.astimezone(tz=None).strftime('%Y-%m-%d %I:%M:%S %p') }}
+    {{ time.astimezone(tz=None).strftime('%Y-%m-%d %I:%M:%S') }}
 {%- endmacro %}

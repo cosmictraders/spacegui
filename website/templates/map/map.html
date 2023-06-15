@@ -117,7 +117,8 @@ Map
             drotate: 0,
             drag: 0.1,  // drag for movements
             accel: 0.7, // acceleration
-            matrix: [0, 0, 0, 0, 0, 0], // main matrix
+            // main matrix: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform
+            matrix: [0, 0, 0, 0, 0, 0],
             invMatrix: [0, 0, 0, 0, 0, 0], // inverse matrix;
             mouseX: 0,
             mouseY: 0,
@@ -247,12 +248,12 @@ Map
             let zoom = 16/displayTransform.cscale;
             ctx.font = zoom + "px serif";
             for (const system of Object.keys(data)) {
-                if (-displayTransform.matrix[4]-canvas.width/displayTransform.matrix[0] < data[system].x * 10
+                if ((-displayTransform.matrix[4]-canvas.width)/displayTransform.matrix[0] < data[system].x * 10
                     &&
-                    -displayTransform.matrix[4]+canvas.width/displayTransform.matrix[0] > data[system].x * 10) { // x coord (5 is y)
-                    if (-displayTransform.matrix[5]-canvas.height/displayTransform.matrix[0] < data[system].y * 10
+                    (-displayTransform.matrix[4]+canvas.width)/displayTransform.matrix[0] > data[system].x * 10) { // x coord (5 is y)
+                    if ((-displayTransform.matrix[5]-canvas.height)/displayTransform.matrix[0] < data[system].y * 10
                         &&
-                        -displayTransform.matrix[5]+canvas.height/displayTransform.matrix[0] > data[system].y * 10) {
+                        (-displayTransform.matrix[5]+canvas.height)/displayTransform.matrix[0] > data[system].y * 10) {
                         ctx.fillStyle = colorMap[data[system].type] || "green"
                         ctx.beginPath();
                         if (displayTransform.scale < 1) {

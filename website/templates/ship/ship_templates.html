@@ -48,9 +48,9 @@
             <br>ETA: <span onload="timer(this, {{ (now - ship.nav.route.arrival).total_seconds() }}, refresh, this.innerHTML)" id="eta"></span></p>
     {% endif %}
     <p class="left-margin">Location:
-        <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><span id="waypoint">{{ ship.nav.location }}</span></a>
+        <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> <span id="waypoint">{{ ship.nav.location }}</span></a>
         , a waypoint of
-        <a id="system_link" href="/system/{{ ship.nav.location.system }}"><span id="system">{{ ship.nav.location.system }}</span></a>
+        <a id="system_link" href="/system/{{ ship.nav.location.system }}"><i class="bi bi-stars"></i> <span id="system">{{ ship.nav.location.system }}</span></a>
     </p>
     {% if ship.fuel.total != 0 %}
         {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}

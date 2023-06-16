@@ -1,22 +1,9 @@
 {% extends 'base.html' %}
+{% import "faction/faction_templates.html" as display %}
 {% block title %}
 Faction - {{ faction.name }}
 {% endblock %}
 {% block body %}
-    <h1 class="center">{{ faction.name }} <span class="badge bg-warning">WIP</span></h1>
-    <p class="center">{{ faction.symbol }}</p>
-    <p class="left-margin"><a href="/waypoint/{{ faction.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ faction.headquarters }}</a></p>
-    <p class="left-margin">Recruiting: {{ faction.is_recruiting }}<p>
-    <p class="left-margin">{{ faction.description }}</p>
-    <div class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
-        {% for trait in faction.traits %}
-            <div class="list-group-item">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ trait.name }}</h5>
-                </div>
-                <p class="mb-1">{{ trait.description }}</p>
-            </div>
-        {% endfor %}
-    </div>
+    {{ display.faction_display(faction) }}
 {% endblock %}
 {% block navid %}factions{% endblock %}

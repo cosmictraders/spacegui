@@ -13,8 +13,8 @@
     </div>
 {%- endmacro %}
 {% macro waypoint_display(waypoint, marketplace, shipyard) -%}
-    <h1 class="center">{{ waypoint.symbol }}</h1>
-    <p class="center">{{ waypoint.waypoint_type }} of <a href="/system/{{ waypoint.symbol.system }}">{{ waypoint.symbol.system }}</a></p>
+    <h1 class="center"><i class="bi bi-geo-alt-fill"></i> {{ waypoint.symbol }}</h1>
+    <p class="center">{{ waypoint.waypoint_type }} of <a href="/system/{{ waypoint.symbol.system }}"><i class="bi bi-stars"></i> {{ waypoint.symbol.system }}</a></p>
     {% if waypoint.traits.__len__() > 0 %}
         <h2 class="center">Traits</h2>
         <div class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">

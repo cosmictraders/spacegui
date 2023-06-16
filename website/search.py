@@ -71,7 +71,7 @@ def check_filters_system(system, filters):
 
 def weight(query, s):
     weight = difflib.SequenceMatcher(None, query.lower(), s.lower()).ratio()
-    return weight
+    return weight * 2 - 1
 
 
 def read_query(q):

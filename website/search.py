@@ -72,9 +72,11 @@ class Filter:
             except ValueError:
                 return False
         elif type(value) is list:
+            item_real = [str(item).lower().strip() for item in value]
             if self.condition == Condition.EQ:
-                return self.value in [str(item).lower().strip() for item in value] or self.value.split(',') == [
-                    str(item).lower().strip() for item in value]
+                return self.value in item_real or self.value.split(',') == item_real
+            elif self.condition == Condition.LE:
+                return self.value in item_real or self.value.split(',') in item_real
         else:
             return False
 

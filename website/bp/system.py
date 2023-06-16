@@ -15,7 +15,16 @@ system_bp = Blueprint("system", __name__)
 def systems(session):
     page = int(request.args.get("page", default=1))
     systems_list = System.all(session, page)
-    li = {1, 2, 3, 4, 5, systems_list.pages - 2, systems_list.pages - 1, systems_list.pages}
+    li = {
+        1,
+        2,
+        3,
+        4,
+        5,
+        systems_list.pages - 2,
+        systems_list.pages - 1,
+        systems_list.pages,
+    }
     li.add(page)
     if page > min(li):
         li.add(page - 1)
@@ -30,9 +39,7 @@ def systems(session):
             new_li.append("..")
         new_li.append(i)
         prev = i
-    return render_template(
-        "map/systems.html", systems=systems_list, li=new_li
-    )
+    return render_template("map/systems.html", systems=systems_list, li=new_li)
 
 
 @system_bp.route("/system/<symbol>/")

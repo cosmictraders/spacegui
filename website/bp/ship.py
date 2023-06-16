@@ -25,8 +25,15 @@ def ship(name, session):
     j = json.load(open("./website/static/systems.json"))
     li: list[str] = list(j.keys())
     waypoints_raw = j[ship.nav.location.system]["waypoints"]
-    waypoints = [f'{waypoint} ({waypoints_raw[waypoint]["type"]})' for waypoint in waypoints_raw]
-    return render_template("ship/ship.html", ship=ship, waypoint_options=waypoints + li, now=datetime.now(timezone.utc))
+    waypoints = [
+        f'{waypoint} ({waypoints_raw[waypoint]["type"]})' for waypoint in waypoints_raw
+    ]
+    return render_template(
+        "ship/ship.html",
+        ship=ship,
+        waypoint_options=waypoints + li,
+        now=datetime.now(timezone.utc),
+    )
 
 
 @ship_bp.route("/ship/<name>/api/")
@@ -36,8 +43,15 @@ def ship_api(name):
     j = json.load(open("./website/static/systems.json"))
     li: list[str] = list(j.keys())
     waypoints_raw = j[ship.nav.location.system]["waypoints"]
-    waypoints = [f'{waypoint} ({waypoints_raw[waypoint]["type"]})' for waypoint in waypoints_raw]
-    return render_template("ship/ship_api.html", ship=ship, waypoint_options=waypoints + li, now=datetime.now(timezone.utc))
+    waypoints = [
+        f'{waypoint} ({waypoints_raw[waypoint]["type"]})' for waypoint in waypoints_raw
+    ]
+    return render_template(
+        "ship/ship_api.html",
+        ship=ship,
+        waypoint_options=waypoints + li,
+        now=datetime.now(timezone.utc),
+    )
 
 
 @ship_bp.route("/ship/<name>/navigate")

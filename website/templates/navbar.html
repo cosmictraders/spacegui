@@ -39,6 +39,6 @@
         }
     });
     function search() {
-        this.window.location.href = "/search?query=" + $("#search-box").val();
+        this.window.location.href = "/search?query=" + encodeURIComponent($("#search-box").val());
     }
 </script>

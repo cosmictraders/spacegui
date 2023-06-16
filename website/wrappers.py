@@ -9,17 +9,19 @@ from minify_html import minify
 def minify_html(func):
     def wrap(*args, **kwargs):
         result: str = func(*args, **kwargs)  # TODO: Fix
-        return minify(result, do_not_minify_doctype=True,
-                      ensure_spec_compliant_unquoted_attribute_values=True,
-                      keep_closing_tags=True,
-                      keep_comments=False,
-                      keep_html_and_head_opening_tags=True,
-                      keep_spaces_between_attributes=True,
-                      minify_css=True,
-                      minify_js=False,
-                      remove_bangs=False,
-                      remove_processing_instructions=False
-                      )
+        return minify(
+            result,
+            do_not_minify_doctype=True,
+            ensure_spec_compliant_unquoted_attribute_values=True,
+            keep_closing_tags=True,
+            keep_comments=False,
+            keep_html_and_head_opening_tags=True,
+            keep_spaces_between_attributes=True,
+            minify_css=True,
+            minify_js=False,
+            remove_bangs=False,
+            remove_processing_instructions=False,
+        )
 
     wrap.__name__ = func.__name__
     wrap.__doc__ = func.__doc__

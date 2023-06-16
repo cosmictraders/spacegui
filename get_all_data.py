@@ -8,7 +8,7 @@ from secret import TOKEN
 
 s = get_session(TOKEN)
 all_systems = System.all(s)
-for i in tqdm(range(1, all_systems.pages+1)):
+for i in tqdm(range(1, all_systems.pages + 1)):
     all_systems.next()
 print("Writing ...")
 pickle.dump(all_systems.stitch(), open("data.pickle", "wb"))

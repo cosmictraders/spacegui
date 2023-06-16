@@ -4,12 +4,6 @@ Search
 {% endblock %}
 {% block body %}
     <div class="row">
-        <h1 class="center">Search Results for {{ query }} <span class="badge bg-info">BETA</span></h1>
-    </div>
-    <div class="row">
-
-    </div>
-    <div class="row">
         <div class="list-group list-group-flush left-margin" style="max-width: 70%;">
             {% for ship in ships %}
                 <div class="list-group-item list-group-item-action" onclick="window.location.href = '/ship/{{ ship.symbol }}'">
@@ -79,7 +73,7 @@ Search
     </div>
     <script>
     // TODO: fix literal hack
-    $("#search-box").val("{{ query }}");
+    $("#search-box").val("{{ query|safe }}");
     </script>
 {% endblock %}
 {% block navid %}search-bar{% endblock %}

@@ -15,7 +15,7 @@ faction_bp = Blueprint("contract", __name__)
 def factions(session):
     factions = Faction.all(session)[1]
     for faction in factions:
-        faction.description = textwrap.shorten(faction.description, width=250, placeholder="...")
+        faction.description = textwrap.shorten(faction.description, width=250, placeholder=" ...")
     return render_template("faction/factions.html", factions=factions)
 
 

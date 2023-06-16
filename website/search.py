@@ -36,7 +36,7 @@ class Filter:
             self.condition_split.pop(0)
         else:
             self.condition = Condition.EQ
-        self.value = ''.join(self.condition_split)
+        self.value = ''.join(self.condition_split).lower()
 
     def validate(self, value):
         if type(value) is str:
@@ -72,7 +72,7 @@ class Filter:
                 return False
         elif type(value) is list:
             if self.condition == Condition.EQ:
-                return self.value in [str(item).lower().strip() for item in value]
+                return self.value in [str(item).lower().strip() for item in value] or self.value.split(',') == [str(item).lower().strip() for item in value]
         else:
             return False
 

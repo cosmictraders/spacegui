@@ -61,7 +61,7 @@ Search
                     </div>
                 {# TODO: Fix hacks #}
                 {% else %}
-                    <div class="list-group-item list-group-item-action" onclick="window.location.href = '/system/{{ item.symbol }}'">
+                    <div class="list-group-item list-group-item-action" onclick="window.location.href = '/waypoint/{{ item.symbol }}'">
                         <div class="row gx-5 justify-content-between">
                             <div class="col-md-auto">
                                 <h5><i class="bi bi-stars"></i> {{ item.__class__.__name__ }} {{ item.symbol }}</h5>

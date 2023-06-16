@@ -60,6 +60,8 @@ def check_filter_system(system, f: Filter):
         return f.validate(system.star_type)
     elif f.name == "waypoints":
         return f.validate(len(system.waypoints)) or f.validate(len(system.waypoints))
+    elif f.name == "is":
+        return f.validate("system")
 
 
 def check_filters_system(system, filters):

@@ -8,7 +8,7 @@ from autotraders.ship import Ship
 from flask import *
 
 from website.model import db, User
-from website.search import weight, read_query, check_filters_system
+from website.search import weight, read_query, check_filters_system, check_filters_waypoint
 from website.wrappers import token_required, minify_html
 
 main_bp = Blueprint("main", __name__)
@@ -147,13 +147,11 @@ def search(session):
         if weight(query, str(item.symbol)) > 0:
             if check_filters_system(item, filters):
                 unweighted_map.append((item, weight(query, str(item.symbol))))
-            for waypoint in item.waypoints:
-                if weight(query, str(waypoint.symbol)) != 0 and check_filters_system(
-                    item, filters
-                ):
-                    unweighted_map.append(
-                        (waypoint, weight(query, str(waypoint.symbol)))
-                    )
+        for waypoint in item.waypoints:
+            if weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(waypoint, filters):
+                unweighted_map.append(
+                    (waypoint, weight(query, str(waypoint.symbol)))
+                )
     smap = sorted(unweighted_map, key=lambda x: x[1], reverse=True)
     amap = []
     for item, _ in smap:

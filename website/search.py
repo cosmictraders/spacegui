@@ -59,7 +59,7 @@ def check_filter_system(system, f: Filter):
     if f.name == "type":
         return f.validate(system.star_type)
     elif f.name == "waypoints":
-        return f.validate(len(system.waypoints)) or f.validate(len(system.waypoints))
+        return f.validate(len(system.waypoints)) or f.validate(system.waypoints)
     elif f.name == "is":
         return f.validate("system")
 
@@ -67,6 +67,22 @@ def check_filter_system(system, f: Filter):
 def check_filters_system(system, filters):
     for f in filters:
         if not check_filter_system(system, f):
+            return False
+    return True
+
+
+def check_filter_waypoint(waypoint, f: Filter):
+    if f.name == "type":
+        return f.validate(waypoint.waypoint_type)
+    elif f.name == "traits":
+        return f.validate(len(waypoint.traits)) or f.validate(waypoint.traits)
+    elif f.name == "is":
+        return f.validate("waypoint")
+
+
+def check_filters_waypoint(waypoint, filters):
+    for f in filters:
+        if not check_filter_waypoint(waypoint, f):
             return False
     return True
 

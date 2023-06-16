@@ -1,7 +1,7 @@
 import os
 from flask import *
 
-from website.bp.contract import contract_bp
+from website.bp.faction import faction_bp
 from website.bp.main import main_bp
 from website.bp.ship import ship_bp
 from website.bp.system import system_bp
@@ -21,7 +21,7 @@ def create_app():
 
     app.register_blueprint(ship_bp)
     app.register_blueprint(system_bp)
-    app.register_blueprint(contract_bp)
+    app.register_blueprint(faction_bp)
     app.register_blueprint(main_bp)
 
     @app.route("/favicon.ico")

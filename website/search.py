@@ -37,7 +37,7 @@ class Filter:
             self.condition_split.pop(0)
         else:
             self.condition = Condition.EQ
-        self.value = ''.join(self.condition_split).lower()
+        self.value = "".join(self.condition_split).lower()
 
     def validate(self, value):
         if type(value) is str:
@@ -74,9 +74,9 @@ class Filter:
         elif type(value) is list:
             item_real = [str(item).lower().strip() for item in value]
             if self.condition == Condition.EQ:
-                return self.value in item_real or self.value.split(',') == item_real
+                return self.value in item_real or self.value.split(",") == item_real
             elif self.condition == Condition.LE:
-                return self.value in item_real or self.value.split(',') in item_real
+                return self.value in item_real or self.value.split(",") in item_real
         else:
             return False
 
@@ -106,7 +106,9 @@ def check_filter_waypoint(waypoint, f: Filter):
     if f.name == "type":
         return f.validate(waypoint.waypoint_type)
     elif f.name == "trait":
-        return f.validate(len(waypoint.traits)) or f.validate([trait.symbol for trait in waypoint.traits])
+        return f.validate(len(waypoint.traits)) or f.validate(
+            [trait.symbol for trait in waypoint.traits]
+        )
     elif f.name == "is":
         return f.validate(["waypoint", "any"])
     elif f.name == "system":
@@ -163,8 +165,13 @@ def read_query(q):
     query = ""
     filters = []
     current = ""
-    filters_name_match = [match for match in re.findall(r'\S*(?= ?:)', q) if match != ""]
-    filters_value_match = [match[1] for match in re.findall(r'(?<=:) *(<|>|<=|>=|=)? *(\S+|\".*(?<!\\)\")', q)]
+    filters_name_match = [
+        match for match in re.findall(r"\S*(?= ?:)", q) if match != ""
+    ]
+    filters_value_match = [
+        match[1]
+        for match in re.findall(r"(?<=:) *(<|>|<=|>=|=)? *(\S+|\".*(?<!\\)\")", q)
+    ]
     filters_match = zip(filters_name_match, filters_value_match)
     for name, value in filters_match:
         filters.append(Filter(name, value))

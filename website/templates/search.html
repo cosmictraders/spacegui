@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% import "ship/ship_templates.html" as ship %}
+{% import "map/system_templates.html" as system %}
+{% import "map/waypoint_templates.html" as waypoint %}
 {% block title %}
 Search
 {% endblock %}
@@ -6,80 +9,21 @@ Search
     <div class="row">
         <div class="list-group list-group-flush left-margin" style="max-width: 70%;">
             {% for ship in ships %}
-                <div class="list-group-item list-group-item-action" onclick="window.location.href = '/ship/{{ ship.symbol }}'">
-                    <div class="row gx-5 justify-content-between">
-                        <div class="col-md-auto"><h5><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}</h5></div>
-                        <div class="col-md-auto"><p>{{ ship.registration.role }}</p></div>
-                    </div>
-                    <div class="row gx-5 justify-content-between">
-                        <div class="col-md-auto">{{ ship.nav.status }}</div>
-                        <div class="col-md-auto"><a href="/waypoint/{{ ship.nav.route.departure }}">{{ ship.nav.route.departure }} <i class="bi bi-geo-alt-fill"></i></a></div>
-                        {% if ship.fuel.total != 0 %}
-                            {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}
-                                {% set pb_color = "bg-success" %}
-                            {% elif 100*(ship.fuel.current/ship.fuel.total) > 40 %}
-                                {% set pb_color = "bg-warning" %}
-                            {% else %}
-                                {% set pb_color = "bg-danger" %}
-                            {% endif %}
-                            <div class="col-md-auto">
-                                <div class="progress" role="progressbar" aria-label="labeled fuel bar" aria-valuenow="{{ ship.fuel.current }}" aria-valuemin="0" aria-valuemax="{{ ship.fuel.total }}">
-                                    <div class="progress-bar {{ pb_color }} overflow-visible" style="width: {{ 100*(ship.fuel.current/ship.fuel.total) }}%">
-                                        <span>{{ ship.fuel.current }}/{{ ship.fuel.total }} <i class="bi bi-fuel-pump"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                        {% else %}
-                            <div class="col-md-auto">
-                                No Fuel Tank
-                            </div>
-                        {% endif %}
-                        <div class="col-md-auto">
-                            <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item list-group-item-info">{{ ship.crew.current }} <i class="bi bi-person-fill"></i></li>
-                                <li class="list-group-item list-group-item-warning">{{ ship.reactor.power_output }} <i class="bi bi-lightning-charge-fill"></i></li>
-                                <li class="list-group-item list-group-item-success">{{ ship.engine.speed }} <i class="bi bi-speedometer"></i></li>
-                                <li class="list-group-item list-group-item-primary">{{ ship.cargo.current }}/{{ ship.cargo.capacity }} <i class="bi bi-box-seam-fill"></i></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                {{ ship.ship_list(ship) }}
             {% endfor %}
             {% for item in map %}
                 {% if item.__class__.__name__ == "System" %}
-                    <div class="list-group-item gx-5 list-group-item-action" onclick="window.location.href = '/system/{{ item.symbol }}'">
-                        <div class="row gx-5 justify-content-between">
-                            <div class="col-md-auto">
-                                <h5><i class="bi bi-stars"></i> {{ item.__class__.__name__ }} {{ item.symbol }}</h5>
-                            </div>
-                            <div class="col-md-auto"><p>{{ item.star_type }}</p></div>
-                        </div>
-                        <div class="row gx-5 justify-content-between">
-                            <div class="col-md-auto">{{ item.waypoints.__len__() }} waypoints</div>
-                            <div class="col-md-auto">({{ item.x }}, {{ item.y }})</div>
-                        </div>
-                    </div>
+                    {{ system.system_list(item) }}
                 {# TODO: Fix hacks #}
                 {% else %}
-                    <div class="list-group-item list-group-item-action" onclick="window.location.href = '/waypoint/{{ item.symbol }}'">
-                        <div class="row gx-5 justify-content-between">
-                            <div class="col-md-auto">
-                                <h5><i class="bi bi-stars"></i> {{ item.__class__.__name__ }} {{ item.symbol }}</h5>
-                            </div>
-                            <div class="col-md-auto"><p>{{ item.waypoint_type }}</p></div>
-                        </div>
-                        <div class="row gx-5 justify-content-between">
-                            <div class="col-md-auto">{{ item.orbitals.__len__() }} orbitals</div>
-                            <div class="col-md-auto">({{ item.x }}, {{ item.y }})</div>
-                        </div>
-                    </div>
+                    {{ waypoint.waypoint_list(item) }}
                 {% endif %}
             {% endfor %}
         </div>
     </div>
     <script>
-    // TODO: fix literal hack
-    $("#search-box").val("{{ query|safe }}");
+        // TODO: fix literal hack
+        $("#search-box").val("{{ query|safe }}");
     </script>
 {% endblock %}
 {% block navid %}search-bar{% endblock %}

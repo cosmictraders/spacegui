@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% import "ship/ship_display_macro.html" as display %}
+{% import "ship/ship_templates.html" as display %}
 {% block title %}
 Ship - {{ ship.symbol }}
 {% endblock %}
 {% block body %}
     <div id="errors"></div>
     <div id="ship-display">
-        {{ display.render_ship_display(ship, waypoint_options, now) }}
+        {{ display.ship_display(ship, waypoint_options, now) }}
     </div>
     <script>
         const alertPlaceholder = $("#errors");

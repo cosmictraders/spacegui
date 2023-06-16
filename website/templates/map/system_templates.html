@@ -1,0 +1,28 @@
+{% import "map/waypoint_templates.html" as display %}
+{% macro system_list(system) -%}
+    <div class="list-group-item gx-5 list-group-item-action" onclick="window.location.href = '/system/{{ system.symbol }}'">
+        <div class="row gx-5 justify-content-between">
+            <div class="col-md-auto">
+                <h5><i class="bi bi-stars"></i> System {{ system.symbol }}</h5>
+            </div>
+            <div class="col-md-auto"><p>{{ system.star_type }}</p></div>
+        </div>
+        <div class="row gx-5 justify-content-between">
+            <div class="col-md-auto">{{ system.waypoints.__len__() }} waypoints</div>
+            <div class="col-md-auto">({{ system.x }}, {{ system.y }})</div>
+        </div>
+    </div>
+{%- endmacro %}
+{% macro system_display(system, waypoints) -%}
+    <h1 class="center">{{ system.symbol }}</h1>
+    {% if system.factions.__len__() > 0 %}
+    <p class="left-margin">Coordinates: ({{ system.x }}, {{ system.y }})</p>
+    <p>Factions: {% for faction in system.factions %}{{ faction["symbol"] }} {% endfor %}</p>
+    {% endif %}
+    <h2 class="center">Waypoints</h2>
+    <div class="list-group list-group-flush left-margin" style="max-width: 70%;">
+            {% for waypoint in waypoints %}
+                {{ display.waypoint_list(waypoint) }}
+            {% endfor %}
+    </div>
+{%- endmacro %}

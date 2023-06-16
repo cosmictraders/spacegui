@@ -1,8 +1,18 @@
-{% extends 'base.html' %}
-{% block title %}
-Waypoint - {{ waypoint.symbol }}
-{% endblock %}
-{% block body %}
+{% macro waypoint_list(waypoint) -%}
+    <div class="list-group-item list-group-item-action" onclick="window.location.href = '/waypoint/{{ waypoint.symbol }}'">
+        <div class="row gx-5 justify-content-between">
+            <div class="col-md-auto">
+                <h5><i class="bi bi-geo-alt-fill"></i> Waypoint {{ waypoint.symbol }}</h5>
+            </div>
+            <div class="col-md-auto"><p>{{ waypoint.waypoint_type }}</p></div>
+        </div>
+        <div class="row gx-5 justify-content-between">
+            <div class="col-md-auto">{{ waypoint.orbitals.__len__() }} orbitals</div>
+            <div class="col-md-auto">({{ waypoint.x }}, {{ waypoint.y }})</div>
+        </div>
+    </div>
+{%- endmacro %}
+{% macro waypoint_display(ship, waypoint_options, now) -%}
     <h1 class="center">{{ waypoint.symbol }}</h1>
     <p class="center">{{ waypoint.waypoint_type }} of <a href="/system/{{ waypoint.symbol.system }}">{{ waypoint.symbol.system }}</a></p>
     {% if waypoint.traits.__len__() > 0 %}
@@ -109,5 +119,4 @@ Waypoint - {{ waypoint.symbol }}
             }
         </script>
     {% endif %}
-{% endblock %}
-{% block navid %}systems{% endblock %}
+{%- endmacro %}

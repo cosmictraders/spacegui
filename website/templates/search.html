@@ -4,7 +4,7 @@ Search
 {% endblock %}
 {% block body %}
     <div class="row">
-        <div class="list-group list-group-flush" style="max-width: 70%;">
+        <div class="list-group list-group-flush left-margin" style="max-width: 70%;">
             {% for ship in ships %}
                 <div class="list-group-item list-group-item-action" onclick="window.location.href = '/ship/{{ ship.symbol }}'">
                     <div class="row gx-5 justify-content-between">

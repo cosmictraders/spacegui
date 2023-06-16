@@ -1,6 +1,8 @@
 import difflib
 from enum import Enum
 
+from autotraders.ship import Ship
+
 
 class Condition(Enum):
     LE = -2
@@ -43,29 +45,29 @@ class Filter:
         elif type(value) is int:
             try:
                 if self.condition == Condition.LE:
-                    return value > int(self.value)
+                    return value < int(self.value)
                 elif self.condition == Condition.LEQ:
-                    return value >= int(self.value)
+                    return value <= int(self.value)
                 elif self.condition == Condition.EQ:
                     return value == int(self.value)
                 elif self.condition == Condition.GEQ:
-                    return value <= int(self.value)
+                    return value >= int(self.value)
                 elif self.condition == Condition.GE:
-                    return value < int(self.value)
+                    return value > int(self.value)
             except ValueError:
                 return False
         elif type(value) is float:
             try:
                 if self.condition == Condition.LE:
-                    return value > float(self.value)
+                    return value < float(self.value)
                 elif self.condition == Condition.LEQ:
-                    return value >= float(self.value)
+                    return value <= float(self.value)
                 elif self.condition == Condition.EQ:
                     return value == float(self.value)
                 elif self.condition == Condition.GEQ:
-                    return value <= float(self.value)
+                    return value >= float(self.value)
                 elif self.condition == Condition.GE:
-                    return value < float(self.value)
+                    return value > float(self.value)
             except ValueError:
                 return False
         elif type(value) is list:
@@ -115,6 +117,31 @@ def check_filter_waypoint(waypoint, f: Filter):
 def check_filters_waypoint(waypoint, filters):
     for f in filters:
         if not check_filter_waypoint(waypoint, f):
+            return False
+    return True
+
+
+def check_filter_ship(ship: Ship, f: Filter):
+    if f.name == "type":
+        return f.validate(ship.registration.role)
+    elif f.name == "status":
+        return f.validate(ship.nav.status)
+    elif f.name == "is":
+        return f.validate(["ship", "any"])
+    elif f.name == "fuel":
+        return f.validate(ship.fuel.current)
+    elif f.name == "cargo":
+        return f.validate(ship.cargo.current)
+    elif f.name == "waypoint":
+        return f.validate(ship.nav.location.waypoint)
+    elif f.name == "system":
+        return f.validate(ship.nav.location.system)
+    return True
+
+
+def check_filters_ship(ship, filters):
+    for f in filters:
+        if not check_filter_ship(ship, f):
             return False
     return True
 

@@ -8,7 +8,7 @@ from autotraders.ship import Ship
 from flask import *
 
 from website.model import db, User
-from website.search import weight, read_query, check_filters_system, check_filters_waypoint
+from website.search import weight, read_query, check_filters_system, check_filters_waypoint, check_filters_ship
 from website.wrappers import token_required, minify_html
 
 main_bp = Blueprint("main", __name__)
@@ -157,12 +157,9 @@ def search(session):
         amap = amap[:100]
     ship_data = Ship.all(session)[1]
     ships = []
-    if "ship" in query:
-        ships = ship_data
-    elif query.strip() != "":
-        for item in ship_data:
-            if weight(query, item.symbol) > 0:
-                ships.append(item)
+    for item in ship_data:
+        if weight(query, item.symbol) > 0 and check_filters_ship(item, filters):
+            ships.append(item)
     return render_template(
         "search.html", query=request.args.get("query"), map=amap, ships=ships
     )

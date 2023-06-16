@@ -3,7 +3,7 @@
 Systems
 {% endblock %}
 {% block body %}
-     <li class="list-group list-group-flush">
+     <li class="list-group list-group-flush left-margin">
         {% for system in systems.current() %}
             <div class="list-group-item gx-5 list-group-item-action" onclick="window.location.href = '/system/{{ system.symbol }}'">
                 <div class="row gx-5 justify-content-between">

@@ -8,7 +8,8 @@ from website.wrappers import token_required, minify_html
 
 faction_bp = Blueprint("contract", __name__)
 
-@faction_bp.route("/factions")
+
+@faction_bp.route("/factions/")
 @minify_html
 @token_required
 def factions(session):
@@ -23,6 +24,7 @@ def factions(session):
 @token_required
 def faction(symbol, session):
     return render_template("faction/faction.html", faction=Faction(symbol, session))
+
 
 @faction_bp.route("/contracts/")
 @minify_html

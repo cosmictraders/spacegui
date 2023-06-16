@@ -81,7 +81,7 @@ def check_filter_system(system, f: Filter):
     elif f.name == "waypoints":
         return f.validate(len(system.waypoints)) or f.validate(system.waypoints)
     elif f.name == "is":
-        return f.validate("system")
+        return f.validate(["system", "any"])
     elif f.name == "x":
         return f.validate(system.x)
     elif f.name == "y":
@@ -102,7 +102,7 @@ def check_filter_waypoint(waypoint, f: Filter):
     elif f.name == "trait":
         return f.validate(len(waypoint.traits)) or f.validate([trait.symbol for trait in waypoint.traits])
     elif f.name == "is":
-        return f.validate("waypoint")
+        return f.validate(["waypoint", "any"])
     elif f.name == "system":
         return f.validate(waypoint.symbol.system)
     elif f.name == "x":

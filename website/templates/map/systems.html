@@ -3,22 +3,22 @@
 Systems
 {% endblock %}
 {% block body %}
-     <table class="table table-hover">
-        <tr>
-            <th>Symbol</th>
-            <th>Number of Waypoints</th>
-            <th>Coordinates</th>
-            <th>Factions</th>
-        </tr>
+     <li class="list-group list-group-flush">
         {% for system in systems.current() %}
-            <tr onclick="window.location.href = '/system/{{ system.symbol }}'">
-               <td>{{ system.symbol }}</td>
-               <td>{{ system.waypoints.__len__() }}</td>
-               <td>({{ system.x }}, {{ system.y }})</td>
-               <td>({{ system.factions }})</td>
-            </tr>
+            <div class="list-group-item gx-5 list-group-item-action" onclick="window.location.href = '/system/{{ system.symbol }}'">
+                <div class="row gx-5 justify-content-between">
+                    <div class="col-md-auto">
+                        <h5><i class="bi bi-stars"></i> {{ system.__class__.__name__ }} {{ system.symbol }}</h5>
+                    </div>
+                    <div class="col-md-auto"><p>{{ system.star_type }}</p></div>
+                </div>
+                <div class="row gx-5 justify-content-between">
+                    <div class="col-md-auto">{{ system.waypoints.__len__() }} waypoints</div>
+                    <div class="col-md-auto">({{ system.x }}, {{ system.y }})</div>
+                </div>
+            </div>
         {% endfor %}
-    </table>
+    </li>
     <nav aria-label="Pagination">
         <ul class="pagination left-margin">
             {% if systems.page > 1 %}

@@ -1,9 +1,14 @@
 # Search Docs
+## Usage
+`[name]: [comparison] [value]`
+## Comparisons
+- `=` - used by default when no other comparison is detected meaning you can leave it out of the query, and it will be assumed.
+- `<`, `>`, `<=`, `>=` - used when comparing integers and floats
 ## General Filters
 - `is` - Filter by type i.e. `is: system`. Possible values are `system`, `waypoint`, `ship`, and `all`.
 ## System Filters
 - `type` - Filter by star type
-- `waypoints` - Filter by number of waypoints
+- `waypoints` - Filter by number of waypoints. For example, use `waypoints:>0` to search for all systems with at least one waypoint. 
 - `x` - Filter by x coordinate
 - `y` - Filter by y coordinate
 ## Waypoint Filters

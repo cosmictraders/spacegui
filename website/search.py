@@ -34,7 +34,7 @@ class Filter:
             self.condition_split.pop(0)
         else:
             self.condition = Condition.EQ
-        self.value = "".join(self.condition_split)
+        self.value = ''.join(self.condition_split)
 
     def validate(self, value):
         if type(value) is str:

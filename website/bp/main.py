@@ -152,11 +152,8 @@ def search(session):
                 unweighted_map.append(
                     (waypoint, weight(query, str(waypoint.symbol)))
                 )
-    smap = sorted(unweighted_map, key=lambda x: x[1], reverse=True)
-    amap = []
-    for item, _ in smap:
-        amap.append(item)
-    if len(amap) > 105:
+    amap = [item for item, _ in sorted(unweighted_map, key=lambda x: x[1], reverse=True)]
+    if len(amap) > 100:
         amap = amap[:100]
     ship_data = Ship.all(session)[1]
     ships = []

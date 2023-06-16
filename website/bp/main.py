@@ -159,10 +159,10 @@ def search(session):
     if len(amap) > 105:
         amap = amap[:100]
     ship_data = Ship.all(session)[1]
+    ships = []
     if "ship" in query:
         ships = ship_data
-    else:
-        ships = []
+    elif query.strip() != "":
         for item in ship_data:
             if weight(query, item.symbol) > 0:
                 ships.append(item)

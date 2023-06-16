@@ -7,8 +7,8 @@ Search
         <div class="list-group list-group-flush left-margin" style="max-width: 70%;">
             {% for ship in ships %}
                 <div class="list-group-item list-group-item-action" onclick="window.location.href = '/ship/{{ ship.symbol }}'">
-                    <div class="row justify-content-between">
-                        <div class="col-md-auto"><h5 class="mb-1"><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}</h5></div>
+                    <div class="row gx-5 justify-content-between">
+                        <div class="col-md-auto"><h5><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}</h5></div>
                         <div class="col-md-auto"><p>{{ ship.registration.role }}</p></div>
                     </div>
                     <div class="row gx-5 justify-content-between">
@@ -47,25 +47,31 @@ Search
             {% endfor %}
             {% for item in map %}
                 {% if item.__class__.__name__ == "System" %}
-                    <div class="list-group-item list-group-item-action" onclick="window.location.href = '/system/{{ item.symbol }}'">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1"><i class="bi bi-stars"></i> {{ item.__class__.__name__ }} {{ item.symbol }}</h5>
-        {#                        Hack #}
-                            <p>{{ item.star_type }}</p>
-
+                    <div class="list-group-item gx-5 list-group-item-action" onclick="window.location.href = '/system/{{ item.symbol }}'">
+                        <div class="row gx-5 justify-content-between">
+                            <div class="col-md-auto">
+                                <h5><i class="bi bi-stars"></i> {{ item.__class__.__name__ }} {{ item.symbol }}</h5>
+                            </div>
+                            <div class="col-md-auto"><p>{{ item.star_type }}</p></div>
                         </div>
-                        <p class="mb-1">{{ item.waypoints.__len__() }} waypoints</p>
+                        <div class="row gx-5 justify-content-between">
+                            <div class="col-md-auto">{{ item.waypoints.__len__() }} waypoints</div>
+                            <div class="col-md-auto">({{ item.x }}, {{ item.y }})</div>
+                        </div>
                     </div>
                 {# TODO: Fix hacks #}
                 {% else %}
                     <div class="list-group-item list-group-item-action" onclick="window.location.href = '/system/{{ item.symbol }}'">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1"><i class="bi bi-stars"></i> {{ item.__class__.__name__ }} {{ item.symbol }}</h5>
-        {#                        Hack #}
-                            <p>{{ item.waypoint_type }}</p>
-
+                        <div class="row gx-5 justify-content-between">
+                            <div class="col-md-auto">
+                                <h5><i class="bi bi-stars"></i> {{ item.__class__.__name__ }} {{ item.symbol }}</h5>
+                            </div>
+                            <div class="col-md-auto"><p>{{ item.waypoint_type }}</p></div>
                         </div>
-                        <p class="mb-1">{{ item.orbitals.__len__() }} orbitals</p>
+                        <div class="row gx-5 justify-content-between">
+                            <div class="col-md-auto">{{ item.orbitals.__len__() }} orbitals</div>
+                            <div class="col-md-auto">({{ item.x }}, {{ item.y }})</div>
+                        </div>
                     </div>
                 {% endif %}
             {% endfor %}

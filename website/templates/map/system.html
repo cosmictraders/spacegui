@@ -5,6 +5,7 @@ System - {{ system.symbol }}
 {% block body %}
     <h1 class="center">{{ system.symbol }}</h1>
     {% if system.factions.__len__() > 0 %}
+    <p class="left-margin">Coordinates: ({{ system.x }}, {{ system.y }})</p>
     <p>Factions: {% for faction in system.factions %}{{ faction["symbol"] }} {% endfor %}</p>
     {% endif %}
     <h2 class="center">Waypoints</h2>

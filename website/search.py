@@ -37,20 +37,40 @@ class Filter:
         self.value = "".join(self.condition_split)
 
     def validate(self, value):
-        if type(value) == str:
+        if type(value) is str:
             if self.condition == Condition.EQ:
                 return value.lower() == self.value.lower()
-        elif type(value) == int:
-            if self.condition == Condition.LE:
-                return value > int(self.value)
-            elif self.condition == Condition.LEQ:
-                return value >= int(self.value)
-            elif self.condition == Condition.EQ:
-                return value == int(self.value)
-            elif self.condition == Condition.GEQ:
-                return value <= int(self.value)
-            elif self.condition == Condition.GE:
-                return value < int(self.value)
+        elif type(value) is int:
+            try:
+                if self.condition == Condition.LE:
+                    return value > int(self.value)
+                elif self.condition == Condition.LEQ:
+                    return value >= int(self.value)
+                elif self.condition == Condition.EQ:
+                    return value == int(self.value)
+                elif self.condition == Condition.GEQ:
+                    return value <= int(self.value)
+                elif self.condition == Condition.GE:
+                    return value < int(self.value)
+            except ValueError:
+                return False
+        elif type(value) is float:
+            try:
+                if self.condition == Condition.LE:
+                    return value > float(self.value)
+                elif self.condition == Condition.LEQ:
+                    return value >= float(self.value)
+                elif self.condition == Condition.EQ:
+                    return value == float(self.value)
+                elif self.condition == Condition.GEQ:
+                    return value <= float(self.value)
+                elif self.condition == Condition.GE:
+                    return value < float(self.value)
+            except ValueError:
+                return False
+        elif type(value) is list:
+            if self.condition == Condition.EQ:
+                return self.value in [str(item).lower().strip() for item in value]
         else:
             return False
 
@@ -62,6 +82,11 @@ def check_filter_system(system, f: Filter):
         return f.validate(len(system.waypoints)) or f.validate(system.waypoints)
     elif f.name == "is":
         return f.validate("system")
+    elif f.name == "x":
+        return f.validate(system.x)
+    elif f.name == "y":
+        return f.validate(system.y)
+    return True
 
 
 def check_filters_system(system, filters):
@@ -74,10 +99,17 @@ def check_filters_system(system, filters):
 def check_filter_waypoint(waypoint, f: Filter):
     if f.name == "type":
         return f.validate(waypoint.waypoint_type)
-    elif f.name == "traits":
-        return f.validate(len(waypoint.traits)) or f.validate(waypoint.traits)
+    elif f.name == "trait":
+        return f.validate(len(waypoint.traits)) or f.validate([trait.symbol for trait in waypoint.traits])
     elif f.name == "is":
         return f.validate("waypoint")
+    elif f.name == "system":
+        return f.validate(waypoint.symbol.system)
+    elif f.name == "x":
+        return f.validate(waypoint.x)
+    elif f.name == "y":
+        return f.validate(waypoint.y)
+    return True
 
 
 def check_filters_waypoint(waypoint, filters):
@@ -88,8 +120,11 @@ def check_filters_waypoint(waypoint, filters):
 
 
 def weight(query, s):
-    weight = difflib.SequenceMatcher(None, query.lower(), s.lower()).ratio()
-    return weight * 2 - 1
+    if query.strip() != "":
+        weight = difflib.SequenceMatcher(None, query.lower(), s.lower()).ratio()
+        return weight * 2 - 1
+    else:
+        return 0.5
 
 
 def read_query(q):

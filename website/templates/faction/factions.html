@@ -1,20 +1,12 @@
 {% extends 'base.html' %}
+{% import "faction/faction_templates.html" as display %}
 {% block title %}
 Factions
 {% endblock %}
 {% block body %}
     <div class="list-group list-group-flush left-margin">
         {% for faction in factions %}
-            <div class="list-group-item list-group-item-action" onclick="window.location.href = '/faction/{{ faction.symbol }}'">
-                <div class="row justify-content-between">
-                    <div class="col-md-auto"><h5 class="mb-1"><i class="bi bi-building-fill"></i> {{ faction.name }}</h5></div>
-                    <div class="col-md-auto"><p>{{ faction.symbol }}</p></div>
-                </div>
-                <div class="row gx-5 justify-content-between">
-                    <div class="col-md-auto">{{ faction.description }}</div>
-                    <div class="col-md-auto"><a href="/waypoint/{{ faction.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ faction.headquarters }}</a></div>
-                </div>
-            </div>
+            {{ display.faction_list(faction) }}
         {% endfor %}
     </div>
 {% endblock %}

@@ -1,22 +1,12 @@
 {% extends 'base.html' %}
+{% import "map/system_templates.html" as display %}
 {% block title %}
 Systems
 {% endblock %}
 {% block body %}
      <li class="list-group list-group-flush left-margin">
         {% for system in systems.current() %}
-            <div class="list-group-item gx-5 list-group-item-action" onclick="window.location.href = '/system/{{ system.symbol }}'">
-                <div class="row gx-5 justify-content-between">
-                    <div class="col-md-auto">
-                        <h5><i class="bi bi-stars"></i> System {{ system.symbol }}</h5>
-                    </div>
-                    <div class="col-md-auto"><p>{{ system.star_type }}</p></div>
-                </div>
-                <div class="row gx-5 justify-content-between">
-                    <div class="col-md-auto">{{ system.waypoints.__len__() }} waypoints</div>
-                    <div class="col-md-auto">({{ system.x }}, {{ system.y }})</div>
-                </div>
-            </div>
+            {{ display.system_list(system) }}
         {% endfor %}
     </li>
     <nav aria-label="Pagination">

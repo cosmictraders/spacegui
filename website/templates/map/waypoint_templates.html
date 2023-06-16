@@ -12,7 +12,7 @@
         </div>
     </div>
 {%- endmacro %}
-{% macro waypoint_display(ship, waypoint_options, now) -%}
+{% macro waypoint_display(waypoint, marketplace, shipyard) -%}
     <h1 class="center">{{ waypoint.symbol }}</h1>
     <p class="center">{{ waypoint.waypoint_type }} of <a href="/system/{{ waypoint.symbol.system }}">{{ waypoint.symbol.system }}</a></p>
     {% if waypoint.traits.__len__() > 0 %}

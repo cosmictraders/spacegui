@@ -1,4 +1,5 @@
 import difflib
+import re
 from enum import Enum
 
 from autotraders.ship import Ship
@@ -72,7 +73,8 @@ class Filter:
                 return False
         elif type(value) is list:
             if self.condition == Condition.EQ:
-                return self.value in [str(item).lower().strip() for item in value] or self.value.split(',') == [str(item).lower().strip() for item in value]
+                return self.value in [str(item).lower().strip() for item in value] or self.value.split(',') == [
+                    str(item).lower().strip() for item in value]
         else:
             return False
 
@@ -159,35 +161,10 @@ def read_query(q):
     query = ""
     filters = []
     current = ""
-    filter_name = None
-    filter_condition = None
-    in_condition = (
-        False  # do we know we are in the condition part (comes after the ":")?
-    )
-    filter_ending = False  # does next space mean end
-    for char in q:
-        if char not in [" ", "<", ">", "="] and in_condition:
-            filter_ending = True
-        if char == ":":
-            split = [c for c in current.split(" ") if c != ""]
-            if len(split) != 0:
-                if len(split) == 1:
-                    filter_name = current
-                else:
-                    filter_name = split.pop()
-                    query += " ".join(split)
-                current = ""
-                in_condition = True
-        elif char == " " and filter_ending:
-            filter_condition = current
-            current = ""
-            filter_ending = False
-            in_condition = False
-            filters.append(Filter(filter_name, filter_condition))
-            filter_name = None
-            filter_condition = None
-            query += " "
-        else:
-            current += char
+    filters_name_match = [match for match in re.findall(r'\S*(?= ?:)', q) if match != ""]
+    filters_value_match = [match[1] for match in re.findall(r'(?<=:) *(<|>|<=|>=|=)? *(\S+|\".*(?<!\\)\")', q)]
+    filters_match = zip(filters_name_match, filters_value_match)
+    for name, value in filters_match:
+        filters.append(Filter(name, value))
     query += current
     return query, filters

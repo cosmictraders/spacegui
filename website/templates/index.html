@@ -3,15 +3,15 @@
 Home
 {% endblock %}
 {% block body %}
-    <h1 class="center">{{ agent.symbol }}</h1>
+    <h1 class="center"><i class="bi bi-person-fill"></i> {{ agent.symbol }}</h1>
     <p class="center"><i class="bi bi-credit-card"></i> {{ agent.credits }}</p>
-    <p class="center"><i class="bi bi-credit-card"></i> {{ agent.headquarters }}</p>
+    <p class="center"><i class="bi bi-geo-alt-fill"></i> {{ agent.headquarters }}</p>
     <h2 class="center">Ships</h2>
     <div class="row" style="margin-left: 25px">
     {% for ship in agent.ships[1] %}
         <div class="card" style="width: 23rem; margin: 17px 10px">
             <div class="card-body">
-                <h5 class="card-title"><a href="/ship/{{ ship.symbol }}">{{ ship.symbol }}</a></h5>
+                <h5 class="card-title"><a href="/ship/{{ ship.symbol }}"><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}</a></h5>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item"><i class="bi bi-rocket"></i> {{ ship.frame.name }}</li>
@@ -58,7 +58,7 @@ Home
     {% for contract in agent.contracts[1] %}
         <div class="card" style="width: 23rem; margin: 17px 10px">
             <div class="card-body">
-                <h5 class="card-title"><a href="/contract/{{ contract.contract_id }}">{{ contract.contract_id }}</a></h5>
+                <h5 class="card-title"><a href="/contract/{{ contract.contract_id }}"><i class="bi bi-file-earmark-text-fill"></i> {{ contract.contract_id }}</a></h5>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Accept By: <i class="bi bi-clock"></i> {{ macros.time_display(contract.accept_deadline) }}</li>

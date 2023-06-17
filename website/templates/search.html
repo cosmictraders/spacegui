@@ -8,8 +8,8 @@ Search
 {% block body %}
     <div class="row">
         <div class="list-group list-group-flush left-margin" style="max-width: 70%;">
-            {% for ship in ships %}
-                {{ ship.ship_list(ship) }}
+            {% for item in ships %}
+                {{ ship.ship_list(item) }}
             {% endfor %}
             {% for item in map %}
                 {% if item.__class__.__name__ == "System" %}

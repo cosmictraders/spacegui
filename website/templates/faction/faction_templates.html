@@ -11,7 +11,7 @@
     </div>
 {%- endmacro %}
 {% macro faction_display(faction) -%}
-    <h1 class="center">{{ faction.name }} <span class="badge bg-warning">WIP</span></h1>
+    <h1 class="center">{{ faction.name }}</h1>
     <p class="center">{{ faction.symbol }}</p>
     <p class="left-margin"><a href="/waypoint/{{ faction.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ faction.headquarters }}</a></p>
     <p class="left-margin">Recruiting: {{ faction.is_recruiting }}<p>

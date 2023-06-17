@@ -148,6 +148,7 @@ def automation(name):
 def search(session):
     query, filters = read_query(request.args.get("query"))
     system_data = pickle.load(open("./data.pickle", "rb"))
+    faction_data = pickle.load(open("./factions.pickle", "rb"))
     unweighted_map = []
     for item in system_data:
         if weight(query, str(item.symbol)) > 0:
@@ -163,6 +164,10 @@ def search(session):
     ]
     if len(amap) > 100:
         amap = amap[:100]
+    factions = []
+    for item in faction_data:
+        if (weight(query, item.symbol) > 0 or weight(query, item.name) > 0) and check_filters_ship(item, filters):
+            factions.append(item)
     ship_data = Ship.all(session)[1]
     ships = []
     for item in ship_data:

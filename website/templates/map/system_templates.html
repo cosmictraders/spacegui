@@ -15,8 +15,9 @@
 {%- endmacro %}
 {% macro system_display(system, waypoints) -%}
     <h1 class="center"><i class="bi bi-stars"></i> {{ system.symbol }}</h1>
-    {% if system.factions.__len__() > 0 %}
+    <p class="center">{{ system.star_type }}</p>
     <p class="left-margin">Coordinates: ({{ system.x }}, {{ system.y }})</p>
+    {% if system.factions.__len__() > 0 %}
     <p>Factions: {% for faction in system.factions %}{{ faction["symbol"] }} {% endfor %}</p>
     {% endif %}
     <h2 class="center">Waypoints</h2>

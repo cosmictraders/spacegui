@@ -1,0 +1,33 @@
+{% macro contract_list(contract) -%}
+    <div class="list-group-item gx-5 list-group-item-action" onclick="window.location.href = '/contract/{{ contract.contract_id }}'">
+        <div class="row gx-5 justify-content-between">
+            <div class="col-md-auto">
+                <h5><i class="bi bi-file-earmark-text-fill"></i> Contract {{ contract.contract_id }}</h5>
+            </div>
+            <div class="col-md-auto"><p>{{ contract.contract_type }}</p></div>
+        </div>
+        <div class="row gx-5 justify-content-between">
+            <div class="col-md-auto">Accepted: {{ contract.on_accepted }} {% if contract.accepted %}(Claimed){% endif %}</div>
+            <div class="col-md-auto">Fulfilled: {{ contract.on_fulfilled }} {% if contract.fulfilled %}(Claimed){% endif %}</div>
+        </div>
+    </div>
+{%- endmacro %}
+{% macro contract_display(contract) -%}
+    <h1 class="center"><i class="bi bi-file-earmark-text-fill"></i> {{ contract.contract_id }}</h1>
+    <p class="center">Complete By: <span id="deadline"></span></p>
+    <p class="left-margin">Accepted: <i class="bi bi-credit-card"></i> <span id="on_accepted">{{ contract.on_accepted }}</span></p>
+    <p class="left-margin">Fulfilled: <i class="bi bi-credit-card"></i> <span id="on_fulfilled">{{ contract.on_fulfilled }}</span></p>
+    {% if not contract.accepted %}
+        <p class="left-margin">Accept By: {{ contract.accept_deadline }}</p>
+    {% endif %}
+    <h2 class="center">Details</h2>
+    {% if contract.contract_type == "PROCUREMENT" %}
+        {% for delivery in contract.contract_data %}
+            <p class="left-margin">Deliver {{ delivery.trade_symbol }} to <a href="/waypoint/{{ delivery.destination_symbol }}">{{ delivery.destination_symbol }}</a>
+                ({{ delivery.units_fulfilled }}/{{ delivery.units_required }}).</p>
+        {% endfor %}
+    {% endif %}
+    <br>
+    <button onclick="accept()" class="btn btn-primary" {% if contract.accepted %}disabled{% endif %}>Accept</button>
+    <button onclick="fulfill()" class="btn btn-primary" {% if contract.fulfilled %}disabled{% endif %}>Fulfill</button>
+{%- endmacro %}

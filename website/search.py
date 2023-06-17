@@ -2,6 +2,7 @@ import difflib
 import re
 from enum import Enum
 
+from autotraders.faction.contract import Contract
 from autotraders.ship import Ship
 
 
@@ -77,6 +78,12 @@ class Filter:
                 return self.value in item_real or self.value.split(",") == item_real
             elif self.condition == Condition.LE:
                 return self.value in item_real or self.value.split(",") in item_real
+        elif type(value) is bool:
+            if self.condition == Condition.EQ:
+                if value:
+                    return self.value.lower() == "true"
+                else:
+                    return self.value.lower() == "false"
         else:
             return False
 
@@ -87,7 +94,7 @@ def check_filter_system(system, f: Filter):
     elif f.name == "waypoints":
         return f.validate(len(system.waypoints)) or f.validate(system.waypoints)
     elif f.name == "is":
-        return f.validate(["system", "any"])
+        return f.validate(["system", "map", "any"])
     elif f.name == "x":
         return f.validate(system.x)
     elif f.name == "y":
@@ -110,7 +117,7 @@ def check_filter_waypoint(waypoint, f: Filter):
             [trait.symbol for trait in waypoint.traits]
         )
     elif f.name == "is":
-        return f.validate(["waypoint", "any"])
+        return f.validate(["waypoint", "map", "any"])
     elif f.name == "system":
         return f.validate(waypoint.symbol.system)
     elif f.name == "x":
@@ -152,10 +159,29 @@ def check_filters_ship(ship, filters):
     return True
 
 
+def check_filter_contract(contract: Contract, f: Filter):
+    if f.name == "type":
+        return f.validate(contract.contract_type)
+    elif f.name == "accepted":
+        return f.validate(contract.accepted)
+    elif f.name == "fulfilled":
+        return f.validate(contract.fulfilled)
+    elif f.name == "is":
+        return f.validate(["contract", "any"])
+    return True
+
+
+def check_filters_contract(contract, filters):
+    for f in filters:
+        if not check_filter_contract(contract, f):
+            return False
+    return True
+
+
 def weight(query, s):
     if query.strip() != "":
         weight = difflib.SequenceMatcher(None, query.lower(), s.lower()).ratio()
-        return weight * 2 - 1
+        return weight * 2 - 1.5
     else:
         return 0.5
 
@@ -165,15 +191,35 @@ def read_query(q):
     query = ""
     filters = []
     current = ""
-    filters_name_match = [
-        match for match in re.findall(r"\S*(?= ?:)", q) if match != ""
-    ]
-    filters_value_match = [
-        match[1]
-        for match in re.findall(r"(?<=:) *(<|>|<=|>=|=)? *(\S+|\".*(?<!\\)\")", q)
-    ]
-    filters_match = zip(filters_name_match, filters_value_match)
-    for name, value in filters_match:
-        filters.append(Filter(name, value))
+    filter_name = None
+    filter_condition = None
+    in_condition = (
+        False  # do we know we are in the condition part (comes after the ":")?
+    )
+    filter_ending = False  # does next space mean end
+    for char in q:
+        if char not in [" ", "<", ">", "="] and in_condition:
+            filter_ending = True
+        if char == ":":
+            split = [c for c in current.split(" ") if c != ""]
+            if len(split) != 0:
+                if len(split) == 1:
+                    filter_name = current
+                else:
+                    filter_name = split.pop()
+                    query += " ".join(split)
+                current = ""
+                in_condition = True
+        elif char == " " and filter_ending:
+            filter_condition = current
+            current = ""
+            filter_ending = False
+            in_condition = False
+            filters.append(Filter(filter_name, filter_condition))
+            filter_name = None
+            filter_condition = None
+            query += " "
+        else:
+            current += char
     query += current
     return query, filters

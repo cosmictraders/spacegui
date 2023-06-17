@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
+{% import "faction/faction_templates.html" as faction %}
 {% import "ship/ship_templates.html" as ship %}
+{% import "faction/contract/contract_templates.html" as contract %}
 {% import "map/system_templates.html" as system %}
 {% import "map/waypoint_templates.html" as waypoint %}
 {% block title %}
@@ -8,15 +10,18 @@ Search
 {% block body %}
     <div class="row">
         <div class="list-group list-group-flush left-margin" style="max-width: 70%;">
-            {% for item in ships %}
-                {{ ship.ship_list(item) }}
-            {% endfor %}
             {% for item in map %}
                 {% if item.__class__.__name__ == "System" %}
                     {{ system.system_list(item) }}
                 {# TODO: Fix hacks #}
-                {% else %}
+                {% elif item.__class__.__name__ == "Waypoint" %}
                     {{ waypoint.waypoint_list(item) }}
+                {% elif item.__class__.__name__ == "Contract" %}
+                    {{ contract.contract_list(item) }}
+                {% elif item.__class__.__name__ == "Faction" %}
+                    {{ faction.faction_list(item) }}
+                {% elif item.__class__.__name__ == "Ship" %}
+                    {{ ship.ship_list(item) }}
                 {% endif %}
             {% endfor %}
         </div>

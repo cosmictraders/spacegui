@@ -39,7 +39,7 @@
     </div>
 {%- endmacro %}
 {% macro ship_display(ship, waypoint_options, now) -%}
-    <h1 class="center">{{ ship.symbol }}</h1>
+    <h1 class="center"><i class="bi bi-rocket-takeoff-fill"></i>  {{ ship.symbol }}</h1>
     <p class="center">{{ ship.registration.role }}</p>
     {% if not ship.nav.moving %}
         <p class="left-margin">Status: {{ ship.nav.status }}</p>

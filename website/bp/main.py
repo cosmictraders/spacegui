@@ -4,7 +4,6 @@ from datetime import datetime, timezone
 import autotraders
 import requests
 from autotraders.agent import Agent
-from autotraders.ship import Ship
 from flask import *
 
 from website.model import db, User
@@ -13,7 +12,7 @@ from website.search import (
     read_query,
     check_filters_system,
     check_filters_waypoint,
-    check_filters_ship,
+    check_filters_ship, check_filters_contract,
 )
 from website.wrappers import token_required, minify_html
 
@@ -150,6 +149,9 @@ def search(session):
     system_data = pickle.load(open("./data.pickle", "rb"))
     faction_data = pickle.load(open("./factions.pickle", "rb"))
     unweighted_map = []
+    agent = Agent(session)
+    ship_data = agent.ships[1]
+    contract_data = agent.contracts[1]
     for item in system_data:
         if weight(query, str(item.symbol)) > 0:
             if check_filters_system(item, filters):
@@ -159,20 +161,20 @@ def search(session):
                 waypoint, filters
             ):
                 unweighted_map.append((waypoint, weight(query, str(waypoint.symbol))))
+    for item in faction_data:
+        if (weight(query, item.symbol) > 0 or weight(query, item.name) > 0) and check_filters_ship(item, filters):
+            unweighted_map.append((item, weight(query, str(item.symbol))))
+    for item in ship_data:
+        if weight(query, item.symbol) > 0 and check_filters_ship(item, filters):
+            unweighted_map.append((item, weight(query, item.symbol)))
+    for item in contract_data:
+        if weight(query, item.contract_id) and check_filters_contract(item, filters):
+            unweighted_map.append((item, weight(query, str(item.contract_id))))
     amap = [
         item for item, _ in sorted(unweighted_map, key=lambda x: x[1], reverse=True)
     ]
     if len(amap) > 100:
         amap = amap[:100]
-    factions = []
-    for item in faction_data:
-        if (weight(query, item.symbol) > 0 or weight(query, item.name) > 0) and check_filters_ship(item, filters):
-            factions.append(item)
-    ship_data = Ship.all(session)[1]
-    ships = []
-    for item in ship_data:
-        if weight(query, item.symbol) > 0 and check_filters_ship(item, filters):
-            ships.append(item)
     return render_template(
-        "search.html", query=request.args.get("query"), map=amap, ships=ships
+        "search.html", query=request.args.get("query"), map=amap
     )

@@ -8,6 +8,7 @@
         </div>
         <div class="row gx-5 justify-content-between">
             <div class="col-md-auto">{{ waypoint.orbitals.__len__() }} orbitals</div>
+            <div class="col-md-auto">{% for trait in waypoint.traits %}{{ trait.name }} {% endfor %}</div>
             <div class="col-md-auto">({{ waypoint.x }}, {{ waypoint.y }})</div>
         </div>
     </div>

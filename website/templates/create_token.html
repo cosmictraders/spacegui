@@ -18,7 +18,7 @@ Create Token
     </form>
     <p class="left-margin">Note that this automatically saves the token,
         it can be always accessed from
-        <a href="/info">the info page</a>.</p>
+        <a href="/settings">the settings page</a>.</p>
     <script>
         function create() {
             fetch("/create-token-api?symbol=" + $("#symbol").val() + "&faction=" + $("#faction").val() + "&email=" + $("#email").val()).then(

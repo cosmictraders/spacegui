@@ -16,7 +16,7 @@
                     {% set pb_color = "bg-danger" %}
                 {% endif %}
                 <div class="col-md-auto">
-                    <div class="progress" role="progressbar" aria-label="labeled fuel bar" aria-valuenow="{{ ship.fuel.current }}" aria-valuemin="0" aria-valuemax="{{ ship.fuel.total }}">
+                    <div class="progress" role="progressbar" aria-label="labeled fuel bar" aria-valuenow="{{ ship.fuel.current }}" aria-valuemin="0" aria-valuemax="{{ ship.fuel.total }}" style="min-width: 150px">
                         <div class="progress-bar {{ pb_color }} overflow-visible" style="width: {{ 100*(ship.fuel.current/ship.fuel.total) }}%">
                             <span><i class="bi bi-fuel-pump"></i> {{ ship.fuel.current }}/{{ ship.fuel.total }}</span>
                         </div>

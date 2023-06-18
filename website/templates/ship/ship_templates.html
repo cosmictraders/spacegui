@@ -93,7 +93,7 @@
         {% endfor %}
     </div>
     <div class="btn-group left-margin" role="group" aria-label="Ship Controls">
-        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#navigateModal">Move</button>
+        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#navigateModal" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}>Move</button>
         {% if ship.nav.status != "DOCKED" %}
             <button type="button" class="btn btn-primary" onclick="dock()">Dock</button>
         {% else %}
@@ -216,8 +216,8 @@
 {#                    TODO: Add tooltips for disabled buttons with explainations#}
                     {#                    TODO: make jump only allowed if the ship has the capability to do so #}
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="jump()">Jump</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="warp()" {% if not ship.capabilities.warp %}disabled{% endif %}>Warp</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="navigate()" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}>Navigate</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="warp()">Warp</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="navigate()">Navigate</button>
                 </div>
             </div>
         </div>

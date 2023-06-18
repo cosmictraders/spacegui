@@ -2,6 +2,7 @@ import difflib
 import re
 from enum import Enum
 
+from autotraders.faction import Faction
 from autotraders.faction.contract import Contract
 from autotraders.ship import Ship
 
@@ -155,6 +156,19 @@ def check_filter_ship(ship: Ship, f: Filter):
 def check_filters_ship(ship, filters):
     for f in filters:
         if not check_filter_ship(ship, f):
+            return False
+    return True
+
+
+def check_filter_faction(faction: Faction, f: Filter):
+    if f.name == "is":
+        return f.validate(["faction", "any"])
+    return True
+
+
+def check_filters_faction(faction, filters):
+    for f in filters:
+        if not check_filter_faction(faction, f):
             return False
     return True
 

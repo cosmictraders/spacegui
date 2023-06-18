@@ -12,7 +12,7 @@ from website.search import (
     read_query,
     check_filters_system,
     check_filters_waypoint,
-    check_filters_ship, check_filters_contract,
+    check_filters_ship, check_filters_contract, check_filters_faction,
 )
 from website.wrappers import token_required, minify_html
 
@@ -162,7 +162,7 @@ def search(session):
             ):
                 unweighted_map.append((waypoint, weight(query, str(waypoint.symbol))))
     for item in faction_data:
-        if (weight(query, item.symbol) > 0 or weight(query, item.name) > 0) and check_filters_ship(item, filters):
+        if (weight(query, item.symbol) > 0 or weight(query, item.name) > 0) and check_filters_faction(item, filters):
             unweighted_map.append((item, weight(query, str(item.symbol))))
     for item in ship_data:
         if weight(query, item.symbol) > 0 and check_filters_ship(item, filters):

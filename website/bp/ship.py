@@ -67,7 +67,7 @@ def navigate(name):
         ship = Ship(name, s)
         if ship.nav.flight_mode != request.args.get("mode", ship.nav.flight_mode):
             ship.patch_navigation(request.args.get("mode", ship.nav.flight_mode))
-        ship.navigate(request.args.get("place"))
+        ship.navigate(request.args.get("place").strip())
         return jsonify({})
     except IOError as e:
         return jsonify({"error": "Failed to navigate: " + str(e)})
@@ -78,7 +78,7 @@ def jump(name):
     try:
         s = get_session()
         ship = Ship(name, s, data={})
-        ship.jump(request.args.get("place"))
+        ship.jump(request.args.get("place").strip())
         return jsonify({})
     except IOError as e:
         return jsonify({"error": "Failed to jump: " + str(e)})
@@ -89,7 +89,7 @@ def warp(name):
     try:
         s = get_session()
         ship = Ship(name, s, data={})
-        ship.warp(request.args.get("place"))
+        ship.warp(request.args.get("place").strip())
         return jsonify({})
     except IOError as e:
         return jsonify({"error": "Failed to warp: " + str(e)})

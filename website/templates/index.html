@@ -5,6 +5,7 @@ Home
 {% block body %}
     <h1 class="center"><i class="bi bi-person-fill"></i> {{ agent.symbol }}</h1>
     <p class="center"><i class="bi bi-credit-card"></i> {{ agent.credits }}</p>
+    <p class="center"><a href="/faction/{{ agent.starting_faction }}"><i class="bi bi-building"></i> {{ agent.starting_faction }}</a></p>
     <p class="center"><a href="/waypoint/{{ agent.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ agent.headquarters }}</a></p>
     <h2 class="center">Ships</h2>
     <div class="row" style="margin-left: 25px">

@@ -139,34 +139,34 @@ def extract(name):
         return jsonify({"error": "Failed to extract: " + str(e)})
 
 
-@ship_bp.route("/ship/<name>/jettison/<symbol>")
-def jettison(name, symbol):
+@ship_bp.route("/ship/<name>/jettison/<symbol>/<quantity>")
+def jettison(name, symbol, quantity):
     s = get_session()
     ship = Ship(name, s, data={"modules": {}, "mounts": {}})
     try:
-        ship.jettison(symbol, 1)
+        ship.jettison(symbol, quantity)
         return jsonify({})
     except IOError as e:
         return jsonify({"error": "Failed to jettison: " + str(e)})
 
 
-@ship_bp.route("/ship/<name>/transfer/<symbol>")
-def transfer(name, symbol):
+@ship_bp.route("/ship/<name>/transfer/<symbol>/<quantity>")
+def transfer(name, symbol, quantity):
     s = get_session()
     ship = Ship(name, s, data={"modules": {}, "mounts": {}})
     try:
-        ship.jettison(symbol, 1)
+        ship.jettison(symbol, quantity)
         return jsonify({})
     except IOError as e:
         return jsonify({"error": "Failed to transfer cargo: " + str(e)})
 
 
-@ship_bp.route("/ship/<name>/sell/<symbol>")
-def sell(name, symbol):
+@ship_bp.route("/ship/<name>/sell/<symbol>/<quantity>")
+def sell(name, symbol, quantity):
     s = get_session()
     ship = Ship(name, s, data={"modules": {}, "mounts": {}})
     try:
-        ship.jettison(symbol, 1)
+        ship.sell(symbol, quantity)
         return jsonify({})
     except IOError as e:
         return jsonify({"error": "Failed to sell: " + str(e)})

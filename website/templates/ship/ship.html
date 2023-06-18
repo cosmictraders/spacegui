@@ -107,7 +107,7 @@ Ship - {{ ship.symbol }}
         }
 
         function jettison(symbol, quantity) { // TODO: Add quantity support
-            fetch("/ship/{{ ship.symbol }}/jettison/" + symbol).then(
+            fetch("/ship/{{ ship.symbol }}/jettison/" + symbol + "/" + quantity).then(
                 (resp) => {
                     alertIfErr(resp);
                 }
@@ -118,7 +118,7 @@ Ship - {{ ship.symbol }}
         }
 
         function sell(symbol, quantity) {
-            fetch("/ship/{{ ship.symbol }}/sell/" + symbol).then(
+            fetch("/ship/{{ ship.symbol }}/sell/" + symbol + "/" + quantity).then(
                 (resp) => {
                     alertIfErr(resp);
                 }

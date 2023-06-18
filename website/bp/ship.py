@@ -98,7 +98,7 @@ def warp(name):
 @ship_bp.route("/ship/<name>/dock/")
 def dock(name):
     s = get_session()
-    ship = Ship(name, s, data={})
+    ship = Ship(name, s, data={"modules": {}, "mounts": {}})
     try:
         ship.dock()
         return jsonify({})
@@ -109,7 +109,7 @@ def dock(name):
 @ship_bp.route("/ship/<name>/orbit/")
 def orbit(name):
     s = get_session()
-    ship = Ship(name, s, data={})
+    ship = Ship(name, s, data={"modules": {}, "mounts": {}})
     try:
         ship.orbit()
         return jsonify({})
@@ -120,7 +120,7 @@ def orbit(name):
 @ship_bp.route("/ship/<name>/refuel/")
 def refuel(name):
     s = get_session()
-    ship = Ship(name, s, data={})
+    ship = Ship(name, s, data={"modules": {}, "mounts": {}})
     try:
         ship.refuel()
         return jsonify({})
@@ -131,7 +131,7 @@ def refuel(name):
 @ship_bp.route("/ship/<name>/extract/")
 def extract(name):
     s = get_session()
-    ship = Ship(name, s, data={})
+    ship = Ship(name, s, data={"modules": {}, "mounts": {}})
     try:
         ship.extract()
         return jsonify({})
@@ -142,7 +142,7 @@ def extract(name):
 @ship_bp.route("/ship/<name>/jettison/<symbol>")
 def jettison(name, symbol):
     s = get_session()
-    ship = Ship(name, s, data={})
+    ship = Ship(name, s, data={"modules": {}, "mounts": {}})
     try:
         ship.jettison(symbol, 1)
         return jsonify({})
@@ -153,7 +153,7 @@ def jettison(name, symbol):
 @ship_bp.route("/ship/<name>/transfer/<symbol>")
 def transfer(name, symbol):
     s = get_session()
-    ship = Ship(name, s, data={})
+    ship = Ship(name, s, data={"modules": {}, "mounts": {}})
     try:
         ship.jettison(symbol, 1)
         return jsonify({})
@@ -164,7 +164,7 @@ def transfer(name, symbol):
 @ship_bp.route("/ship/<name>/sell/<symbol>")
 def sell(name, symbol):
     s = get_session()
-    ship = Ship(name, s, data={})
+    ship = Ship(name, s, data={"modules": {}, "mounts": {}})
     try:
         ship.jettison(symbol, 1)
         return jsonify({})

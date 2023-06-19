@@ -1,6 +1,6 @@
 {% import "map/waypoint_templates.html" as display %}
 {% macro system_list(system) -%}
-    <div class="list-group-item gx-5 list-group-item-action" onclick="window.location.href = '/system/{{ system.symbol }}'">
+    <a class="list-group-item gx-5 list-group-item-action" href="/system/{{ system.symbol }}">
         <div class="row gx-5 justify-content-between">
             <div class="col-md-auto">
                 <h5><i class="bi bi-stars"></i> System {{ system.symbol }}</h5>
@@ -11,7 +11,7 @@
             <div class="col-md-auto">{{ system.waypoints.__len__() }} waypoints</div>
             <div class="col-md-auto">({{ system.x }}, {{ system.y }})</div>
         </div>
-    </div>
+    </a>
 {%- endmacro %}
 {% macro system_display(system, waypoints) -%}
     <h1 class="center"><i class="bi bi-stars"></i> {{ system.symbol }}</h1>

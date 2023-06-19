@@ -5,10 +5,16 @@ Ship - {{ ship.symbol }}
 {% endblock %}
 {% block body %}
     <div id="errors"></div>
+    <script>
+        async function refresh() {
+            let data = await fetch("/ship/{{ ship.symbol }}/api");
+            $("#ship-display").html(await data.text());
+        }
+    </script>
     <div id="ship-display">
         {{ display.ship_display(ship, waypoint_options, now) }}
     </div>
-    <script>
+        <script defer>
         const alertPlaceholder = $("#errors");
         document.getElementById("navigation-mode").value = "{{ ship.nav.flight_mode }}";
         const appendAlert = (message, type) => {
@@ -126,26 +132,6 @@ Ship - {{ ship.symbol }}
             setTimeout(function() {
                 refresh();
             }, (500));
-        }
-
-        function timer(element, start, on_end, original) {
-            console.log(start)
-            if (start === 0) {
-                element.innerHTML = original
-                on_end()
-            }
-            else {
-                element.innerHTML = start
-                setTimeout(function () {
-                        timer(element, start - 1, on_end, original);
-                    }, 1000
-                )
-            }
-        }
-
-        async function refresh() {
-            let data = await fetch("/ship/{{ ship.symbol }}/api");
-            $("#ship-display").html(await data.text());
         }
     </script>
 {% endblock %}

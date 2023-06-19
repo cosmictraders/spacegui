@@ -1,5 +1,5 @@
 {% macro contract_list(contract) -%}
-    <div class="list-group-item gx-5 list-group-item-action" onclick="window.location.href = '/contract/{{ contract.contract_id }}'">
+    <a class="list-group-item gx-5 list-group-item-action" href="/contract/{{ contract.contract_id }}">
         <div class="row gx-5 justify-content-between">
             <div class="col-md-auto">
                 <h5><i class="bi bi-file-earmark-text-fill"></i> Contract {{ contract.contract_id }}</h5>
@@ -10,7 +10,7 @@
             <div class="col-md-auto">Accepted: {{ contract.on_accepted }} {% if contract.accepted %}(Claimed){% endif %}</div>
             <div class="col-md-auto">Fulfilled: {{ contract.on_fulfilled }} {% if contract.fulfilled %}(Claimed){% endif %}</div>
         </div>
-    </div>
+    </a>
 {%- endmacro %}
 {% macro contract_display(contract) -%}
     <h1 class="center"><i class="bi bi-file-earmark-text-fill"></i> {{ contract.contract_id }}</h1>

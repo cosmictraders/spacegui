@@ -1,41 +1,43 @@
 {% macro ship_list(ship) -%}
-    <div class="list-group-item list-group-item-action" onclick="window.location.href = '/ship/{{ ship.symbol }}'">
-        <div class="row gx-5 justify-content-between">
-            <div class="col-md-auto"><h5><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}</h5></div>
-            <div class="col-md-auto"><p>{{ ship.registration.role }}</p></div>
-        </div>
-        <div class="row gx-5 justify-content-between">
-            <div class="col-md-auto">{{ ship.nav.status }}</div>
-            <div class="col-md-auto"><a href="/waypoint/{{ ship.nav.route.departure }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.departure }}</a></div>
-            {% if ship.fuel.total != 0 %}
-                {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}
-                    {% set pb_color = "bg-success" %}
-                {% elif 100*(ship.fuel.current/ship.fuel.total) > 40 %}
-                    {% set pb_color = "bg-warning" %}
-                {% else %}
-                    {% set pb_color = "bg-danger" %}
-                {% endif %}
-                <div class="col-md-auto">
-                    <div class="progress" role="progressbar" aria-label="labeled fuel bar" aria-valuenow="{{ ship.fuel.current }}" aria-valuemin="0" aria-valuemax="{{ ship.fuel.total }}" style="min-width: 150px">
-                        <div class="progress-bar {{ pb_color }} overflow-visible" style="width: {{ 100*(ship.fuel.current/ship.fuel.total) }}%">
-                            <span><i class="bi bi-fuel-pump"></i> {{ ship.fuel.current }}/{{ ship.fuel.total }}</span>
+    <div class="list-group-item list-group-item-action">
+        <a href="/ship/{{ ship.symbol }}" style="color: inherit; text-decoration: none;">
+            <div class="row gx-5 justify-content-between">
+                <div class="col-md-auto"><h5><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}</h5></div>
+                <div class="col-md-auto"><p>{{ ship.registration.role }}</p></div>
+            </div>
+            <div class="row gx-5 justify-content-between">
+                <div class="col-md-auto">{{ ship.nav.status }}</div>
+                <div class="col-md-auto"><a href="/waypoint/{{ ship.nav.route.departure }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.departure }}</a></div>
+                {% if ship.fuel.total != 0 %}
+                    {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}
+                        {% set pb_color = "bg-success" %}
+                    {% elif 100*(ship.fuel.current/ship.fuel.total) > 40 %}
+                        {% set pb_color = "bg-warning" %}
+                    {% else %}
+                        {% set pb_color = "bg-danger" %}
+                    {% endif %}
+                    <div class="col-md-auto">
+                        <div class="progress" role="progressbar" aria-label="labeled fuel bar" aria-valuenow="{{ ship.fuel.current }}" aria-valuemin="0" aria-valuemax="{{ ship.fuel.total }}" style="min-width: 150px">
+                            <div class="progress-bar {{ pb_color }} overflow-visible" style="width: {{ 100*(ship.fuel.current/ship.fuel.total) }}%">
+                                <span><i class="bi bi-fuel-pump"></i> {{ ship.fuel.current }}/{{ ship.fuel.total }}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% else %}
+                {% else %}
+                    <div class="col-md-auto">
+                        No Fuel Tank
+                    </div>
+                {% endif %}
                 <div class="col-md-auto">
-                    No Fuel Tank
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.crew.current }}</li>
+                        <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
+                        <li class="list-group-item list-group-item-success"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
+                        <li class="list-group-item list-group-item-primary"><i class="bi bi-box-seam-fill"></i> {{ ship.cargo.current }}/{{ ship.cargo.capacity }}</li>
+                    </ul>
                 </div>
-            {% endif %}
-            <div class="col-md-auto">
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.crew.current }}</li>
-                    <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
-                    <li class="list-group-item list-group-item-success"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
-                    <li class="list-group-item list-group-item-primary"><i class="bi bi-box-seam-fill"></i> {{ ship.cargo.current }}/{{ ship.cargo.capacity }}</li>
-                </ul>
             </div>
-        </div>
+        </a>
     </div>
 {%- endmacro %}
 {% macro ship_display(ship, waypoint_options, now) -%}
@@ -45,7 +47,25 @@
         <p class="left-margin">Status: {{ ship.nav.status }}</p>
     {% else %}
         <p class="left-margin">Status: {{ ship.nav.status }} with flight mode "{{ ship.nav.flight_mode }}"
-            <br>ETA: <span onload="timer(this, {{ (now - ship.nav.route.arrival).total_seconds() }}, refresh, this.innerHTML)" id="eta"></span></p>
+            <br>ETA: <span id="eta"></span> seconds</p>
+            <script>
+                function timer(element, start, on_end, original) {
+                    if (start === 0) {
+                        console.log("ITS 0")
+                        element.innerHTML = original
+                        on_end()
+                    }
+                    else {
+                        console.log(start)
+                        element.innerHTML = start
+                        setTimeout(function () {
+                                timer(element, start - 1, on_end, original);
+                            }, 1000
+                        )
+                    }
+                }
+                timer(document.getElementById("eta"), {{ -(now - ship.nav.route.arrival).total_seconds() // 1 }}, refresh, "");
+            </script>
     {% endif %}
     <p class="left-margin">Location:
         <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> <span id="waypoint">{{ ship.nav.location }}</span></a>

@@ -1,5 +1,5 @@
 {% macro waypoint_list(waypoint) -%}
-    <div class="list-group-item list-group-item-action" onclick="window.location.href = '/waypoint/{{ waypoint.symbol }}'">
+    <a class="list-group-item list-group-item-action" href = "/waypoint/{{ waypoint.symbol }}">
         <div class="row gx-5 justify-content-between">
             <div class="col-md-auto">
                 <h5><i class="bi bi-geo-alt-fill"></i> Waypoint {{ waypoint.symbol }}</h5>
@@ -11,7 +11,7 @@
             <div class="col-md-auto">{% for trait in waypoint.traits %}{{ trait.name }} {% endfor %}</div>
             <div class="col-md-auto">({{ waypoint.x }}, {{ waypoint.y }})</div>
         </div>
-    </div>
+    </a>
 {%- endmacro %}
 {% macro waypoint_display(waypoint, marketplace, shipyard) -%}
     <h1 class="center"><i class="bi bi-geo-alt-fill"></i> {{ waypoint.symbol }}</h1>

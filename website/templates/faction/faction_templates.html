@@ -1,5 +1,5 @@
 {% macro faction_list(faction) -%}
-    <div class="list-group-item list-group-item-action" onclick="window.location.href = '/faction/{{ faction.symbol }}'">
+    <a class="list-group-item list-group-item-action" href="/faction/{{ faction.symbol }}">
         <div class="row justify-content-between">
             <div class="col-md-auto"><h5 class="mb-1"><i class="bi bi-building-fill"></i> {{ faction.name }}</h5></div>
             <div class="col-md-auto"><p>{{ faction.symbol }}</p></div>
@@ -8,7 +8,7 @@
             <div class="col-md-auto">{{ faction.description }}</div>
             <div class="col-md-auto"><a href="/waypoint/{{ faction.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ faction.headquarters }}</a></div>
         </div>
-    </div>
+    </a>
 {%- endmacro %}
 {% macro faction_display(faction) -%}
     <h1 class="center">{{ faction.name }}</h1>

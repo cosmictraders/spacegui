@@ -1,3 +1,19 @@
+{% import "macros.html" as macros %}
+
+{% macro contract_card(contract) %}
+    <div class="card" style="width: 23rem; margin: 17px 10px">
+        <div class="card-body">
+            <h5 class="card-title"><a href="/contract/{{ contract.contract_id }}"><i class="bi bi-file-earmark-text-fill"></i> {{ contract.contract_id }}</a></h5>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Accept By: <i class="bi bi-clock"></i> {{ macros.time_display(contract.accept_deadline) }}</li>
+            <li class="list-group-item">Deadline: <i class="bi bi-clock"></i> {{ macros.time_display(contract.deadline) }}</li>
+            <li class="list-group-item">If Accepted: <i class="bi bi-credit-card"></i> {{ contract.on_accepted }}</li>
+            <li class="list-group-item">If Fulfilled: <i class="bi bi-credit-card"></i> {{ contract.on_fulfilled }}</li>
+            <li class="list-group-item">Status: {% if contract.fulfilled %}Fulfilled{% elif contract.accepted %}Accepted{% else %}Not Accepted{% endif %}</li>
+        </ul>
+    </div>
+{%- endmacro %}
 {% macro contract_list(contract) -%}
     <a class="list-group-item gx-5 list-group-item-action" href="/contract/{{ contract.contract_id }}">
         <div class="row gx-5 justify-content-between">

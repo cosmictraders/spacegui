@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% import "ship/ship_templates.html" as ship %}
+{% import "faction/contract/contract_templates.html" as contract %}
 {% block title %}
 Home
 {% endblock %}
@@ -8,66 +10,14 @@ Home
     <p class="center"><a href="/faction/{{ agent.starting_faction }}"><i class="bi bi-building"></i> {{ agent.starting_faction }}</a> <a href="/waypoint/{{ agent.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ agent.headquarters }}</a></p>
     <h2 class="center">Ships</h2>
     <div class="row" style="margin-left: 25px">
-    {% for ship in agent.ships[1] %}
-        <div class="card" style="width: 23rem; margin: 17px 10px">
-            <div class="card-body">
-                <h5 class="card-title"><a href="/ship/{{ ship.symbol }}"><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}</a></h5>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><i class="bi bi-rocket"></i> {{ ship.frame.name }}</li>
-                {% if not ship.nav.moving %}
-                    <li class="list-group-item">{{ ship.nav.status }}</li>
-                {% else %}
-                    <li class="list-group-item">{{ ship.nav.status }}<br>Arrival: {{ macros.time_display(ship.nav.route.arrival) }}</li>
-                {% endif %}
-                <li class="list-group-item"><a href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.location }}</a></li>
-                <li class="list-group-item">
-                    <ul class="list-group list-group-horizontal">
-                        <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.crew.current }}</li>
-                        <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
-                        <li class="list-group-item list-group-item-success"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
-                        <li class="list-group-item list-group-item-primary"><i class="bi bi-box-seam-fill"></i> {{ ship.cargo.current }}/{{ ship.cargo.capacity }}</li>
-                    </ul>
-                </li>
-                {% if ship.fuel.total != 0 %}
-                    {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}
-                        {% set pb_color = "bg-success" %}
-                    {% elif 100*(ship.fuel.current/ship.fuel.total) > 40 %}
-                        {% set pb_color = "bg-warning" %}
-                    {% else %}
-                        {% set pb_color = "bg-danger" %}
-                    {% endif %}
-                    <li class="list-group-item">
-                        <div class="progress" role="progressbar" aria-label="labeled fuel bar" aria-valuenow="{{ ship.fuel.current }}" aria-valuemin="0" aria-valuemax="{{ ship.fuel.total }}">
-                            <div class="progress-bar {{ pb_color }} overflow-visible" style="width: {{ 100*(ship.fuel.current/ship.fuel.total) }}%">
-                                <span><i class="bi bi-fuel-pump"></i> {{ ship.fuel.current }}/{{ ship.fuel.total }}</span>
-                            </div>
-                        </div>
-                    </li>
-                {% else %}
-                    <li class="list-group-item">
-                        No Fuel Tank
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
+    {% for item in agent.ships[1] %}
+        {{ ship.ship_card(item) }}
     {% endfor %}
     </div>
     <h2 class="center">Contracts</h2>
     <div class="row" style="margin-left: 25px">
-    {% for contract in agent.contracts[1] %}
-        <div class="card" style="width: 23rem; margin: 17px 10px">
-            <div class="card-body">
-                <h5 class="card-title"><a href="/contract/{{ contract.contract_id }}"><i class="bi bi-file-earmark-text-fill"></i> {{ contract.contract_id }}</a></h5>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Accept By: <i class="bi bi-clock"></i> {{ macros.time_display(contract.accept_deadline) }}</li>
-                <li class="list-group-item">Deadline: <i class="bi bi-clock"></i> {{ macros.time_display(contract.deadline) }}</li>
-                <li class="list-group-item">If Accepted: <i class="bi bi-credit-card"></i> {{ contract.on_accepted }}</li>
-                <li class="list-group-item">If Fulfilled: <i class="bi bi-credit-card"></i> {{ contract.on_fulfilled }}</li>
-                <li class="list-group-item">Status: {% if contract.fulfilled %}Fulfilled{% elif contract.accepted %}Accepted{% else %}Not Accepted{% endif %}</li>
-            </ul>
-        </div>
+    {% for item in agent.contracts[1] %}
+        {{ contract.contract_card(item) }}
     {% endfor %}
     </div>
 {% endblock %}

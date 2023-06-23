@@ -1,29 +1,13 @@
 {% extends 'base.html' %}
+{% import "faction/contract/contract_templates.html" as display %}
 {% block title %}
 Contracts
 {% endblock %}
 {% block body %}
-     <table class="table table-hover">
-        <tr>
-            <th>ID</th>
-            <th>On Accept</th>
-            <th>On Completion</th>
-            <th>Accepted</th>
-            <th>Completed</th>
-            <th>Accept Deadline</th>
-            <th>Deadline</th>
-        </tr>
+     <div class="list-group list-group-flush left-margin">
         {% for contract in contracts[1] %}
-            <tr onclick="window.location.href = '/contract/{{ contract.contract_id }}'">
-                <td>{{ contract.contract_id }}</td>
-                <td>{{ contract.on_accepted }}</td>
-                <td>{{ contract.on_fulfilled }}</td>
-                <td>{{ contract.accepted }}</td>
-                <td>{{ contract.fulfilled }}</td>
-                <td>{{ macros.time_display(contract.accept_deadline) }}</td>
-                <td>{{ macros.time_display(contract.deadline) }}</td>
-            </tr>
+            {{ display.contract_list(contract) }}
         {% endfor %}
-    </table>
+    </div>
 {% endblock %}
 {% block navid %}contracts{% endblock %}

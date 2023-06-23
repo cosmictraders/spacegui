@@ -265,7 +265,7 @@ Map
                         if (displayTransform.scale > 0.5) {
                             ctx.globalAlpha = 0.8;
                             ctx.fillStyle = "green";
-                            ctx.fillText(system + " (" + data[system].num_waypoints + " waypoints)", data[system].x * 10 + 20, data[system].y * 10 - 10);
+                            ctx.fillText(system + " [" + data[system].num_waypoints + " waypoints] (" + data[system].x + ", " + data[system].y + ")", data[system].x * 10 + 20, data[system].y * 10 - 10);
                         }
                     }
                 }

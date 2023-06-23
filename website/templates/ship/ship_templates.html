@@ -1,3 +1,48 @@
+{% import "macros.html" as macros %}
+{% macro ship_card(ship) -%}
+    <div class="card" style="width: 25rem; margin: 17px 10px">
+        <div class="card-body">
+            <h5 class="card-title"><a href="/ship/{{ ship.symbol }}"><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}</a></h5>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><i class="bi bi-rocket"></i> {{ ship.frame.name }}</li>
+            {% if not ship.nav.moving %}
+                <li class="list-group-item">{{ ship.nav.status }}</li>
+            {% else %}
+                <li class="list-group-item">{{ ship.nav.status }}<br>Arrival: {{ macros.time_display(ship.nav.route.arrival) }}</li>
+            {% endif %}
+            <li class="list-group-item"><a href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.location }}</a></li>
+            <li class="list-group-item">
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.crew.current }}/{{ ship.crew.capacity }}</li>
+                    <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
+                    <li class="list-group-item list-group-item-success"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
+                    <li class="list-group-item list-group-item-primary"><i class="bi bi-box-seam-fill"></i> {{ ship.cargo.current }}/{{ ship.cargo.capacity }}</li>
+                </ul>
+            </li>
+            {% if ship.fuel.total != 0 %}
+                {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}
+                    {% set pb_color = "bg-success" %}
+                {% elif 100*(ship.fuel.current/ship.fuel.total) > 40 %}
+                    {% set pb_color = "bg-warning" %}
+                {% else %}
+                    {% set pb_color = "bg-danger" %}
+                {% endif %}
+                <li class="list-group-item">
+                    <div class="progress" role="progressbar" aria-label="labeled fuel bar" aria-valuenow="{{ ship.fuel.current }}" aria-valuemin="0" aria-valuemax="{{ ship.fuel.total }}">
+                        <div class="progress-bar {{ pb_color }} overflow-visible" style="width: {{ 100*(ship.fuel.current/ship.fuel.total) }}%">
+                            <span><i class="bi bi-fuel-pump"></i> {{ ship.fuel.current }}/{{ ship.fuel.total }}</span>
+                        </div>
+                    </div>
+                </li>
+            {% else %}
+                <li class="list-group-item">
+                    No Fuel Tank
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+{%- endmacro  %}
 {% macro ship_list(ship) -%}
     <div class="list-group-item list-group-item-action">
         <a href="/ship/{{ ship.symbol }}" style="color: inherit; text-decoration: none;">

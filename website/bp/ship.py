@@ -77,7 +77,7 @@ def navigate(name):
 def jump(name):
     try:
         s = get_session()
-        ship = Ship(name, s, data={})
+        ship = Ship(name, s, data={"modules": {}, "mounts": {}})
         ship.jump(request.args.get("place").strip())
         return jsonify({})
     except IOError as e:
@@ -88,7 +88,7 @@ def jump(name):
 def warp(name):
     try:
         s = get_session()
-        ship = Ship(name, s, data={})
+        ship = Ship(name, s, data={"modules": {}, "mounts": {}})
         ship.warp(request.args.get("place").strip())
         return jsonify({})
     except IOError as e:

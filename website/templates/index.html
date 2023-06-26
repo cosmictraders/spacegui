@@ -5,20 +5,53 @@
 Home
 {% endblock %}
 {% block body %}
-    <h1 class="center"><i class="bi bi-person-fill"></i> {{ agent.symbol }}</h1>
-    <p class="center"><i class="bi bi-credit-card"></i> {{ agent.credits }}</p>
-    <p class="center"><a href="/faction/{{ agent.starting_faction }}"><i class="bi bi-building"></i> {{ agent.starting_faction }}</a> <a href="/waypoint/{{ agent.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ agent.headquarters }}</a></p>
-    <h2 class="center">Ships</h2>
-    <div class="row" style="margin-left: 25px">
-    {% for item in agent.ships[1] %}
-        {{ ship.ship_card(item) }}
-    {% endfor %}
-    </div>
-    <h2 class="center">Contracts</h2>
-    <div class="row" style="margin-left: 25px">
-    {% for item in agent.contracts[1] %}
-        {{ contract.contract_card(item) }}
-    {% endfor %}
+    <style>
+        @media (prefers-color-scheme: dark) {
+            .colored-background {
+                background: linear-gradient(#272b54, #752828);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .colored-background {
+                background: linear-gradient(#ffcccc, #dadcff);
+            }
+        }
+    </style>
+    <div class="colored-background">
+        <div class="row justify-content-center" style="padding-top: 25px">
+            <div class="shadow-lg card" style="width: 20rem">
+                <div class="card-body">
+                    <h1 class="center"><i class="bi bi-person-fill"></i> {{ agent.symbol }}</h1>
+                    <p class="center"><i class="bi bi-credit-card"></i> {{ agent.credits }}</p>
+                    <p class="center"><a href="/faction/{{ agent.starting_faction }}"><i class="bi bi-building"></i> {{ agent.starting_faction }}</a> <a href="/waypoint/{{ agent.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ agent.headquarters }}</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center" style="padding-top: 25px">
+            <div class="shadow-sm card" style="width: 10rem">
+                <div class="card-body">
+                    <h2 class="center">Ships</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 25px">
+        {% for item in agent.ships[1] %}
+            {{ ship.ship_card(item) }}
+        {% endfor %}
+        </div>
+        <div class="row justify-content-center" style="padding-top: 25px">
+            <div class="shadow-sm card" style="width: 15rem">
+                <div class="card-body">
+                    <h2 class="center">Contracts</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-left: 25px">
+        {% for item in agent.contracts[1] %}
+            {{ contract.contract_card(item) }}
+        {% endfor %}
+        </div>
     </div>
 {% endblock %}
 {% block navid %}home{% endblock %}

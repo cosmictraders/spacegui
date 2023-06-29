@@ -36,32 +36,14 @@
         </ul>
     </div>
 </nav>
-<ul class="list-group position-absolute top-5 end-0" id="search-suggestions">
-    <li class="list-group-item list-group-item-action" onclick="search_filter('system')">Search Systems</li>
-    <li class="list-group-item list-group-item-action" onclick="search_filter('waypoint')">Search Waypoints</li>
-    <li class="list-group-item list-group-item-action" onclick="search_filter('ship')">Search Ships</li>
-</ul>
 <script>
-    $("#search-suggestions").hide()
     $('#search-box').keypress(function(event) {
         if (event.keyCode === 13 || event.which === 13) {
             search();
             event.preventDefault();
         }
-        else {
-            if ($("#search-box").val().length > 0) {
-                $("#search-suggestions").show()
-            }
-            else {
-                $("#search-suggestions").hide()
-            }
-        }
     });
     function search() {
         this.window.location.href = "/search?query=" + encodeURIComponent($("#search-box").val());
-    }
-
-    function search_filter(type) {
-        this.window.location.href = "/search?query=" + encodeURIComponent($("#search-box").val() + " is: " + type);
     }
 </script>

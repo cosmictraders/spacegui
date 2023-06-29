@@ -11,7 +11,7 @@
             {% else %}
                 <li class="list-group-item">{{ ship.nav.status }}<br>Arrival: {{ macros.time_display(ship.nav.route.arrival) }}</li>
             {% endif %}
-            <li class="list-group-item"><a class="icon-link" href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.location }}</a></li>
+            <li class="list-group-item"><a href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.location }}</a></li>
             <li class="list-group-item">
                 <ul class="list-group list-group-horizontal">
                     <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.crew.current }}/{{ ship.crew.capacity }}</li>
@@ -52,7 +52,7 @@
             </div>
             <div class="row g-5 gy-5 justify-content-between">
                 <div class="col-md-auto">{{ ship.nav.status }}</div>
-                <div class="col-md-auto"><a class="icon-link" href="/waypoint/{{ ship.nav.route.departure }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.departure }}</a></div>
+                <div class="col-md-auto"><a href="/waypoint/{{ ship.nav.route.departure }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.departure }}</a></div>
                 {% if ship.fuel.total != 0 %}
                     {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}
                         {% set pb_color = "bg-success" %}
@@ -122,8 +122,8 @@
             </div>
             <div class="col-12">
                 <p class="p-1">Location:
-                    <a class="icon-link" id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> <span id="waypoint">{{ ship.nav.location }}</span></a>, a waypoint of
-                    <a class="icon-link" id="system_link" href="/system/{{ ship.nav.location.system }}"><i class="bi bi-stars"></i> <span id="system">{{ ship.nav.location.system }}</span></a>
+                    <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> <span id="waypoint">{{ ship.nav.location }}</span></a>, a waypoint of
+                    <a id="system_link" href="/system/{{ ship.nav.location.system }}"><i class="bi bi-stars"></i> <span id="system">{{ ship.nav.location.system }}</span></a>
                 </p>
             </div>
             <div class="col-12">

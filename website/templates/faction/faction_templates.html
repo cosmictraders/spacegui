@@ -13,19 +13,36 @@
     </div>
 {%- endmacro %}
 {% macro faction_display(faction) -%}
-    <h1 class="center">{{ faction.name }}</h1>
-    <p class="center">{{ faction.symbol }}</p>
-    <p class="left-margin"><a href="/waypoint/{{ faction.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ faction.headquarters }}</a></p>
-    <p class="left-margin">Recruiting: {{ faction.is_recruiting }}<p>
-    <p class="left-margin">{{ faction.description }}</p>
-    <div class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
-        {% for trait in faction.traits %}
-            <div class="list-group-item">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ trait.name }}</h5>
-                </div>
-                <p class="mb-1">{{ trait.description }}</p>
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <h1 class="col"><i class="bi bi-building-fill"></i> {{ faction.name }}</h1>
+        </div>
+        <div class="row justify-content-center text-center">
+            <div class="col"><p>{{ faction.symbol }}</p></div>
+        </div>
+        <div class="row gx-5 gy-3">
+            <div class="col-12">
+                <p><a href="/waypoint/{{ faction.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ faction.headquarters }}</a></p>
             </div>
-        {% endfor %}
+            <div class="col-12">
+                <p>Recruiting: {{ faction.is_recruiting }}</p>
+            </div>
+            <div class="col-12">
+                <p>{{ faction.description }}</p>
+            </div>
+            <div class="col-12">
+                <h2 class="center">Traits</h2>
+                <div class="list-group list-group" style="max-width: 70%;">
+                    {% for trait in faction.traits %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ trait.name }}</h5>
+                            </div>
+                            <p class="mb-1">{{ trait.description }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 {%- endmacro %}

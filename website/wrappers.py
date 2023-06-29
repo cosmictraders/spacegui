@@ -8,7 +8,7 @@ from minify_html import minify
 
 def minify_html(func):
     def wrap(*args, **kwargs):
-        result: str = func(*args, **kwargs)  # TODO: Fix
+        result: str = func(*args, **kwargs)
         return minify(
             result,
             do_not_minify_doctype=True,

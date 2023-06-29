@@ -9,8 +9,9 @@ for i in data:
     waypoints = {}
     for w in i.waypoints:
         traits = []
-        for trait in w.traits:
-            traits.append(trait.symbol)
+        if w.traits is not None:
+            for trait in w.traits:
+                traits.append(trait.symbol)
         waypoints[str(w.symbol)] = {
             "x": w.x,
             "y": w.y,

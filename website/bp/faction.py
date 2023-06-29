@@ -25,7 +25,10 @@ def factions(session):
 @minify_html
 @token_required
 def faction(symbol, session):
-    return render_template("faction/faction.html", faction=Faction(symbol, session))
+    light_background = {}.get(symbol, "")
+    dark_background = {}.get(symbol, "")
+    force_dark = {"VOID": True}.get(symbol, False)
+    return render_template("faction/faction.html", faction=Faction(symbol, session), light_background=light_background, dark_background=dark_background, force_dark=force_dark)
 
 
 @faction_bp.route("/contracts/")

@@ -148,7 +148,8 @@ def automation(name):
 @main_bp.route("/search/")
 @token_required
 def search(session):
-    t1 = time.time() # TODO: Speed improvements by only querying whats needed (is: waypoint should not be getting ship,contract info)
+    page = int(request.args.get("page", default=1))
+    t1 = time.time() # TODO: Speed improvements by only querying whats needed (`is: waypoint` should not be getting ship,contract info)
     query, filters = read_query(request.args.get("query"))
     system_data = pickle.load(open("./data.pickle", "rb"))
     t1_2 = time.time()
@@ -183,7 +184,7 @@ def search(session):
         item for item, _ in sorted(unweighted_map, key=lambda x: x[1], reverse=True)
     ]
     if len(amap) > 100:
-        amap = amap[:100]
+        amap = amap[page-1*100:page*100]
     t2 = time.time()
     print(t1_2-t1, t1_3-t1_2, t1_4-t1_3, t1_5-t1_4, t1_6-t1_5, t2-t1_6)
     return render_template(

@@ -4,13 +4,13 @@
 Systems
 {% endblock %}
 {% block body %}
-     <li class="list-group list-group-flush left-margin">
+     <li class="list-group list-group-flush p-3">
         {% for system in systems.current() %}
             {{ display.system_list(system) }}
         {% endfor %}
     </li>
     <nav aria-label="Pagination">
-        <ul class="pagination left-margin">
+        <ul class="pagination p-3">
             {% if systems.page > 1 %}
                 <li class="page-item"><a class="page-link" href="/systems/?page={{ systems.page-1 }}">Previous</a></li>
             {% else %}

@@ -45,9 +45,6 @@
             text-align: center;
         }
 
-        .left-margin {
-            margin-left: 10px;
-        }
         .row {
             margin-right: 0;
         }
@@ -92,7 +89,7 @@
         </footer>
     </div>
     <script>
-        var element = document.getElementById("{% block navid %}{% endblock %}");
+        const element = document.getElementById("{% block navid %}{% endblock %}");
         element.classList.add("active");
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));

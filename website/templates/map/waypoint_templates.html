@@ -26,7 +26,7 @@
                 <p>Coordinates: ({{ waypoint.x }}, {{ waypoint.y }})</p>
             </div>
             <div class="col-12">
-                <p>Faction: ({{ waypoint.faction }})</p>
+                <p>Faction: {{ waypoint.faction }}</p>
             </div>
             <div class="col-12">
                 {% if waypoint.traits.__len__() > 0 %}
@@ -41,7 +41,7 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                    <p class="left-margin">No Traits</p>
+                    <p>No Traits</p>
                 {% endif %}
             </div>
             {% if waypoint.marketplace %}
@@ -67,7 +67,7 @@
                 {% endif %}
                 {% if marketplace.trade_goods != [] and marketplace.trade_goods != None %}
                 <div class="col-4">
-                    <h3 class="left-margin">Trades</h3>
+                    <h3>Trades</h3>
                     <table class="table">
                             <tr>
                                 <th>Symbol</th>
@@ -109,7 +109,7 @@
                 {% else %}
                     <div class="col-6">
                         <h2 class="center">Shipyard</h2>
-                        <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
+                        <ul class="list-group">
                             {% for ship in shipyard.ship_types %}
                                 <li class="list-group-item">{{ ship }}</li>
                             {% endfor %}

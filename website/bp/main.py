@@ -1,12 +1,15 @@
 import pickle
+import time
 from datetime import datetime, timezone
 
 import autotraders
 import requests
 from autotraders.agent import Agent
+from autotraders.faction.contract import Contract
+from autotraders.ship import Ship
 from flask import *
 
-from website.model import db, User
+from website.model import db, User, Automation
 from website.search import (
     weight,
     read_query,
@@ -134,7 +137,7 @@ def settings_api():
 
 @main_bp.route("/automations/")
 def automations():
-    return render_template("automations.html")
+    return render_template("automations.html", automations=Automation.all())
 
 
 @main_bp.route("/automation/<name>/")
@@ -145,25 +148,31 @@ def automation(name):
 @main_bp.route("/search/")
 @token_required
 def search(session):
+    t1 = time.time() # TODO: Speed improvements by only querying whats needed (is: waypoint should not be getting ship,contract info)
     query, filters = read_query(request.args.get("query"))
     system_data = pickle.load(open("./data.pickle", "rb"))
+    t1_2 = time.time()
     faction_data = pickle.load(open("./factions.pickle", "rb"))
+    t1_3 = time.time()
     unweighted_map = []
-    agent = Agent(session)
-    ship_data = agent.ships[1]
-    contract_data = agent.contracts[1]
+    ship_data = Ship.all(session)[1]
+    contract_data = Contract.all(session)[1]
+    t1_4 = time.time()
     for item in system_data:
-        if weight(query, str(item.symbol)) > 0:
+        if weight(query, str(item.symbol)) > -0.1:
             if check_filters_system(item, filters):
                 unweighted_map.append((item, weight(query, str(item.symbol))))
-        for waypoint in item.waypoints:
-            if weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
-                waypoint, filters
-            ):
-                unweighted_map.append((waypoint, weight(query, str(waypoint.symbol))))
+        if weight(query, str(item.symbol)) > -0.2:
+            for waypoint in item.waypoints:
+                if weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
+                    waypoint, filters
+                ):
+                    unweighted_map.append((waypoint, weight(query, str(waypoint.symbol))))
+    t1_5 = time.time()
     for item in faction_data:
         if (weight(query, item.symbol) > 0 or weight(query, item.name) > 0) and check_filters_faction(item, filters):
             unweighted_map.append((item, weight(query, str(item.symbol))))
+    t1_6 = time.time()
     for item in ship_data:
         if weight(query, item.symbol) > 0 and check_filters_ship(item, filters):
             unweighted_map.append((item, weight(query, item.symbol)))
@@ -175,6 +184,8 @@ def search(session):
     ]
     if len(amap) > 100:
         amap = amap[:100]
+    t2 = time.time()
+    print(t1_2-t1, t1_3-t1_2, t1_4-t1_3, t1_5-t1_4, t1_6-t1_5, t2-t1_6)
     return render_template(
-        "search.html", query=request.args.get("query"), map=amap
+        "search.html", query=request.args.get("query"), map=amap, time=t2-t1
     )

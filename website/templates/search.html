@@ -8,24 +8,29 @@
 Search
 {% endblock %}
 {% block body %}
-    <div class="row">
-        <div class="list-group list-group-flush left-margin" style="max-width: 70%;">
-            {% for item in map %}
-                {% if item.__class__.__name__ == "System" %}
-                    {{ system.system_list(item) }}
-                {# TODO: Fix hacks #}
-                {% elif item.__class__.__name__ == "Waypoint" %}
-                    {{ waypoint.waypoint_list(item) }}
-                {% elif item.__class__.__name__ == "Contract" %}
-                    {{ contract.contract_list(item) }}
-                {% elif item.__class__.__name__ == "Faction" %}
-                    {{ faction.faction_list(item) }}
-                {% elif item.__class__.__name__ == "Ship" %}
-                    {{ ship.ship_list(item) }}
-                {% endif %}
-            {% endfor %}
+    <p>Searched in {{ time }}</p>
+    {% if map.__len__() != 0 %}
+        <div class="row">
+            <div class="list-group list-group-flush left-margin" style="max-width: 70%;">
+                {% for item in map %}
+                    {% if item.__class__.__name__ == "System" %}
+                        {{ system.system_list(item) }}
+                    {# TODO: Fix hacks #}
+                    {% elif item.__class__.__name__ == "Waypoint" %}
+                        {{ waypoint.waypoint_list(item) }}
+                    {% elif item.__class__.__name__ == "Contract" %}
+                        {{ contract.contract_list(item) }}
+                    {% elif item.__class__.__name__ == "Faction" %}
+                        {{ faction.faction_list(item) }}
+                    {% elif item.__class__.__name__ == "Ship" %}
+                        {{ ship.ship_list(item) }}
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
-    </div>
+    {% else %}
+        No results
+    {% endif %}
     <script>
         // TODO: fix literal hack
         $("#search-box").val("{{ query|safe }}");

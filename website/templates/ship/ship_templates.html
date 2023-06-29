@@ -86,75 +86,96 @@
     </div>
 {%- endmacro %}
 {% macro ship_display(ship, waypoint_options, now) -%}
-    <div class="container">
+    <div class="container py-3">
         <div class="row justify-content-center text-center">
             <h1 class="col"><i class="bi bi-rocket-takeoff-fill"></i>  {{ ship.symbol }}</h1>
         </div>
         <div class="row justify-content-center text-center">
-            <div class="col"><p>{{ ship.registration.role }}</p></div>
+            <p class="col">{{ ship.registration.role }}</p>
         </div>
         <div class="row gx-5 gy-3">
-            <div class="col-12">
-                {% if not ship.nav.moving %}
-                    <p class="p-1">Status: {{ ship.nav.status }}</p>
-                {% else %}
-                    <p class="p-1">Status: {{ ship.nav.status }} with flight mode "{{ ship.nav.flight_mode }}"
-                        <br>ETA: <span id="eta"></span> seconds</p>
-                        <script>
-                            function timer(element, start, on_end, original) {
-                                if (start === 0) {
-                                    console.log("ITS 0")
-                                    element.innerHTML = original
-                                    on_end()
-                                }
-                                else {
-                                    console.log(start)
-                                    element.innerHTML = start
-                                    setTimeout(function () {
-                                            timer(element, start - 1, on_end, original);
-                                        }, 1000
-                                    )
-                                }
-                            }
-                            timer(document.getElementById("eta"), {{ -(now - ship.nav.route.arrival).total_seconds() // 1 }}, refresh, "");
-                        </script>
-                {% endif %}
-            </div>
-            <div class="col-12">
-                <p class="p-1">Location:
-                    <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> <span id="waypoint">{{ ship.nav.location }}</span></a>, a waypoint of
-                    <a id="system_link" href="/system/{{ ship.nav.location.system }}"><i class="bi bi-stars"></i> <span id="system">{{ ship.nav.location.system }}</span></a>
-                </p>
-            </div>
-            <div class="col-12">
-                {% if ship.fuel.total != 0 %}
-                    {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}
-                        {% set pb_color = "bg-success" %}
-                    {% elif 100*(ship.fuel.current/ship.fuel.total) > 40 %}
-                        {% set pb_color = "bg-warning" %}
+            <div class="col-6">
+                <div class="row py-3">
+                    {% if not ship.nav.moving %}
+                        <p>Status: {{ ship.nav.status }}</p>
                     {% else %}
-                        {% set pb_color = "bg-danger" %}
+                        <p>Status: {{ ship.nav.status }} with flight mode "{{ ship.nav.flight_mode }}"
+                            <br>ETA: <span id="eta"></span> seconds</p>
+                            <script>
+                                function timer(element, start, on_end, original) {
+                                    if (start === 0) {
+                                        element.innerHTML = original
+                                        on_end()
+                                    }
+                                    else {
+                                        element.innerHTML = start
+                                        setTimeout(function () {
+                                                timer(element, start - 1, on_end, original);
+                                            }, 1000
+                                        )
+                                    }
+                                }
+                                timer(document.getElementById("eta"), {{ -(now - ship.nav.route.arrival).total_seconds() // 1 }}, refresh, "");
+                            </script>
                     {% endif %}
-                    <div style="max-width: 400px; margin-bottom: 20px">
-                    <div class="progress" role="progressbar" aria-label="labeled fuel bar" aria-valuenow="{{ ship.fuel.current }}" aria-valuemin="0" aria-valuemax="{{ ship.fuel.total }}">
-                    <div class="progress-bar {{ pb_color }} overflow-visible" style="width: {{ 100*(ship.fuel.current/ship.fuel.total) }}%">
-                        <span>{{ ship.fuel.current }}/{{ ship.fuel.total }} <i class="bi bi-fuel-pump"></i></span>
-                    </div>
-                    </div>
-                    </div>
+                </div>
+                <div class="row py-3">
+                    <p>Location:
+                        <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> <span id="waypoint">{{ ship.nav.location }}</span></a>, a waypoint of
+                        <a id="system_link" href="/system/{{ ship.nav.location.system }}"><i class="bi bi-stars"></i> <span id="system">{{ ship.nav.location.system }}</span></a>
+                    </p>
+                </div>
+                <div class="row py-3">
+                    {% if ship.fuel.total != 0 %}
+                        {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}
+                            {% set pb_color = "bg-success" %}
+                        {% elif 100*(ship.fuel.current/ship.fuel.total) > 40 %}
+                            {% set pb_color = "bg-warning" %}
+                        {% else %}
+                            {% set pb_color = "bg-danger" %}
+                        {% endif %}
+                        <div style="max-width: 400px;">
+                            <div class="progress" role="progressbar" aria-label="labeled fuel bar" aria-valuenow="{{ ship.fuel.current }}" aria-valuemin="0" aria-valuemax="{{ ship.fuel.total }}">
+                                <div class="progress-bar {{ pb_color }} overflow-visible" style="width: {{ 100*(ship.fuel.current/ship.fuel.total) }}%">
+                                    <span>{{ ship.fuel.current }}/{{ ship.fuel.total }} <i class="bi bi-fuel-pump"></i></span>
+                                </div>
+                            </div>
+                        </div>
                     {% else %}
-                    <p class="p-1">No Fuel Tank</p>
-                {% endif %}
+                        <p>No Fuel Tank</p>
+                    {% endif %}
+                </div>
+{#                 TODO: Fix row below this line #}
+                <div class="row py-3 px-2">
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.crew.current }}/{{ ship.crew.capacity }}</li>
+                        <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
+                        <li class="list-group-item list-group-item-success"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
+                        <li class="list-group-item list-group-item-primary"><i class="bi bi-box-seam-fill"></i> {{ ship.cargo.current }}/{{ ship.cargo.capacity }}</li>
+                    </ul>
+                </div>
+                <div class="row py-3">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group me-2" role="group" aria-label="Ship Controls">
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#navigateModal" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}>Move</button>
+                        </div>
+                        <div class="btn-group me-2" role="group" aria-label="Ship Controls">
+                            <button type="button" class="btn btn-success" onclick="dock()" {% if ship.nav.status == "DOCKED" %}disabled{% endif %}>Dock</button>
+                            <button type="button" class="btn btn-success" onclick="orbit()" {% if ship.nav.status == "IN_ORBIT" %}disabled{% endif %}>Orbit</button>
+                        </div>
+                        <div class="btn-group me-2" role="group" aria-label="Ship Controls">
+                            <button type="button" class="btn btn-primary" onclick="refuel()" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}>Refuel</button>
+                        </div>
+                        <div class="btn-group me-2" role="group" aria-label="Ship Controls">
+                            <button type="button" class="btn btn-primary" onclick="extract()" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}>Extract</button>
+                        </div>
+                        <div class="btn-group me-2" role="group" aria-label="Ship Controls">
+                            <button type="button" class="btn btn-secondary" onclick="refresh()"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-12">
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.crew.current }}/{{ ship.crew.capacity }}</li>
-                    <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
-                    <li class="list-group-item list-group-item-success"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
-                    <li class="list-group-item list-group-item-primary"><i class="bi bi-box-seam-fill"></i> {{ ship.cargo.current }}/{{ ship.cargo.capacity }}</li>
-                </ul>
-            </div>
-            <div class="col-12">
+            <div class="col-6">
                 <div class="list-group" id="cargo">
                     {% for c in ship.cargo.inventory %}
                         <div class='list-group-item list-group-item-primary'>
@@ -166,30 +187,12 @@
                             <div class="input-group">
 {#                            TODO: Switch to range#}
                                 <input id="amount" type="number" class="form-control" placeholder="Amount" value="1" min="0" max="{{ c.quantity }}" style="max-width: 75px">
-                                <button type="button" class="btn btn-success" onclick="sell('{{ c.symbol }}', $('#amount').val())" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}>Sell</button>
-                                <button type="button" class="btn btn-secondary" onclick="transfer('{{ c.symbol }}', $('#amount').val())" disabled>Transfer</button>
-                                <button type="button" class="btn btn-danger" onclick="jettison('{{ c.symbol }}', $('#amount').val())">Jettison</button>
+                                <button type="button" class="btn btn-success" onclick="sell('{{ c.symbol }}', $('#amount').val())" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}><i class="bi bi-currency-dollar"></i> Sell</button>
+                                <button type="button" class="btn btn-secondary" onclick="transfer('{{ c.symbol }}', $('#amount').val())" disabled><i class="bi bi-airplane-fill"></i> Transfer</button>
+                                <button type="button" class="btn btn-danger" onclick="jettison('{{ c.symbol }}', $('#amount').val())"><i class="bi bi-trash3-fill"></i> Jettison</button>
                             </div>
                         </div>
                     {% endfor %}
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="btn-group" role="group" aria-label="Ship Controls">
-                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#navigateModal" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}>Move</button>
-                    {% if ship.nav.status != "DOCKED" %}
-                        <button type="button" class="btn btn-primary" onclick="dock()">Dock</button>
-                    {% else %}
-                        <button type="button" class="btn btn-primary" onclick="dock()" disabled>Dock</button>
-                    {% endif %}
-                    {% if ship.nav.status != "IN_ORBIT" %}
-                        <button type="button" class="btn btn-primary" onclick="orbit()">Orbit</button>
-                    {% else %}
-                        <button type="button" class="btn btn-primary" onclick="orbit()" disabled>Orbit</button>
-                    {% endif %}
-                    <button type="button" class="btn btn-primary" onclick="refuel()" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}>Refuel</button>
-                    <button type="button" class="btn btn-primary" onclick="extract()" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}>Extract</button>
-                    <button type="button" class="btn btn-secondary" onclick="refresh()"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
                 </div>
             </div>
             <div class="col-6">
@@ -199,8 +202,8 @@
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">{{ ship.frame.name }}</h5>
                             <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item list-group-item-info">{{ ship.frame.requirements.crew }} <i class="bi bi-person-fill"></i></li>
-                                <li class="list-group-item list-group-item-warning">{{ ship.frame.requirements.power }} <i class="bi bi-lightning-charge-fill"></i></li>
+                                <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.frame.requirements.crew }}</li>
+                                <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.frame.requirements.power }}</li>
                             </ul>
                         </div>
                         <p class="mb-1">{{ ship.frame.description }}</p>
@@ -208,34 +211,34 @@
                         <p class="mb-1">Mounting Points: {{ ship.frame.mounting_points }}</p>
                         <p class="mb-1"></p>
                     </div>
-                    <div class="list-group-item">
+                    <div class="list-group-item list-group-item-success">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">{{ ship.engine.name }}</h5>
                             <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item list-group-item-info">{{ ship.engine.requirements.crew }} <i class="bi bi-person-fill"></i></li>
-                                <li class="list-group-item list-group-item-warning">{{ ship.engine.requirements.power }} <i class="bi bi-lightning-charge-fill"></i></li>
+                                <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.engine.requirements.crew }}</li>
+                                <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.engine.requirements.power }}</li>
                             </ul>
                         </div>
                         <small>Speed: {{ ship.engine.speed }}</small>
                         <p class="mb-1">{{ ship.engine.description }}</p>
                     </div>
-                    <div class="list-group-item">
+                    <div class="list-group-item list-group-item-warning">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">{{ ship.reactor.name }}</h5>
                             <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item list-group-item-info">{{ ship.reactor.requirements.crew }} <i class="bi bi-person-fill"></i></li>
+                                <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.reactor.requirements.crew }}</li>
                             </ul>
                         </div>
                         <small>Power: {{ ship.reactor.power_output }}</small>
                         <p class="mb-1">{{ ship.reactor.description }}</p>
                     </div>
                     {% for module in ship.modules %}
-                        <div class="list-group-item">
+                        <div class="list-group-item {% if module.symbol == 'MODULE_CARGO_HOLD_I' %}list-group-item-primary{% elif module.symbol == 'MODULE_CREW_QUARTERS_I' %}list-group-item-info{% endif %}">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{{ module.name }}</h5>
+                                <h5 class="mb-1">{{ module.symbol }}</h5>
                                 <ul class="list-group list-group-horizontal">
-                                    <li class="list-group-item list-group-item-info">{{ module.requirements.crew }} <i class="bi bi-person-fill"></i></li>
-                                    <li class="list-group-item list-group-item-warning">{{ module.requirements.power }} <i class="bi bi-lightning-charge-fill"></i></li>
+                                    <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ module.requirements.crew }}</li>
+                                    <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ module.requirements.power }}</li>
                                 </ul>
                             </div>
                             <p class="mb-1">{{ module.description }}</p>
@@ -252,8 +255,8 @@
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">{{ mount.name }}</h5>
                                 <ul class="list-group list-group-horizontal">
-                                    <li class="list-group-item list-group-item-info">{{ mount.requirements.crew }} <i class="bi bi-person-fill"></i></li>
-                                    <li class="list-group-item list-group-item-warning">{{ mount.requirements.power }} <i class="bi bi-lightning-charge-fill"></i></li>
+                                    <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ mount.requirements.crew }}</li>
+                                    <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ mount.requirements.power }}</li>
                                 </ul>
                             </div>
                             <p class="mb-1">{{ mount.description }}</p>
@@ -263,6 +266,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="navigateModal" tabindex="-1" aria-labelledby="NavigateModal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -298,7 +302,8 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 {#                    TODO: Add tooltips for disabled buttons with explainations#}
-                    {#                    TODO: make jump only allowed if the ship has the capability to do so #}
+{#                    TODO: make jump/warp only allowed if the ship has the capability to do so #}
+{#                    TODO: Make cancel button float on left and the rest float on the right #}
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="jump()">Jump</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="warp()">Warp</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="navigate()">Navigate</button>

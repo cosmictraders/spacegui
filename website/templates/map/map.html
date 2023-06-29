@@ -10,22 +10,21 @@ Map
         }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <canvas id="c" width="2000" height="1000"></canvas>
-{#    <div data-bs-theme="dark">#}
-{#        <h1 class="left-margin">Key</h1>#}
-{#        <ul class="list-group left-margin">#}
-{#            <li class="list-group-item" style="color: red">RED_STAR: red</li>#}
-{#            <li class="list-group-item" style="color: orange">ORANGE_STAR: orange</li>#}
-{#            <li class="list-group-item" style="color: white">WHITE_DWARF: white</li>#}
-{#            <li class="list-group-item" style="color: yellow">YOUNG_STAR: yellow</li>#}
-{#            <li class="list-group-item" style="color: grey">BLACK_HOLE: grey</li>#}
-{#            <li class="list-group-item" style="color: blue">BLUE_STAR: blue</li>#}
-{#            <li class="list-group-item" style="color: red">HYPERGIANT: red // repeated</li>#}
-{#            <li class="list-group-item" style="color: white">NEUTRON_STAR: white // repeated</li>#}
-{#            <li class="list-group-item" style="color: blue">UNSTABLE: blue // repeated</li>#}
-{#            <li class="list-group-item" style="color: green">OTHER: green</li>#}
-{#        </ul>#}
-{#    </div>#}
+    <canvas id="c" width="1000" height="1000"></canvas>
+    <div class="position-absolute bottom-0 start-0" data-bs-theme="dark">
+        <ul class="list-group left-margin">
+            <li class="list-group-item" style="color: red">RED_STAR: red</li>
+            <li class="list-group-item" style="color: orange">ORANGE_STAR: orange</li>
+            <li class="list-group-item" style="color: white">WHITE_DWARF: white</li>
+            <li class="list-group-item" style="color: yellow">YOUNG_STAR: yellow</li>
+            <li class="list-group-item" style="color: grey">BLACK_HOLE: grey</li>
+            <li class="list-group-item" style="color: blue">BLUE_STAR: blue</li>
+            <li class="list-group-item" style="color: red">HYPERGIANT: red // repeated</li>
+            <li class="list-group-item" style="color: white">NEUTRON_STAR: white // repeated</li>
+            <li class="list-group-item" style="color: blue">UNSTABLE: blue // repeated</li>
+            <li class="list-group-item" style="color: green">OTHER: green</li>
+        </ul>
+    </div>
     <script>
         const data = JSON.parse(jQuery.ajax({
             url: "/static/systems.json",
@@ -273,6 +272,10 @@ Map
         }
 
         function update(_time) {
+            canvas.style.width ='100%';
+            canvas.style.height='100%';
+            canvas.width  = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
             // update the transform
             displayTransform.update();
             // set home transform to clear the screen

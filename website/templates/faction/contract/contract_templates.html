@@ -52,7 +52,7 @@
     <h2 class="center">Details</h2>
     {% if contract.contract_type == "PROCUREMENT" %}
         {% for delivery in contract.contract_data %}
-            <p class="left-margin">Deliver {{ delivery.trade_symbol }} to <a href="/waypoint/{{ delivery.destination_symbol }}">{{ delivery.destination_symbol }}</a>
+            <p class="left-margin">Deliver {{ delivery.trade_symbol }} to <a class="icon-link" href="/waypoint/{{ delivery.destination_symbol }}">{{ delivery.destination_symbol }}</a>
                 ({{ delivery.units_fulfilled }}/{{ delivery.units_required }}).</p>
         {% endfor %}
     {% endif %}

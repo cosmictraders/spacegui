@@ -278,7 +278,7 @@
                                 <datalist id="waypoints">
                                     <option value="X1-"></option>
                                     {% for waypoint in waypoint_options %}
-                                        <option value="{{waypoint}}"></option>
+                                        <option label="{{ waypoint[1] }}" value="{{ waypoint[0] }}"></option>
                                     {% endfor %}
                                 </datalist>
                             </div>

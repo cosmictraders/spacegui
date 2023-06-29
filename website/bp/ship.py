@@ -23,11 +23,11 @@ def ships(session):
 def ship(name, session):
     ship = Ship(name, session)
     j = json.load(open("./website/static/systems.json"))
-    li: list[str] = list(j.keys())
+    li: list[tuple[str, str]] = [(i,i) for i in list(j.keys())]
     try:
         waypoints_raw = j[ship.nav.location.system]["waypoints"]
         waypoints = [
-            f'{waypoint} ({waypoints_raw[waypoint]["type"]})' for waypoint in waypoints_raw
+            (waypoint, f'{waypoint} ({waypoints_raw[waypoint]["type"]})') for waypoint in waypoints_raw
         ]
     except:
         waypoints = []
@@ -44,11 +44,11 @@ def ship_api(name):
     s = get_session()
     ship = Ship(name, s)
     j = json.load(open("./website/static/systems.json"))
-    li: list[str] = list(j.keys())
+    li: list[tuple[str, str]] = [(i,i) for i in list(j.keys())]
     try:
         waypoints_raw = j[ship.nav.location.system]["waypoints"]
         waypoints = [
-            f'{waypoint} ({waypoints_raw[waypoint]["type"]})' for waypoint in waypoints_raw
+            (waypoint, f'{waypoint} ({waypoints_raw[waypoint]["type"]})') for waypoint in waypoints_raw
         ]
     except:
         waypoints = []
@@ -131,7 +131,8 @@ def refuel(name):
 @ship_bp.route("/ship/<name>/extract/")
 def extract(name):
     s = get_session()
-    ship = Ship(name, s, data={"modules": {}, "mounts": {}})
+    ship = Ship(name, s, data={"modules": {}, "mounts": {},
+                               "reactor": {"symbol": "blank", "name": "blank", "powerOutput": 1, "cooldown": "2000-01-01 00:00:00.000", "requirements": {}}})
     try:
         ship.extract()
         return jsonify({})

@@ -164,6 +164,7 @@
                             </div>
                             <p class="mb-1">{{ c.description }}</p>
                             <div class="input-group">
+{#                            TODO: Switch to range#}
                                 <input id="amount" type="number" class="form-control" placeholder="Amount" value="1" min="0" max="{{ c.quantity }}" style="max-width: 75px">
                                 <button type="button" class="btn btn-success" onclick="sell('{{ c.symbol }}', $('#amount').val())" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}>Sell</button>
                                 <button type="button" class="btn btn-secondary" onclick="transfer('{{ c.symbol }}', $('#amount').val())" disabled>Transfer</button>

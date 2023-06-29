@@ -14,110 +14,114 @@
     </a>
 {%- endmacro %}
 {% macro waypoint_display(waypoint, marketplace, shipyard) -%}
-    <h1 class="center"><i class="bi bi-geo-alt-fill"></i> {{ waypoint.symbol }}</h1>
-    <p class="center">{{ waypoint.waypoint_type }} of <a href="/system/{{ waypoint.symbol.system }}"><i class="bi bi-stars"></i> {{ waypoint.symbol.system }}</a></p>
-    {% if waypoint.traits.__len__() > 0 %}
-        <h2 class="center">Traits</h2>
-        <div class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
-            {% for trait in waypoint.traits %}
-                <div class="list-group-item">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ trait.name }}</h5>
-                    </div>
-                    <p class="mb-1">{{ trait.description }}</p>
-                </div>
-            {% endfor %}
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <h1 class="col"><i class="bi bi-geo-alt-fill"></i> {{ waypoint.symbol }}</h1>
         </div>
-    {% else %}
-        <p class="left-margin">No Traits</p>
-    {% endif %}
-    <p class="left-margin">Coordinates: ({{ waypoint.x }}, {{ waypoint.y }})</p>
-    <p class="left-margin">Faction: ({{ waypoint.faction }})</p>
-    {% if waypoint.marketplace %}
-        <h2 class="center">Marketplace</h2>
-        <div class="row">
-            {% if marketplace.imports != [] and marketplace.imports != None  %}
-            <div class="col">
-                <h3 class="left-margin">Imports</h3>
-                <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
-                    {% for good in marketplace.imports %}
-                        <li class="list-group-item">{{ good }}</li>
-                    {% endfor %}
-                </ul>
+        <div class="row justify-content-center text-center">
+            <div class="col"><p>{{ waypoint.waypoint_type }} of <a href="/system/{{ waypoint.symbol.system }}"><i class="bi bi-stars"></i> {{ waypoint.symbol.system }}</a></p></div>
+        </div>
+        <div class="row gx-5 gy-3">
+            <div class="col-12">
+                <p>Coordinates: ({{ waypoint.x }}, {{ waypoint.y }})</p>
             </div>
-            {% endif %}
-            {% if marketplace.exports != [] and marketplace.exports != None %}
-            <div class="col">
-                <h3 class="left-margin">Exports</h3>
-                <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
-                    {% for good in marketplace.exports %}
-                        <li class="list-group-item">{{ good }}</li>
-                    {% endfor %}
-                </ul>
+            <div class="col-12">
+                <p>Faction: ({{ waypoint.faction }})</p>
             </div>
-            {% endif %}
-            {% if marketplace.trade_goods != [] and marketplace.trade_goods != None %}
-            <div class="col">
-                <h3 class="left-margin">Trades</h3>
-                <table class="table">
-                        <tr>
-                            <th>Symbol</th>
-                            <th>Buy Price</th>
-                            <th>Sell Price</th>
-                            <th>Quantity</th>
-                            <th>Volume</th>
-                        </tr>
-                        {% for good in marketplace.trade_goods %}
-                            <tr>
-                                <td>{{ good.symbol }}</td>
-                                <td>{{ good.purchase_price }}</td>
-                                <td>{{ good.sell_price }}</td>
-                                <td>{{ good.supply }}</td>
-                                <td>{{ good.trade_volume }}</td>
-                            </tr>
+            <div class="col-12">
+                {% if waypoint.traits.__len__() > 0 %}
+                    <div class="list-group" id="traits">
+                        {% for trait in waypoint.traits %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ trait.name }}</h5>
+                                </div>
+                                <p class="mb-1">{{ trait.description }}</p>
+                            </div>
                         {% endfor %}
-                </table>
+                    </div>
+                {% else %}
+                    <p class="left-margin">No Traits</p>
+                {% endif %}
             </div>
+            {% if waypoint.marketplace %}
+                {% if marketplace.imports != [] and marketplace.imports != None  %}
+                <div class="col">
+                    <h3>Imports</h3>
+                    <ul class="list-group">
+                        {% for good in marketplace.imports %}
+                            <li class="list-group-item">{{ good }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if marketplace.exports != [] and marketplace.exports != None %}
+                <div class="col-4">
+                    <h3>Exports</h3>
+                    <ul class="list-group">
+                        {% for good in marketplace.exports %}
+                            <li class="list-group-item">{{ good }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if marketplace.trade_goods != [] and marketplace.trade_goods != None %}
+                <div class="col-4">
+                    <h3 class="left-margin">Trades</h3>
+                    <table class="table">
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Buy Price</th>
+                                <th>Sell Price</th>
+                                <th>Quantity</th>
+                                <th>Volume</th>
+                            </tr>
+                            {% for good in marketplace.trade_goods %}
+                                <tr>
+                                    <td>{{ good.symbol }}</td>
+                                    <td>{{ good.purchase_price }}</td>
+                                    <td>{{ good.sell_price }}</td>
+                                    <td>{{ good.supply }}</td>
+                                    <td>{{ good.trade_volume }}</td>
+                                </tr>
+                            {% endfor %}
+                    </table>
+                </div>
+                {% endif %}
+            {% endif %}
+            {% if waypoint.shipyard %}
+                {% if shipyard.ships != None and shipyard.ships != [] %}
+                    <div class="col-6">
+                        <h2 class="center">Shipyard</h2>
+                        <div>
+                            {% for ship in shipyard.ships %}
+                                <ul class="list-group list-group-horizontal">
+                                    <li class="list-group-item" style="min-width: 250px">{{ ship.ship_type }}</li>
+                                    <li class="list-group-item" style="min-width: 125px"><i class="bi bi-credit-card"></i> {{ ship.purchase_price }}</li>
+                                    <li class="list-group-item" style="min-width: 100px"><i class="bi bi-fuel-pump"></i> {{ ship.frame.fuel_capacity }}</li>
+                                    <li class="list-group-item" style="min-width: 80px"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
+                                    <li class="list-group-item" style="min-width: 80px"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
+                                    <li class="list-group-item" style="min-width: 75px"><button class="btn btn-primary btn-sm" onclick="buy('{{ ship.ship_type }}')">Buy</button></li>
+                                </ul>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-6">
+                        <h2 class="center">Shipyard</h2>
+                        <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
+                            {% for ship in shipyard.ship_types %}
+                                <li class="list-group-item">{{ ship }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                <script>
+                    function buy(ship) {
+                        fetch("/waypoint/{{ waypoint.symbol }}/buy-ship/?ship="+ship)
+                    }
+                </script>
             {% endif %}
         </div>
-    {% endif %}
-    {% if waypoint.shipyard %}
-        <div class="row">
-        {% if shipyard.ships != None and shipyard.ships != [] %}
-            <div class="col">
-                <h2 class="center">Ship Details</h2>
-            <div class="left-margin" style="max-width: 600px;margin-bottom: 10px">
-                {% for ship in shipyard.ships %}
-                    <ul class="list-group list-group-horizontal">
-                        <li class="list-group-item" style="min-width: 250px">{{ ship.ship_type }}</li>
-                        <li class="list-group-item" style="min-width: 125px"><i class="bi bi-credit-card"></i> {{ ship.purchase_price }}</li>
-                        <li class="list-group-item" style="min-width: 100px"><i class="bi bi-fuel-pump"></i> {{ ship.frame.fuel_capacity }}</li>
-                        <li class="list-group-item" style="min-width: 80px"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
-                        <li class="list-group-item" style="min-width: 80px"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
-                        <li class="list-group-item" style="min-width: 75px"><button class="btn btn-primary btn-sm" onclick="buy('{{ ship.ship_type }}')">Buy</button></li>
-                    </ul>
-                {% endfor %}
-            </div>
-            </div>
-        {% else %}
-                <div class="col">
-            <h2 class="center">Shipyard</h2>
-            <ul class="list-group left-margin" style="max-width: 400px;margin-bottom: 10px">
-                {% for ship in shipyard.ship_types %}
-                    <li class="list-group-item">
-                        {{ ship }}<span style="float: right">
-                            <button class="btn btn-primary btn-sm" onclick="buy('{{ ship }}')">Buy</button>
-                        </span>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
-        </div>
-        <script>
-            function buy(ship) {
-                fetch("/waypoint/{{ waypoint.symbol }}/buy-ship/?ship="+ship)
-            }
-        </script>
-    {% endif %}
+    </div>
 {%- endmacro %}

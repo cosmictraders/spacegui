@@ -18,7 +18,6 @@ def create_app():
     ] = "secret@!%(@!%!@)*(#$)*$@!)*@!%)*@!)*&%@!132509831207549035213028579674138"
     # initialize the app with the extension
     db.init_app(app)
-
     app.register_blueprint(ship_bp)
     app.register_blueprint(system_bp)
     app.register_blueprint(faction_bp)

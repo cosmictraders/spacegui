@@ -98,6 +98,7 @@ def rich_format(s):
 @main_bp.route("/settings/")
 @minify_html
 def settings():
+    db.create_all()
     users = db.session.execute(db.select(User)).first()
     status = autotraders.get_status()
     server_announcements = status.announcements
@@ -122,6 +123,9 @@ def settings():
 @main_bp.route("/settings-api/")
 def settings_api():
     users = db.session.execute(db.select(User)).first()
+    if users is None:
+        # TODO: Fix
+        pass
     t = users[0].token
     updated = []
     input_token = request.args.get("token", t).strip(" ").strip('"').strip("'")

@@ -10,7 +10,7 @@ from secret import TOKEN
 
 s = get_session(TOKEN)
 all_factions = Faction.all(s)
-pickle.dump(all_factions[1], open("factions.pickle",  "wb"))
+pickle.dump(all_factions[1], open("factions.pickle", "wb"))
 all_systems = System.all(s)
 for i in tqdm(range(1, all_systems.pages + 1)):
     all_systems.next()

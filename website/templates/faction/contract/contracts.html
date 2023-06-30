@@ -4,10 +4,12 @@
 Contracts
 {% endblock %}
 {% block body %}
-     <div class="list-group list-group-flush  p-3">
-        {% for contract in contracts[1] %}
-            {{ display.contract_list(contract) }}
-        {% endfor %}
+    <div class="container pt-3">
+        <div class="list-group list-group-flush">
+            {% for contract in contracts[1] %}
+                {{ display.contract_list(contract) }}
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
 {% block navid %}contracts{% endblock %}

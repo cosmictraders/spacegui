@@ -31,6 +31,19 @@
                         <button class="btn btn-success" onclick="search()" id="searchbutton" type="button"><i class="bi bi-search"></i></button>
                     </div>
                 </form>
+                <div class="dropdown-menu d-block pt-0 mt-5 shadow w-280px" id="suggestions">
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <button class="dropdown-item d-flex align-items-center gap-2 py-2" onclick="search_filter('ship')">
+                                Ships
+                            </button>
+                        </li>
+                        <li><button class="dropdown-item d-flex align-items-center gap-2 py-2" onclick="search_filter('system')">
+                                Systems
+                            </button>
+                        </li>
+                    </ul>
+                </div>
                 <a id="change-user" class="nav-link" href="/select-user/"><i class="bi bi-person-lines-fill"></i> Select User</a>
                 <a id="settings" class="nav-link" href="/settings/"><i class="bi bi-gear-fill"></i> Settings</a>
             </li>
@@ -38,13 +51,25 @@
     </div>
 </nav>
 <script>
-    $('#search-box').keypress(function(event) {
+    document.getElementById("suggestions").classList.add("visually-hidden");
+    $("#search-box").keypress(function (event) {
         if (event.keyCode === 13 || event.which === 13) {
             search();
             event.preventDefault();
         }
     });
+    $('#search-box').keyup(function(event) {
+        if ($("#search-box").val().length === 0) {
+            document.getElementById("suggestions").classList.add("visually-hidden");
+        }
+        else {
+            document.getElementById("suggestions").classList.remove("visually-hidden");
+        }
+    });
     function search() {
         this.window.location.href = "/search?query=" + encodeURIComponent($("#search-box").val());
+    }
+    function search_filter(filter) {
+        this.window.location.href = "/search?query=" + encodeURIComponent($("#search-box").val() + " is: " + filter);
     }
 </script>

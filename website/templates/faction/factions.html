@@ -4,10 +4,12 @@
 Factions
 {% endblock %}
 {% block body %}
-    <div class="list-group list-group-flush p-3">
-        {% for faction in factions %}
-            {{ display.faction_list(faction) }}
-        {% endfor %}
+    <div class="container pt-3">
+        <div class="list-group list-group-flush">
+            {% for faction in factions %}
+                {{ display.faction_list(faction) }}
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
 {% block navid %}factions{% endblock %}

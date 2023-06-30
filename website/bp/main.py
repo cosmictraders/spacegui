@@ -16,7 +16,9 @@ from website.search import (
     read_query,
     check_filters_system,
     check_filters_waypoint,
-    check_filters_ship, check_filters_contract, check_filters_faction,
+    check_filters_ship,
+    check_filters_contract,
+    check_filters_faction,
 )
 from website.wrappers import token_required, minify_html
 
@@ -103,7 +105,9 @@ def automation(name):
 @token_required
 def search(session):
     page = int(request.args.get("page", default=1))
-    t1 = time.time()  # TODO: Speed improvements by only querying whats needed (`is: waypoint` should not be getting ship,contract info)
+    t1 = (
+        time.time()
+    )  # TODO: Speed improvements by only querying whats needed (`is: waypoint` should not be getting ship,contract info)
     query, filters = read_query(request.args.get("query"))
     system_data = pickle.load(open("./data.pickle", "rb"))
     t1_2 = time.time()
@@ -120,27 +124,31 @@ def search(session):
         if weight(query, str(item.symbol)) > -0.2:
             for waypoint in item.waypoints:
                 if weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
-                        waypoint, filters
+                    waypoint, filters
                 ):
-                    unweighted_map.append((waypoint, weight(query, str(waypoint.symbol))))
+                    unweighted_map.append(
+                        (waypoint, weight(query, str(waypoint.symbol)))
+                    )
     t1_5 = time.time()
     for item in faction_data:
-        if (weight(query, item.symbol) > 0 or weight(query, item.name) > 0) and check_filters_faction(item, filters):
+        if (
+            weight(query, item.symbol) > -0.25 or weight(query, item.name) > -0.25
+        ) and check_filters_faction(item, filters):
             unweighted_map.append((item, weight(query, str(item.symbol))))
     t1_6 = time.time()
     for item in ship_data:
-        if weight(query, item.symbol) > 0 and check_filters_ship(item, filters):
+        if weight(query, item.symbol) > -0.25 and check_filters_ship(item, filters):
             unweighted_map.append((item, weight(query, item.symbol)))
     for item in contract_data:
-        if weight(query, item.contract_id) and check_filters_contract(item, filters):
+        if weight(query, item.contract_id) > -0.7 and check_filters_contract(item, filters):
             unweighted_map.append((item, weight(query, str(item.contract_id))))
     amap = [
         item for item, _ in sorted(unweighted_map, key=lambda x: x[1], reverse=True)
     ]
     if len(amap) > 100:
-        amap = amap[page - 1 * 100:page * 100]
+        amap = amap[page - 1 * 100 : page * 100]
     t2 = time.time()
     print(t1_2 - t1, t1_3 - t1_2, t1_4 - t1_3, t1_5 - t1_4, t1_6 - t1_5, t2 - t1_6)
     return render_template(
-        "search.html", query=request.args.get("query"), map=amap, time=t2 - t1
+        "search.html", query=request.args.get("query"), map=amap, time=str(t2 - t1)
     )

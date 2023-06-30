@@ -8,29 +8,31 @@
 Search
 {% endblock %}
 {% block body %}
-    <p>Searched in {{ time }}</p>
-    {% if map.__len__() != 0 %}
-        <div class="row g-3">
-            <div class="list-group list-group-flush" style="max-width: 70%;">
-                {% for item in map %}
-                    {% if item.__class__.__name__ == "System" %}
-                        {{ system.system_list(item) }}
-                    {# TODO: Fix hacks #}
-                    {% elif item.__class__.__name__ == "Waypoint" %}
-                        {{ waypoint.waypoint_list(item) }}
-                    {% elif item.__class__.__name__ == "Contract" %}
-                        {{ contract.contract_list(item) }}
-                    {% elif item.__class__.__name__ == "Faction" %}
-                        {{ faction.faction_list(item) }}
-                    {% elif item.__class__.__name__ == "Ship" %}
-                        {{ ship.ship_list(item) }}
-                    {% endif %}
-                {% endfor %}
+    <div class="container pt-3">
+        <p>Searched in {{ time[0:4] }} seconds</p>
+        {% if map.__len__() != 0 %}
+            <div class="row g-3">
+                <div class="list-group list-group-flush">
+                    {% for item in map %}
+                        {% if item.__class__.__name__ == "System" %}
+                            {{ system.system_list(item) }}
+                        {# TODO: Fix hacks #}
+                        {% elif item.__class__.__name__ == "Waypoint" %}
+                            {{ waypoint.waypoint_list(item) }}
+                        {% elif item.__class__.__name__ == "Contract" %}
+                            {{ contract.contract_list(item) }}
+                        {% elif item.__class__.__name__ == "Faction" %}
+                            {{ faction.faction_list(item) }}
+                        {% elif item.__class__.__name__ == "Ship" %}
+                            {{ ship.ship_list(item) }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    {% else %}
-        No results
-    {% endif %}
+        {% else %}
+            No results
+        {% endif %}
+    </div>
     <script>
         // TODO: fix literal hack
         $("#search-box").val("{{ query|safe }}");

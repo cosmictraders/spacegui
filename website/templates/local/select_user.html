@@ -9,6 +9,7 @@ Select User
             {% for user in users %}
                 <div onclick="setUser({{ user.id }})" class="list-group-item list-group-item-action {% if user.active %}active{% endif %}">
                     <p>{{ user.token }}</p>
+                    <button class="btn btn-danger" onclick="deleteUser({{ user.id }})">Delete</button>
                 </div>
             {% endfor %}
         </div>
@@ -17,6 +18,13 @@ Select User
     <script>
         function setUser(user_id) {
             fetch("/select-user-api/" + user_id).then(
+                (_) => {
+                    document.location.href = "/";
+                }
+            )
+        }
+        function deleteUser(user_id) {
+            fetch("/delete-user-api/" + user_id).then(
                 (_) => {
                     document.location.href = "/";
                 }

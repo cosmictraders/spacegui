@@ -40,12 +40,12 @@ def select_user_api(user_id):
     db.session.commit()
     return jsonify({})
 
-
-@local_bp.route("/reset/")
-def reset():
-    db.drop_all()
-    flash("Reset successful", "primary")
-    return redirect("/")
+@local_bp.route("/select-user-api/<user_id>")
+def delete_user_api(user_id):
+    current = db.session.query(User).filter_by(id=user_id).first()
+    db.session.delete(current)
+    db.session.commit()
+    return jsonify({})
 
 
 @local_bp.route("/create-token/")

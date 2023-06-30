@@ -6,7 +6,7 @@ from flask import *
 
 from website.wrappers import token_required, minify_html
 
-faction_bp = Blueprint("contract", __name__)
+faction_bp = Blueprint("faction", __name__)
 
 
 @faction_bp.route("/factions/")

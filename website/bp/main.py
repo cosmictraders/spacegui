@@ -1,3 +1,4 @@
+import inspect
 import pickle
 import time
 from datetime import datetime, timezone
@@ -28,57 +29,6 @@ main_bp = Blueprint("main", __name__)
 def index(session):
     agent = Agent(session)
     return render_template("index.html", agent=agent)
-
-
-@main_bp.route("/setup/")
-@minify_html
-def setup():
-    return render_template("setup.html")
-
-
-@main_bp.route("/create-token/")
-@minify_html
-def create_token():
-    return render_template("create_token.html")
-
-
-@main_bp.route("/create-token-api/")
-@minify_html
-def create_token_api():
-    db.drop_all()
-    db.create_all()
-    r = requests.post(
-        "https://api.spacetraders.io/v2/register",
-        data={
-            "faction": request.args.get("faction").strip().upper(),
-            "symbol": request.args.get("symbol").strip(),
-            "email": request.args.get("email").strip(),
-        },
-    )
-    user = User(token=r.json()["data"]["token"])
-    db.session.add(user)
-    db.session.commit()
-    flash("Added User", "success")
-    return jsonify({})
-
-
-@main_bp.route("/reset/")
-def reset():
-    db.drop_all()
-    flash("Reset successful", "primary")
-    return redirect("/")
-
-
-@main_bp.route("/create-user/")
-@minify_html
-def create_user():
-    db.drop_all()
-    db.create_all()
-    user = User(token=request.args.get("token").strip())
-    db.session.add(user)
-    db.session.commit()
-    flash("Added User", "success")
-    return jsonify({})
 
 
 @main_bp.route("/map/")
@@ -153,7 +103,7 @@ def automation(name):
 @token_required
 def search(session):
     page = int(request.args.get("page", default=1))
-    t1 = time.time() # TODO: Speed improvements by only querying whats needed (`is: waypoint` should not be getting ship,contract info)
+    t1 = time.time()  # TODO: Speed improvements by only querying whats needed (`is: waypoint` should not be getting ship,contract info)
     query, filters = read_query(request.args.get("query"))
     system_data = pickle.load(open("./data.pickle", "rb"))
     t1_2 = time.time()
@@ -170,7 +120,7 @@ def search(session):
         if weight(query, str(item.symbol)) > -0.2:
             for waypoint in item.waypoints:
                 if weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
-                    waypoint, filters
+                        waypoint, filters
                 ):
                     unweighted_map.append((waypoint, weight(query, str(waypoint.symbol))))
     t1_5 = time.time()
@@ -188,9 +138,9 @@ def search(session):
         item for item, _ in sorted(unweighted_map, key=lambda x: x[1], reverse=True)
     ]
     if len(amap) > 100:
-        amap = amap[page-1*100:page*100]
+        amap = amap[page - 1 * 100:page * 100]
     t2 = time.time()
-    print(t1_2-t1, t1_3-t1_2, t1_4-t1_3, t1_5-t1_4, t1_6-t1_5, t2-t1_6)
+    print(t1_2 - t1, t1_3 - t1_2, t1_4 - t1_3, t1_5 - t1_4, t1_6 - t1_5, t2 - t1_6)
     return render_template(
-        "search.html", query=request.args.get("query"), map=amap, time=t2-t1
+        "search.html", query=request.args.get("query"), map=amap, time=t2 - t1
     )

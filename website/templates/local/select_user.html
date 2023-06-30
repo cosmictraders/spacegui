@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+Select User
+{% endblock %}
+{% block body %}
+    <h1 class="center">Select User</h1>
+    <div class="container">
+        <div class="list-group">
+            {% for user in users %}
+                <div onclick="setUser({{ user.id }})" class="list-group-item list-group-item-action {% if user.active %}active{% endif %}">
+                    <p>{{ user.token }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <a class="p-3" href="/create-user">Create User</a>
+    </div>
+    <script>
+        function setUser(user_id) {
+            fetch("/select-user-api/" + user_id).then(
+                (_) => {
+                    document.location.href = "/";
+                }
+            )
+        }
+    </script>
+{% endblock %}
+{% block navid %}select-user{% endblock %}

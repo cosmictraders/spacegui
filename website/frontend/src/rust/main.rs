@@ -11,8 +11,6 @@ use speedy2d::{color::*, dimen::Vector2, font::*, image::*, shape::*, GLRenderer
 use std::cell::RefCell;
 use std::rc::Rc;
 
-mod canvas;
-
 type SpeedyColor = Color;
 
 //C++ tutorial on implementing pan/zoom
@@ -286,7 +284,7 @@ fn main() {
         450,
         wind_size,
         wind_size,
-        "Speedy 2d Scroll Zoom Canvas",
+        "Map",
     );
     let mut win = GlutWindow::default()
         .with_size(wind_size, wind_size)
@@ -296,8 +294,8 @@ fn main() {
     main_win.show();
     win.make_current();
 
-    let helvetica_bytes = include_bytes!("../fira.ttf");
-    let helvetica_font = Font::new(helvetica_bytes).unwrap();
+    let fira_bytes = include_bytes!("../fira.ttf");
+    let fira_font = Font::new(fira_bytes).unwrap();
 
     gl::load_with(|s| win.get_proc_address(s));
     let mut renderer =
@@ -409,7 +407,7 @@ fn main() {
                 for x in &scene.items {
                     x.draw(graphics, scene.offset, scene.zoom_scale);
                 }
-                let zoom_text = helvetica_font.layout_text(
+                let zoom_text = fira_font.layout_text(
                     &format!(
                         "Zoom: x: {}, y: {}",
                         format!("{:.1$}", scene.zoom_scale.x.to_string(), 4),
@@ -418,12 +416,12 @@ fn main() {
                     font_size,
                     TextOptions::new(),
                 );
-                let event_text = helvetica_font.layout_text(
+                let event_text = fira_font.layout_text(
                     &format!("Event: x: {}, y: {}", app::event_x(), app::event_y()),
                     font_size,
                     TextOptions::new(),
                 );
-                let offset_text = helvetica_font.layout_text(
+                let offset_text = fira_font.layout_text(
                     &format!(
                         "Offset: x: {}, y: {}",
                         format!("{:.1$}", scene.offset.x.to_string(), 5),

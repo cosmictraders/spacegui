@@ -17,11 +17,22 @@ Home
                 background: linear-gradient(#ffcccc, #dadcff);
             }
         }
+        @media (prefers-color-scheme: dark) {
+            .agent-card {
+                background: linear-gradient(#4f3e38, #4d4f43);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .agent-card {
+                background: linear-gradient(#d8dcb7, #ffc8b1);
+            }
+        }
     </style>
     <div class="colored-background">
         <div class="container">
             <div class="row justify-content-center py-4">
-                <div class="shadow-lg card" style="width: 20rem">
+                <div class="shadow-lg card agent-card" style="width: 20rem;">
                     <div class="card-body">
                         <h1 class="center"><i class="bi bi-person-fill"></i> {{ agent.symbol }}</h1>
                         <p class="center"><i class="bi bi-credit-card"></i> {{ agent.credits }}</p>

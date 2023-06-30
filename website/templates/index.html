@@ -6,27 +6,21 @@ Home
 {% endblock %}
 {% block body %}
     <style>
-        @media (prefers-color-scheme: dark) {
-            .colored-background {
-                background: linear-gradient(30deg, var(--bs-primary-bg-subtle), var(--bs-danger-bg-subtle));
-            }
+        .colored-background {
+            --bd-violet-rgb: 108, 20, 240;
+            --bd-accent-rgb: 255,228,132;
+            --bd-pink-rgb: 214,51,132;
+            background: linear-gradient(rgba(var(--bs-body-bg-rgb), 0.25),
+            rgba(var(--bs-body-bg-rgb), 0.75) 85%),
+            radial-gradient(ellipse at top left, rgba(var(--bs-primary-rgb), 0.7), transparent 60%),
+            radial-gradient(ellipse at bottom, rgba(var(--bs-success-rgb), 0.9), transparent 60%),
+            radial-gradient(ellipse at top right, rgba(var(--bd-accent-rgb), 0.7), transparent 60%),
+            radial-gradient(ellipse at bottom right, rgba(var(--bd-violet-rgb), 0.7), transparent 60%),
+            radial-gradient(ellipse at bottom left, rgba(var(--bd-pink-rgb), 0.7), transparent 60%);
         }
 
-        @media (prefers-color-scheme: light) {
-            .colored-background {
-                background: linear-gradient(30deg, var(--bs-danger-bg-subtle), var(--bs-primary-bg-subtle));
-            }
-        }
-        @media (prefers-color-scheme: dark) {
-            .agent-card {
-                background: linear-gradient(60deg, var(--bs-info-bg-subtle), var(--bs-warning-bg-subtle));
-            }
-        }
-
-        @media (prefers-color-scheme: light) {
-            .agent-card {
-                background: linear-gradient(60deg, var(--bs-warning-bg-subtle), var(--bs-info-bg-subtle));
-            }
+        .agent-card {
+            background: linear-gradient(90deg, var(--bs-info-bg-subtle), var(--bs-warning-bg-subtle));
         }
     </style>
     <div class="colored-background">

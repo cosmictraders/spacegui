@@ -9,7 +9,8 @@ name = "map"
 path = "./src/rust/main.rs"
 
 [dependencies]
-iced = { version = "0.9.0", features = ["canvas"] }
-iced_web = "0.4.0"
-serde = "1.0"
-serde_json = "1.0"
+fltk = { version = "1.0.21", features = ["enable-glwindow"] }
+speedy2d = { version = "1.12.0", default-features = true }
+gl = "0.14"
+image = "0.24.6"
+dyn-clone = "1.0.4"

@@ -31,7 +31,7 @@
                 <li class="list-group-item">
                     <div class="progress" role="progressbar" aria-label="labeled fuel bar" aria-valuenow="{{ ship.fuel.current }}" aria-valuemin="0" aria-valuemax="{{ ship.fuel.total }}">
                         <div class="progress-bar {{ pb_color }} overflow-visible" style="width: {{ 100*(ship.fuel.current/ship.fuel.total) }}%">
-                            <span><i class="bi bi-fuel-pump"></i> {{ ship.fuel.current }}/{{ ship.fuel.total }}</span>
+                            <span>{{ ship.fuel.current }}/{{ ship.fuel.total }} <i class="bi bi-fuel-pump"></i></span>
                         </div>
                     </div>
                 </li>

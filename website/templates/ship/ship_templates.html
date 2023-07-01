@@ -1,6 +1,6 @@
 {% import "macros.html" as macros %}
 {% macro ship_card(ship) -%}
-    <div class="card shadow" style="width: 26rem; margin: 17px 10px">
+    <div class="card shadow" style="width: 27rem; margin: 17px 10px">
         <div class="card-body">
             <h5 class="card-title"><a href="/ship/{{ ship.symbol }}"><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}</a></h5>
         </div>
@@ -157,7 +157,7 @@
                 <div class="row py-3">
                     <div class="btn-toolbar" role="toolbar">
                         <div class="btn-group me-2" role="group" aria-label="Ship Controls">
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#navigateModal" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}>Move</button>
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#navigateModal" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}><i class="bi bi-arrows-move"></i> Move</button>
                         </div>
                         <div class="btn-group me-2" role="group" aria-label="Ship Controls">
                             <button type="button" class="btn btn-success" onclick="dock()" {% if ship.nav.status == "DOCKED" %}disabled{% endif %}><i class="bi bi-arrow-down-circle"></i> Dock</button>

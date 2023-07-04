@@ -36,7 +36,7 @@ def index(session):
 @main_bp.route("/map/")
 @minify_html
 def map_v3():
-    return render_template("map/map.html")
+    return render_template("map/map_python.html")
 
 
 def rich_format(s):

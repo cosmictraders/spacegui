@@ -14,31 +14,39 @@
             font-family: "Fira Code";
             src: url({{ url_for('static', filename='fira.ttf') }});
         }
+
         body {
             font-family: "Fira Code", monospace;
             --bs-body-font-family: "Fira Code", monospace;
         }
 
         .typewriter {
-          overflow: hidden; /* Ensures the content is not revealed until the animation */
-          border-right: .15em solid black; /* The typwriter cursor */
-          white-space: nowrap; /* Keeps the content on a single line */
-          margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-          animation:
-            typing 3.5s steps(30, end),
+            overflow: hidden; /* Ensures the content is not revealed until the animation */
+            border-right: .15em solid black; /* The typwriter cursor */
+            white-space: nowrap; /* Keeps the content on a single line */
+            margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+            animation: typing 3.5s steps(30, end),
             blink-caret .5s step-end infinite;
         }
 
         /* The typing effect */
         @keyframes typing {
-          from { width: 0 }
-          to { width: 100% }
+            from {
+                width: 0
+            }
+            to {
+                width: 100%
+            }
         }
 
         /* The typewriter cursor effect */
         @keyframes blink-caret {
-          from, to { border-color: transparent }
-          50% { border-color: black }
+            from, to {
+                border-color: transparent
+            }
+            50% {
+                border-color: black
+            }
         }
 
         .center {
@@ -48,56 +56,57 @@
         .row {
             margin-right: 0;
         }
+
         .bs-theme-adhere {
-          --bs-bg-opacity: 1;
-          background-color: rgba(var(--bs-body-bg-rgb),var(--bs-bg-opacity)) !important;
-          --bs-text-opacity: 1;
-          color: rgba(var(--bs-body-color-rgb),var(--bs-text-opacity)) !important;
+            --bs-bg-opacity: 1;
+            background-color: rgba(var(--bs-body-bg-rgb),var(--bs-bg-opacity)) !important;
+            --bs-text-opacity: 1;
+            color: rgba(var(--bs-body-color-rgb),var(--bs-text-opacity)) !important;
         }
     </style>
     {% block head %}
     {% endblock %}
 </head>
 <body>
-    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
-    <div id="containing">
-        {% include "navbar.html" %}
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div id="flash-box" class=flashes>
-                    {% for message in messages %}
-                        <div class="alert alert-primary alert-dismissible" role="alert">
-                            <div>{{ message }}</div>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-        {% block body %}
-        {% endblock %}
-{#        <div class="container">#}
-{#            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">#}
-{#                <div class="col-md-4 d-flex align-items-center">#}
-{#                    <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">#}
-{#                        <img src="/static/favicon.png" height="32px" width="32px" alt="logo"/>#}
-{#                        Space Gui#}
-{#                    </a>#}
-{#                </div>#}
-{#                <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">#}
-{#                    <li class="ms-3"><a class="text-muted" href="https://github.com/cosmictraders/spacegui/"><span class="bi bi-github"></span></a></li>#}
-{#                </ul>#}
-{#            </footer>#}
-{#        </div>#}
-{#    TODO: Fix #}
-    </div>
-    <script>
-        const element = document.getElementById("{% block navid %}{% endblock %}");
-        element.classList.add("active");
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-    </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
+<div id="containing">
+    {% include "navbar.html" %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div id="flash-box" class=flashes>
+                {% for message in messages %}
+                    <div class="alert alert-primary alert-dismissible" role="alert">
+                        <div>{{ message }}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    {% block body %}
+    {% endblock %}
+    {#        <div class="container">#}
+    {#            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">#}
+    {#                <div class="col-md-4 d-flex align-items-center">#}
+    {#                    <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">#}
+    {#                        <img src="/static/favicon.png" height="32px" width="32px" alt="logo"/>#}
+    {#                        Space Gui#}
+    {#                    </a>#}
+    {#                </div>#}
+    {#                <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">#}
+    {#                    <li class="ms-3"><a class="text-muted" href="https://github.com/cosmictraders/spacegui/"><span class="bi bi-github"></span></a></li>#}
+    {#                </ul>#}
+    {#            </footer>#}
+    {#        </div>#}
+    {#    TODO: Fix #}
+</div>
+<script>
+    const element = document.getElementById("{% block navid %}{% endblock %}");
+    element.classList.add("active");
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="/static/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

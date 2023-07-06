@@ -99,7 +99,7 @@
                     {% if not ship.nav.moving %}
                         <p>Status: {{ ship.nav.status }}</p>
                     {% else %}
-                        <p>Status: {{ ship.nav.status }} with flight mode "{{ ship.nav.flight_mode }}"
+                        <p>Status: {{ ship.nav.status }} with flight mode {{ ship.nav.flight_mode }}
                             <br>ETA: <span id="eta"></span> seconds</p>
                             <script>
                                 function timer(element, start, on_end, original) {

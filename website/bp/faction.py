@@ -47,7 +47,7 @@ def contracts(session):
 
 @faction_bp.route("/contract/<contract_id>/api/")
 @token_required
-def contract_api(contract_id, session):
+def contract_api(contract_id, session):  # TODO: port to html
     contract = Contract(contract_id, session)
     return jsonify(
         {

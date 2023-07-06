@@ -29,15 +29,13 @@ def minify_html(func):
 
 
 def token_required(func):
-    """Decorator that reports the execution time."""
-
     def wrap(*args, **kwargs):
         try:
             session = get_session()
         except Exception as e:
             print(e)
             db.create_all()
-            return render_template("setup.html")
+            return render_template("local/create_user.html")
         result = func(*args, **kwargs, session=session)
         return result
 

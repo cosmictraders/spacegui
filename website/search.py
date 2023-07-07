@@ -1,5 +1,4 @@
 import difflib
-import re
 from enum import Enum
 
 from autotraders.faction import Faction
@@ -216,7 +215,7 @@ def read_query(q):
             filter_ending = True
         if char == ":":
             split = [c for c in current.split(" ") if c != ""]
-            if len(split) != 0:
+            if any(split):
                 if len(split) == 1:
                     filter_name = current
                 else:

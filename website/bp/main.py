@@ -36,7 +36,13 @@ def index(session):
 @main_bp.route("/map/")
 @minify_html
 def map_v3():
-    return render_template("map/map_python.html")
+    return render_template("map/map.html")
+
+
+@main_bp.route("/map-v4/")
+@minify_html
+def map_v4():
+    return render_template("map/map_v4.html")
 
 
 def rich_format(s):
@@ -124,7 +130,7 @@ def search(session):
         if weight(query, str(item.symbol)) > -0.2:
             for waypoint in item.waypoints:
                 if weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
-                    waypoint, filters
+                        waypoint, filters
                 ):
                     unweighted_map.append(
                         (waypoint, weight(query, str(waypoint.symbol)))
@@ -132,7 +138,7 @@ def search(session):
     t1_5 = time.time()
     for item in faction_data:
         if (
-            weight(query, item.symbol) > -0.25 or weight(query, item.name) > -0.25
+                weight(query, item.symbol) > -0.25 or weight(query, item.name) > -0.25
         ) and check_filters_faction(item, filters):
             unweighted_map.append((item, weight(query, str(item.symbol))))
     t1_6 = time.time()
@@ -146,7 +152,7 @@ def search(session):
         item for item, _ in sorted(unweighted_map, key=lambda x: x[1], reverse=True)
     ]
     if len(amap) > 100:
-        amap = amap[page - 1 * 100 : page * 100]
+        amap = amap[page - 1 * 100: page * 100]
     t2 = time.time()
     print(t1_2 - t1, t1_3 - t1_2, t1_4 - t1_3, t1_5 - t1_4, t1_6 - t1_5, t2 - t1_6)
     return render_template(

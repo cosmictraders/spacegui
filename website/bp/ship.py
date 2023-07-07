@@ -13,8 +13,30 @@ ship_bp = Blueprint("ship", __name__)
 @minify_html
 @token_required
 def ships(session):
-    li = Ship.all(session)
-    return render_template("ship/ships.html", ships=li)
+    page = int(request.args.get("page", default=1))
+    ships = Ship.all(session, page)
+    li = {
+        1
+    }
+    if ships.pages > 1:
+        li.add(2)
+        if ships.pages > 2:
+            li.add(3)
+            if ships.pages > 3:
+                li.add(4)
+                if ships.pages > 4:
+                    li.add(5)
+    # TODO: More pagination (more than 5)
+    li = list(li)
+    li.sort()
+    new_li = []
+    prev = 0
+    for i in li:
+        if i != (prev + 1):
+            new_li.append("..")
+        new_li.append(i)
+        prev = i
+    return render_template("ship/ships.html", ships=ships, page=page, li=new_li)
 
 
 @ship_bp.route("/ship/<name>/")

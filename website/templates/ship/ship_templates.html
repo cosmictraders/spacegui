@@ -79,7 +79,7 @@
                         <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
                         <li class="list-group-item list-group-item-success"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
                         <li class="list-group-item list-group-item-primary"><i class="bi bi-box-seam-fill"></i> {{ ship.cargo.current }}/{{ ship.cargo.capacity }}</li>
-                    </ul>
+                    </div>
                 </div>
             </div>
         </a>
@@ -149,14 +149,39 @@
                         <p>No Fuel Tank</p>
                     {% endif %}
                 </div>
-{#                 TODO: Fix row below this line #}
                 <div class="row py-3 px-2">
-                    <ul class="list-group list-group-horizontal">
-                        <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.crew.current }}/{{ ship.crew.capacity }}</li>
-                        <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
-                        <li class="list-group-item list-group-item-success"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
-                        <li class="list-group-item list-group-item-primary"><i class="bi bi-box-seam-fill"></i> {{ ship.cargo.current }}/{{ ship.cargo.capacity }}</li>
-                    </ul>
+                    <div class="list-group">
+                        <div class='list-group-item list-group-item-info'>
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1"><i class="bi bi-person-fill"></i> {{ ship.crew.current }}</h5>
+                                <p class="mb-1 small">{{ ship.crew.required }} Required</p>
+                            </div>
+                            <p class="mb-1">The capacity of {{ ship.symbol }} is {{ ship.crew.capacity }} people.
+                                The crew has {{ ship.crew.morale }} morale, and has {{ ship.crew.wages }} wages.
+                            </p>
+                        </div>
+                        <div class="list-group-item list-group-item-warning">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ ship.reactor.name }}</h5>
+                                <ul class="list-group list-group-horizontal">
+                                    <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.reactor.requirements.crew }}</li>
+                                </ul>
+                            </div>
+                            <small>Power: {{ ship.reactor.power_output }}</small>
+                            <p class="mb-1">{{ ship.reactor.description }}</p>
+                        </div>
+                        <div class="list-group-item list-group-item-success">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ ship.engine.name }}</h5>
+                                <ul class="list-group list-group-horizontal">
+                                    <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.engine.requirements.crew }}</li>
+                                    <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.engine.requirements.power }}</li>
+                                </ul>
+                            </div>
+                            <small>Speed: {{ ship.engine.speed }}</small>
+                            <p class="mb-1">{{ ship.engine.description }}</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="row py-3">
                     <div class="btn-toolbar" role="toolbar">
@@ -186,7 +211,7 @@
                             </div>
                             <p class="mb-1">{{ c.description }}</p>
                             <div class="input-group">
-{#                            TODO: Switch to range#}
+                                {# TODO: Switch to range #}
                                 <input id="amount-{{ c.symbol }}" type="number" class="form-control"
                                        placeholder="Amount" value="1" min="0" max="{{ c.quantity }}"
                                        style="max-width: 75px">
@@ -223,27 +248,6 @@
                         <p class="mb-1">Module Slots: {{ ship.frame.module_slots }}</p>
                         <p class="mb-1">Mounting Points: {{ ship.frame.mounting_points }}</p>
                         <p class="mb-1"></p>
-                    </div>
-                    <div class="list-group-item list-group-item-success">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{ ship.engine.name }}</h5>
-                            <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.engine.requirements.crew }}</li>
-                                <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.engine.requirements.power }}</li>
-                            </ul>
-                        </div>
-                        <small>Speed: {{ ship.engine.speed }}</small>
-                        <p class="mb-1">{{ ship.engine.description }}</p>
-                    </div>
-                    <div class="list-group-item list-group-item-warning">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{ ship.reactor.name }}</h5>
-                            <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.reactor.requirements.crew }}</li>
-                            </ul>
-                        </div>
-                        <small>Power: {{ ship.reactor.power_output }}</small>
-                        <p class="mb-1">{{ ship.reactor.description }}</p>
                     </div>
                     {% for module in ship.modules %}
                         <div class="list-group-item {% if module.symbol == 'MODULE_CARGO_HOLD_I' %}list-group-item-primary{% elif module.symbol == 'MODULE_CREW_QUARTERS_I' %}list-group-item-info{% endif %}">
@@ -314,9 +318,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    {#                    TODO: Add tooltips for disabled buttons with explainations#}
-                    {#                    TODO: make jump/warp only allowed if the ship has the capability to do so #}
-                    {#                    TODO: Make cancel button float on left and the rest float on the right #}
+                    {# TODO: Add tooltips for disabled buttons with explainations#}
+                    {# TODO: make jump/warp only allowed if the ship has the capability to do so #}
+                    {# TODO: Make cancel button float on left and the rest float on the right #}
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="jump()">Jump</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="warp()">Warp</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="navigate()">Navigate</button>

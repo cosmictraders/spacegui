@@ -13,12 +13,35 @@ faction_bp = Blueprint("faction", __name__)
 @minify_html
 @token_required
 def factions(session):
-    factions = Faction.all(session)[1]
-    for faction in factions:
-        faction.description = textwrap.shorten(
-            faction.description, width=250, placeholder=" ..."
-        )
-    return render_template("faction/factions.html", factions=factions)
+    page = int(request.args.get("page", default=1))
+    factions = Faction.all(session)
+    li = {
+        1
+    }
+    if factions.pages > 1:
+        li.add(2)
+        if factions.pages > 2:
+            li.add(3)
+            if factions.pages > 3:
+                li.add(4)
+                if factions.pages > 4:
+                    li.add(5)
+    if factions.pages > 0:
+        li.add(factions.pages - 2)
+    if factions.pages > 0:
+        li.add(factions.pages - 1)
+    if factions.pages > 0:
+        li.add(factions.pages)
+    li = list(li)
+    li.sort()
+    new_li = []
+    prev = 0
+    for i in li:
+        if i != (prev + 1):
+            new_li.append("..")
+        new_li.append(i)
+        prev = i
+    return render_template("faction/factions.html", factions=factions, page=page, li=new_li)
 
 
 @faction_bp.route("/faction/<symbol>/")

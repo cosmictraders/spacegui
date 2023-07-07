@@ -6,10 +6,33 @@ Factions
 {% block body %}
     <div class="container pt-3">
         <div class="list-group list-group-flush">
-            {% for faction in factions %}
+            {% for faction in factions.current() %}
                 {{ display.faction_list(faction) }}
             {% endfor %}
         </div>
+        <nav aria-label="Pagination">
+            <ul class="pagination p-3">
+                {% if factions.page > 1 %}
+                    <li class="page-item"><a class="page-link" href="/factions/?page={{ factions.page-1 }}">Previous</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="/factions/#">Previous</a></li>
+                {% endif %}
+                {% for i in li %}
+                    {% if i == factions.page %}
+                        <li class="page-item"><a class="page-link active" href="/factions/?page={{ i }}">{{ i }}</a></li>
+                    {% elif i == ".." %}
+                        <li class="page-item disabled"><a class="page-link" href="/factions/?page={{ i }}">{{ i }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="/factions/?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if factions.page < factions.pages %}
+                    <li class="page-item"><a class="page-link" href="/factions/?page={{ factions.page+1 }}">Next</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="/factions/#">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
 {% endblock %}
 {% block navid %}factions{% endblock %}

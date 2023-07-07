@@ -88,10 +88,14 @@
 {% macro ship_display(ship, waypoint_options, now) -%}
     <div class="container py-3">
         <div class="row justify-content-center text-center">
-            <h1 class="col"><i class="bi bi-rocket-takeoff-fill"></i>  {{ ship.symbol }} <button type="button" class="btn btn-secondary" onclick="refresh()"><i class="bi bi-arrow-clockwise"></i></button></h1>
+            <h1 class="col"><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}
+                <button type="button" class="btn btn-secondary" onclick="refresh()"><i
+                        class="bi bi-arrow-clockwise"></i></button>
+            </h1>
         </div>
         <div class="row justify-content-center text-center">
-            <p class="col"><i class="bi bi-rocket"></i> {{ ship.registration.faction_symbol }} {{ ship.registration.role }}</p>
+            <p class="col"><i
+                    class="bi bi-rocket"></i> {{ ship.registration.faction_symbol }} {{ ship.registration.role }}</p>
         </div>
         <div class="row gx-5 gy-3">
             <div class="col-6">
@@ -101,22 +105,22 @@
                     {% else %}
                         <p>Status: {{ ship.nav.status }} with flight mode {{ ship.nav.flight_mode }}
                             <br>ETA: <span id="eta"></span> seconds</p>
-                            <script>
-                                function timer(element, start, on_end, original) {
-                                    if (start === 0) {
-                                        element.innerHTML = original
-                                        on_end()
-                                    }
-                                    else {
-                                        element.innerHTML = start
-                                        setTimeout(function () {
-                                                timer(element, start - 1, on_end, original);
-                                            }, 1000
-                                        )
-                                    }
+                        <script>
+                            function timer(element, start, on_end, original) {
+                                if (start === 0) {
+                                    element.innerHTML = original
+                                    on_end()
+                                } else {
+                                    element.innerHTML = start
+                                    setTimeout(function () {
+                                            timer(element, start - 1, on_end, original);
+                                        }, 1000
+                                    )
                                 }
-                                timer(document.getElementById("eta"), {{ -(now - ship.nav.route.arrival).total_seconds() // 1 }}, refresh, "");
-                            </script>
+                            }
+
+                            timer(document.getElementById("eta"), {{ -(now - ship.nav.route.arrival).total_seconds() // 1 }}, refresh, "");
+                        </script>
                     {% endif %}
                 </div>
                 <div class="row py-3">
@@ -298,10 +302,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-{#                    TODO: Add tooltips for disabled buttons with explainations#}
-{#                    TODO: make jump/warp only allowed if the ship has the capability to do so #}
-{#                    TODO: Make cancel button float on left and the rest float on the right #}
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="jump()">Jump</button>
+                    {#                    TODO: Add tooltips for disabled buttons with explainations#}
+                    {#                    TODO: make jump/warp only allowed if the ship has the capability to do so #}
+                    {#                    TODO: Make cancel button float on left and the rest float on the right #}
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="jump()">Jump</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="warp()">Warp</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="navigate()">Navigate</button>
                 </div>

@@ -5,10 +5,36 @@ Contracts
 {% endblock %}
 {% block body %}
     <div class="container pt-3">
-        <div class="list-group list-group-flush">
-            {% for contract in contracts[1] %}
-                {{ display.contract_list(contract) }}
-            {% endfor %}
+    <div class="list-group list-group-flush">
+        {% for contract in contracts[1] %}
+            {{ display.contract_list(contract) }}
+        {% endfor %}
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#negotiateModal">
+            <i class="bi bi-plus-circle-fill"></i> New Contract
+        </button>
+        <div class="modal fade" id="negotiateModal" tabindex="-1" aria-labelledby="NavigateModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="NavigateModal">Negotiate Contract</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="row g-3">
+                                <div class="col">
+                                    <label for="ship" class="form-label">Ship</label>
+                                    <input type="text" class="form-control" id="ship">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="negotiate()">Negotiate</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

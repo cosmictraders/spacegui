@@ -1,4 +1,5 @@
 # Spacegui
+![image.png](image.png)
 A GUI for spacetraders, built with `autotraders`, `flask`, and `bootstrap`
 ## Getting Started
 Run to install the requirements

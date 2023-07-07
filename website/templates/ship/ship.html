@@ -14,19 +14,19 @@ Ship - {{ ship.symbol }}
     <div id="ship-display">
         {{ display.ship_display(ship, waypoint_options, now) }}
     </div>
-        <script defer>
+    <script defer>
         const alertPlaceholder = $("#errors");
         document.getElementById("navigation-mode").value = "{{ ship.nav.flight_mode }}";
         const appendAlert = (message, type) => {
-          const wrapper = document.createElement('div')
-          wrapper.innerHTML = [
-            `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-            `   <div>${message}</div>`,
-            '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-            '</div>'
-          ].join('')
+            const wrapper = document.createElement('div')
+            wrapper.innerHTML = [
+                `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+                `   <div>${message}</div>`,
+                '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                '</div>'
+            ].join('')
 
-          alertPlaceholder.append(wrapper)
+            alertPlaceholder.append(wrapper)
         }
 
         async function alertIfErr(resp) {
@@ -68,6 +68,7 @@ Ship - {{ ship.symbol }}
                 refresh();
             }, (500));
         }
+
         function extract() {
             fetch("/ship/{{ ship.symbol }}/extract").then(
                 (resp) => {

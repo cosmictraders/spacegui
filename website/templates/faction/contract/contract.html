@@ -5,57 +5,57 @@ Contract - {{ contract.contract_id }}
 {% endblock %}
 {% block body %}
     <div id="errors"></div>
-    {{ display.contract_display(contract) }}
     <script>
-    refresh();
-    const alertPlaceholder = $("#errors");
-    const appendAlert = (message, type) => {
-      const wrapper = document.createElement('div')
-      wrapper.innerHTML = [
-        `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-        `   <div>${message}</div>`,
-        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-        '</div>'
-      ].join('')
-
-      alertPlaceholder.append(wrapper)
-    }
-
-    async function alertIfErr(resp) {
-        let j = await resp.json();
-        if (j.hasOwnProperty("error")) {
-            appendAlert(j.error, "danger")
+        async function refresh() {
+            let data = await fetch("/contract/{{ contract.contract_id }}/api/");
+            $("#contract-display").html(await data.text());
         }
-    }
+    </script>
+    <div id="contract-display">
+        {{ display.contract_display(contract) }}
+    </div>
+    <script>
+        const alertPlaceholder = $("#errors");
+        const appendAlert = (message, type) => {
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = [
+                `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+                `   <div>${message}</div>`,
+                '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                '</div>'
+            ].join('');
 
-    function accept() {
-        fetch("/contract/{{ contract.contract_id }}/accept").then(
-            (resp) => {
-                alertIfErr(resp);
+            alertPlaceholder.append(wrapper);
+        }
+
+        async function alertIfErr(resp) {
+            let j = await resp.json();
+            if (j.hasOwnProperty("error")) {
+                appendAlert(j.error, "danger");
             }
-        );
-        setTimeout(function() {
-            refresh();
-        }, (500));
-    }
+        }
 
-    function fulfill() {
-        fetch("/contract/{{ contract.contract_id }}/fulfill").then(
-            (resp) => {
-                alertIfErr(resp);
-            }
-        );
-        setTimeout(function() {
-            refresh();
-        }, (500));
-    }
+        function accept() {
+            fetch("/contract/{{ contract.contract_id }}/accept").then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
 
-    async function refresh() {
-        let data = await fetch("/contract/{{ contract.contract_id }}/api");
-        let j = await data.json();
-        console.log(j)
-        document.getElementById("deadline").innerHTML = j.deadline;
-    }
+        function fulfill() {
+            fetch("/contract/{{ contract.contract_id }}/fulfill").then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
     </script>
 {% endblock %}
 {% block navid %}contracts{% endblock %}

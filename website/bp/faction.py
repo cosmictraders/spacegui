@@ -1,5 +1,6 @@
 import textwrap
 
+from autotraders.error import SpaceTradersException
 from autotraders.faction import Faction
 from autotraders.faction.contract import Contract
 from flask import *
@@ -64,23 +65,15 @@ def faction(symbol, session):
 @minify_html
 @token_required
 def contracts(session):
-    c = Contract.all(session)
-    return render_template("faction/contract/contracts.html", contracts=c)
+    contracts = Contract.all(session)
+    return render_template("faction/contract/contracts.html", contracts=contracts)
 
 
 @faction_bp.route("/contract/<contract_id>/api/")
 @token_required
 def contract_api(contract_id, session):  # TODO: port to html
-    contract = Contract(contract_id, session)
-    return jsonify(
-        {
-            "deadline": str(
-                contract.deadline.astimezone(tz=None).strftime("%Y-%m-%d %I:%M:%S")
-            ),
-            "accepted": contract.accepted,
-            "fulfilled": contract.fulfilled,
-        }
-    )
+    c = Contract(contract_id, session)
+    return render_template("faction/contract/contract_api.html", contract=c)
 
 
 @faction_bp.route("/contract/<contract_id>/")
@@ -115,9 +108,9 @@ def fulfill_contract(contract_id: str, session):
 
 @faction_bp.route("/contract/new/<ship>/")
 @token_required
-def sandbox(ship, session):
+def new_contract(ship, session):
     try:
         c = Contract.negotiate(ship, session)
         return jsonify({})
-    except IOError as e:
+    except SpaceTradersException as e:
         return jsonify({"error": str(e)})

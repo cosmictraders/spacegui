@@ -34,7 +34,7 @@
             <h1 class="col"><i class="bi bi-file-earmark-text-fill"></i> {{ contract.contract_id }}</h1>
         </div>
         <div class="row justify-content-center text-center">
-            <div class="col"><p>Complete By: <span id="deadline"></span></p></div>
+            <div class="col"><p>Complete By: {{ macros.time_display(contract.deadline) }}</p></div>
         </div>
         <div class="row gx-5 gy-3">
             <div class="col-12">
@@ -44,19 +44,32 @@
                 <p>Fulfilled: <i class="bi bi-credit-card"></i> <span id="on_fulfilled">{{ contract.on_fulfilled }}</span></p>
             </div>
         </div>
+        <div class="row gx-5 gy-3">
+            {% if not contract.accepted %}
+                <p>Accept By: {{ macros.time_display(contract.accept_deadline) }}</p>
+            {% endif %}
+        </div>
+        <div class="row gx-5 gy-3 justify-content-center text-center">
+            <h2>Details</h2>
+        </div>
+        <div class="row gx-5 gy-3">
+            {% if contract.contract_type == "PROCUREMENT" %}
+                {% for delivery in contract.contract_data %}
+                    <p>Deliver {{ delivery.trade_symbol }} to <a
+                            href="/waypoint/{{ delivery.destination_symbol }}">{{ delivery.destination_symbol }}</a>
+                        ({{ delivery.units_fulfilled }}/{{ delivery.units_required }}).</p>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="row gx-5 gy-3">
+            <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group me-2" role="group" aria-label="Contract Controls">
+                    <button onclick="accept()" class="btn btn-primary" {% if contract.accepted %}disabled{% endif %}>Accept</button>
+                </div>
+                <div>
+                    <button onclick="fulfill()" class="btn btn-primary" {% if contract.fulfilled %}disabled{% endif %}>Fulfill</button>
+                </div>
+            </div>
+        </div>
     </div>
-{#    TODO: Finish porting #}
-    {% if not contract.accepted %}
-        <p class="p-3">Accept By: {{ contract.accept_deadline }}</p>
-    {% endif %}
-    <h2 class="center">Details</h2>
-    {% if contract.contract_type == "PROCUREMENT" %}
-        {% for delivery in contract.contract_data %}
-            <p class="p-3">Deliver {{ delivery.trade_symbol }} to <a href="/waypoint/{{ delivery.destination_symbol }}">{{ delivery.destination_symbol }}</a>
-                ({{ delivery.units_fulfilled }}/{{ delivery.units_required }}).</p>
-        {% endfor %}
-    {% endif %}
-    <br>
-    <button onclick="accept()" class="btn btn-primary" {% if contract.accepted %}disabled{% endif %}>Accept</button>
-    <button onclick="fulfill()" class="btn btn-primary" {% if contract.fulfilled %}disabled{% endif %}>Fulfill</button>
 {%- endmacro %}

@@ -36,6 +36,18 @@ Contracts
                 </div>
             </div>
         </div>
+        <script>
+            function negotiate() {
+                fetch("/contract/new/" + document.getElementById("ship").value).then(
+                    (resp) => {
+                        alertIfErr(resp);
+                    }
+                );
+                setTimeout(function () {
+                    window.href.reload();
+                }, (500));
+            }
+        </script>
     </div>
 {% endblock %}
 {% block navid %}contracts{% endblock %}

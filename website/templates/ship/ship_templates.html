@@ -187,10 +187,22 @@
                             <p class="mb-1">{{ c.description }}</p>
                             <div class="input-group">
 {#                            TODO: Switch to range#}
-                                <input id="amount-{{ c.symbol }}" type="number" class="form-control" placeholder="Amount" value="1" min="0" max="{{ c.quantity }}" style="max-width: 75px">
-                                <button type="button" class="btn btn-success" onclick="sell('{{ c.symbol }}', $('#amount-{{ c.symbol }}').val())" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}><i class="bi bi-currency-dollar"></i> Sell</button>
-                                <button type="button" class="btn btn-secondary" onclick="transfer('{{ c.symbol }}', $('#amount-{{ c.symbol }}').val())" disabled><i class="bi bi-airplane-fill"></i> Transfer</button>
-                                <button type="button" class="btn btn-danger" onclick="jettison('{{ c.symbol }}', $('#amount-{{ c.symbol }}').val())"><i class="bi bi-trash3-fill"></i> Jettison</button>
+                                <input id="amount-{{ c.symbol }}" type="number" class="form-control"
+                                       placeholder="Amount" value="1" min="0" max="{{ c.quantity }}"
+                                       style="max-width: 75px">
+                                <button type="button" class="btn btn-success"
+                                        onclick="sell('{{ c.symbol }}', $('#amount-{{ c.symbol }}').val())"
+                                        {% if ship.nav.status != "DOCKED" %}disabled{% endif %}><i
+                                        class="bi bi-currency-dollar"></i> Sell
+                                </button>
+                                <button type="button" class="btn btn-secondary"
+                                        onclick="transfer('{{ c.symbol }}', $('#amount-{{ c.symbol }}').val())"
+                                        disabled><i class="bi bi-airplane-fill"></i> Transfer
+                                </button>
+                                <button type="button" class="btn btn-danger"
+                                        onclick="jettison('{{ c.symbol }}', $('#amount-{{ c.symbol }}').val())"><i
+                                        class="bi bi-trash3-fill"></i> Jettison
+                                </button>
                             </div>
                         </div>
                     {% endfor %}

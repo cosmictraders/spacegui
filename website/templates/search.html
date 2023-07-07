@@ -32,6 +32,29 @@ Search
         {% else %}
             No results
         {% endif %}
+        <nav aria-label="Pagination">
+            <ul class="pagination p-3">
+                {% if page > 1 %}
+                    <li class="page-item"><a class="page-link" href="/search/?query={{ query }}&page={{ page-1 }}">Previous</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="/search/query={{ query }}">Previous</a></li>
+                {% endif %}
+                {% for i in li %}
+                    {% if i == page %}
+                        <li class="page-item"><a class="page-link active" href="/search/?query={{ query }}&page={{ i }}">{{ i }}</a></li>
+                    {% elif i == ".." %}
+                        <li class="page-item disabled"><a class="page-link" href="/search/?query={{ query }}&page={{ i }}">{{ i }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="/search/?query={{ query }}&page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page < pages %}
+                    <li class="page-item"><a class="page-link" href="/search/?query={{ query }}&page={{page+1 }}">Next</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="/search/query={{ query }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#helpModal">
             Search Tips
         </button>

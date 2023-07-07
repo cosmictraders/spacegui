@@ -151,17 +151,19 @@ def search(session):
     amap = [
         item for item, _ in sorted(unweighted_map, key=lambda x: x[1], reverse=True)
     ]
-    if len(amap) > 100:
-        amap = amap[(page - 1) * 100: page * 100]
     t2 = time.time()
     print(t1_2 - t1, t1_3 - t1_2, t1_4 - t1_3, t1_5 - t1_4, t1_6 - t1_5, t2 - t1_6)
     li = {
-        1,
-        2,
-        3,
-        4,
-        5
+        1
     }
+    if len(amap) // 100 > 1:
+        li.add(2)
+        if len(amap) // 100 > 2:
+            li.add(3)
+            if len(amap) // 100 > 3:
+                li.add(4)
+                if len(amap) // 100 > 4:
+                    li.add(5)
     if len(amap) // 100 - 2 > 0:
         li.add(len(amap) // 100 -2)
     if len(amap) // 100 - 1 > 0:
@@ -183,6 +185,6 @@ def search(session):
         new_li.append(i)
         prev = i
     return render_template(
-        "search.html", query=request.args.get("query"), map=amap, time=str(t2 - t1), li=new_li, page=page,
+        "search.html", query=request.args.get("query"), map=amap[(page - 1) * 100: page * 100], time=str(t2 - t1), li=new_li, page=page,
         pages=len(amap) // 100
     )

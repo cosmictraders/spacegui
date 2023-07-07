@@ -26,7 +26,12 @@ def ships(session):
                 li.add(4)
                 if ships.pages > 4:
                     li.add(5)
-    # TODO: More pagination (more than 5)
+    if ships.pages > 0:
+        li.add(ships.pages - 2)
+    if ships.pages > 0:
+        li.add(ships.pages - 1)
+    if ships.pages > 0:
+        li.add(ships.pages)
     li = list(li)
     li.sort()
     new_li = []

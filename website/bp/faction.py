@@ -71,7 +71,7 @@ def contracts(session):
 
 @faction_bp.route("/contract/<contract_id>/api/")
 @token_required
-def contract_api(contract_id, session):  # TODO: port to html
+def contract_api(contract_id, session):
     c = Contract(contract_id, session)
     return render_template("faction/contract/contract_api.html", contract=c)
 

@@ -51,7 +51,7 @@
                 <div class="col-md-auto"><p>{{ ship.registration.role }}</p></div>
             </div>
             <div class="row g-5 gy-5 justify-content-between">
-                <div class="col-md-auto">{{ ship.nav.status }}</div>
+                <div class="col-md-auto">{{ ship.nav.status.value }}</div>
                 <div class="col-md-auto"><a href="/waypoint/{{ ship.nav.route.departure }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.departure }}</a></div>
                 {% if ship.fuel.total != 0 %}
                     {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}
@@ -157,7 +157,7 @@
                                 <p class="mb-1 small">{{ ship.crew.required }} Required</p>
                             </div>
                             <p class="mb-1">The capacity of {{ ship.symbol }} is {{ ship.crew.capacity }} people.
-                                The crew has {{ ship.crew.morale }} morale, and has {{ ship.crew.wages }} wages.
+                                The crew has {{ ship.crew.morale }} morale, {{ ship.crew.rotation }} rotation, and has {{ ship.crew.wages }} wages.
                             </p>
                         </div>
                         <div class="list-group-item list-group-item-warning">

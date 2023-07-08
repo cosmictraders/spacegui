@@ -16,7 +16,7 @@ Ship - {{ ship.symbol }}
     </div>
     <script defer>
         const alertPlaceholder = $("#errors");
-        document.getElementById("navigation-mode").value = "{{ ship.nav.flight_mode }}";
+        document.getElementById("navigation-mode").value = "{{ ship.nav.flight_mode.name }}";
         const appendAlert = (message, type) => {
             const wrapper = document.createElement('div')
             wrapper.innerHTML = [

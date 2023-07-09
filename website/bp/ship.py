@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 
+from autotraders.error import SpaceTradersException
 from flask import *
 
 from autotraders.ship import Ship
@@ -98,7 +99,7 @@ def navigate(name):
             ship.patch_navigation(request.args.get("mode", ship.nav.flight_mode))
         ship.navigate(request.args.get("place").strip())
         return jsonify({})
-    except IOError as e:
+    except SpaceTradersException as e:
         return jsonify({"error": "Failed to navigate: " + str(e)})
 
 
@@ -109,7 +110,7 @@ def jump(name):
         ship = Ship(name, s, data={"modules": {}, "mounts": {}})
         ship.jump(request.args.get("place").strip())
         return jsonify({})
-    except IOError as e:
+    except SpaceTradersException as e:
         return jsonify({"error": "Failed to jump: " + str(e)})
 
 
@@ -120,7 +121,7 @@ def warp(name):
         ship = Ship(name, s, data={"modules": {}, "mounts": {}})
         ship.warp(request.args.get("place").strip())
         return jsonify({})
-    except IOError as e:
+    except SpaceTradersException as e:
         return jsonify({"error": "Failed to warp: " + str(e)})
 
 
@@ -131,7 +132,7 @@ def dock(name):
     try:
         ship.dock()
         return jsonify({})
-    except IOError as e:
+    except SpaceTradersException as e:
         return jsonify({"error": "Failed to dock: " + str(e)})
 
 
@@ -142,7 +143,7 @@ def orbit(name):
     try:
         ship.orbit()
         return jsonify({})
-    except IOError as e:
+    except SpaceTradersException as e:
         return jsonify({"error": "Failed to orbit: " + str(e)})
 
 
@@ -153,7 +154,7 @@ def refuel(name):
     try:
         ship.refuel()
         return jsonify({})
-    except IOError as e:
+    except SpaceTradersException as e:
         return jsonify({"error": "Failed to refuel: " + str(e)})
 
 
@@ -178,7 +179,7 @@ def extract(name):
     try:
         ship.extract()
         return jsonify({})
-    except IOError as e:
+    except SpaceTradersException as e:
         return jsonify({"error": "Failed to extract: " + str(e)})
 
 
@@ -189,7 +190,7 @@ def jettison(name, symbol, quantity):
     try:
         ship.jettison(symbol, quantity)
         return jsonify({})
-    except IOError as e:
+    except SpaceTradersException as e:
         return jsonify({"error": "Failed to jettison: " + str(e)})
 
 
@@ -200,7 +201,7 @@ def transfer(name, symbol, quantity):
     try:
         ship.jettison(symbol, quantity)
         return jsonify({})
-    except IOError as e:
+    except SpaceTradersException as e:
         return jsonify({"error": "Failed to transfer cargo: " + str(e)})
 
 
@@ -211,5 +212,5 @@ def sell(name, symbol, quantity):
     try:
         ship.sell(symbol, quantity)
         return jsonify({})
-    except IOError as e:
+    except SpaceTradersException as e:
         return jsonify({"error": "Failed to sell: " + str(e)})

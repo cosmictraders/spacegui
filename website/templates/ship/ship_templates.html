@@ -1,4 +1,40 @@
 {% import "macros.html" as macros %}
+{% macro modules_and_mounts(modules, mounts) -%}
+    <div class="col-6">
+        <h2 class="center">Modules</h2>
+        <div class="list-group" id="modules">
+            {% for module in modules %}
+                <div class="list-group-item {% if module.symbol == 'MODULE_CARGO_HOLD_I' %}list-group-item-primary{% elif module.symbol == 'MODULE_CREW_QUARTERS_I' %}list-group-item-info{% endif %}">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ module.symbol }}</h5>
+                        <ul class="list-group list-group-horizontal">
+                            <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ module.requirements.crew }}</li>
+                            <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ module.requirements.power }}</li>
+                        </ul>
+                    </div>
+                    <p class="mb-1">{{ module.description }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-6">
+        <h2 class="center">Mounts</h2>
+        <div class="list-group" id="mounts">
+            {% for mount in mounts %}
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ mount.name }}</h5>
+                        <ul class="list-group list-group-horizontal">
+                            <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ mount.requirements.crew }}</li>
+                            <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ mount.requirements.power }}</li>
+                        </ul>
+                    </div>
+                    <p class="mb-1">{{ mount.description }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{%- endmacro %}
 {% macro ship_card(ship) -%}
     <div class="card shadow" style="width: 27rem; margin: 17px 10px">
         <div class="card-body">
@@ -151,6 +187,19 @@
                 </div>
                 <div class="row py-3 px-2">
                     <div class="list-group">
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ ship.frame.name }}</h5>
+                                <ul class="list-group list-group-horizontal">
+                                    <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.frame.requirements.crew }}</li>
+                                    <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.frame.requirements.power }}</li>
+                                </ul>
+                            </div>
+                            <p class="mb-1">{{ ship.frame.description }}</p>
+                            <p class="mb-1">Module Slots: {{ ship.frame.module_slots }}</p>
+                            <p class="mb-1">Mounting Points: {{ ship.frame.mounting_points }}</p>
+                            <p class="mb-1"></p>
+                        </div>
                         <div class='list-group-item list-group-item-info'>
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1"><i class="bi bi-person-fill"></i> {{ ship.crew.current }}</h5>
@@ -233,54 +282,7 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="col-6">
-                <h2 class="center">Modules</h2>
-                <div class="list-group" id="modules">
-                    <div class="list-group-item">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{ ship.frame.name }}</h5>
-                            <ul class="list-group list-group-horizontal">
-                                <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.frame.requirements.crew }}</li>
-                                <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.frame.requirements.power }}</li>
-                            </ul>
-                        </div>
-                        <p class="mb-1">{{ ship.frame.description }}</p>
-                        <p class="mb-1">Module Slots: {{ ship.frame.module_slots }}</p>
-                        <p class="mb-1">Mounting Points: {{ ship.frame.mounting_points }}</p>
-                        <p class="mb-1"></p>
-                    </div>
-                    {% for module in ship.modules %}
-                        <div class="list-group-item {% if module.symbol == 'MODULE_CARGO_HOLD_I' %}list-group-item-primary{% elif module.symbol == 'MODULE_CREW_QUARTERS_I' %}list-group-item-info{% endif %}">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{{ module.symbol }}</h5>
-                                <ul class="list-group list-group-horizontal">
-                                    <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ module.requirements.crew }}</li>
-                                    <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ module.requirements.power }}</li>
-                                </ul>
-                            </div>
-                            <p class="mb-1">{{ module.description }}</p>
-                        </div>
-                    {% endfor %}
-                </div>
-
-            </div>
-            <div class="col-6">
-                <h2 class="center">Mounts</h2>
-                <div class="list-group" id="mounts">
-                    {% for mount in ship.mounts %}
-                        <div class="list-group-item">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{{ mount.name }}</h5>
-                                <ul class="list-group list-group-horizontal">
-                                    <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ mount.requirements.crew }}</li>
-                                    <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ mount.requirements.power }}</li>
-                                </ul>
-                            </div>
-                            <p class="mb-1">{{ mount.description }}</p>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
+            {{ modules_and_mounts(ship.modules, ship.mounts) }}
         </div>
     </div>
 

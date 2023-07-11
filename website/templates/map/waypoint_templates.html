@@ -1,3 +1,4 @@
+{% import 'ship/ship_templates.html' as ship_templates %}
 {% macro waypoint_list(waypoint) -%}
     <a class="list-group-item list-group-item-action" href = "/waypoint/{{ waypoint.symbol }}">
         <div class="row gx-5 justify-content-between">
@@ -101,12 +102,32 @@
                                     <li class="list-group-item" style="min-width: 250px">{{ ship.ship_type }}</li>
                                     <li class="list-group-item" style="min-width: 125px"><i class="bi bi-credit-card"></i> {{ ship.purchase_price }}</li>
                                     <li class="list-group-item" style="min-width: 100px"><i class="bi bi-fuel-pump"></i> {{ ship.frame.fuel_capacity }}</li>
-                                    <li class="list-group-item" style="min-width: 80px"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
-                                    <li class="list-group-item" style="min-width: 80px"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
+                                    <li class="list-group-item list-group-item-warning" style="min-width: 80px"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
+                                    <li class="list-group-item list-group-item-success" style="min-width: 80px"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
                                     <li class="list-group-item" style="min-width: 75px"><button class="btn btn-primary btn-sm" onclick="buy('{{ ship.ship_type }}')">Buy</button></li>
+                                    <li class="list-group-item" style="min-width: 75px"><button class="btn btn-info btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#{{ ship.ship_type }}Modal">Info</button></li>
                                 </ul>
                             {% endfor %}
                         </div>
+                        {% for ship in shipyard.ships %}
+                            <div class="modal modal-xl fade" id="{{ ship.ship_type }}Modal" tabindex="-1" aria-labelledby="{{ ship.ship_type }}ModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="{{ ship.ship_type }}ModalLabel">{{ ship.ship_type }}</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {{ ship_templates.modules_and_mounts(ship.modules, ship.mounts) }}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
                 {% else %}
                     <div class="col-6">

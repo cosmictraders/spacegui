@@ -110,15 +110,17 @@
                             {% endfor %}
                         </div>
                         {% for ship in shipyard.ships %}
-                            <div class="modal modal-xl fade" id="{{ ship.ship_type }}Modal" tabindex="-1" aria-labelledby="{{ ship.ship_type }}ModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
+                            <div class="modal fade" id="{{ ship.ship_type }}Modal" tabindex="-1" aria-labelledby="{{ ship.ship_type }}ModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-xl">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h1 class="modal-title fs-5" id="{{ ship.ship_type }}ModalLabel">{{ ship.ship_type }}</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            {{ ship_templates.modules_and_mounts(ship.modules, ship.mounts) }}
+                                            <div class="row">
+                                                {{ ship_templates.modules_and_mounts(ship.modules, ship.mounts) }}
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

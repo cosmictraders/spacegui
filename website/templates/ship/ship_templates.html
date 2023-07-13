@@ -6,7 +6,7 @@
             {% for module in modules %}
                 <div class="list-group-item {% if module.symbol == 'MODULE_CARGO_HOLD_I' %}list-group-item-primary{% elif module.symbol == 'MODULE_CREW_QUARTERS_I' %}list-group-item-info{% endif %}">
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ module.symbol }}</h5>
+                        <h5 class="mb-1">{{ module.name }}</h5>
                         <ul class="list-group list-group-horizontal">
                             <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ module.requirements.crew }}</li>
                             <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ module.requirements.power }}</li>
@@ -211,7 +211,7 @@
                         </div>
                         <div class="list-group-item list-group-item-warning">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{{ ship.reactor.name }}</h5>
+                                <h5 class="mb-1"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.name }}</h5>
                                 <ul class="list-group list-group-horizontal">
                                     <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.reactor.requirements.crew }}</li>
                                 </ul>
@@ -221,7 +221,7 @@
                         </div>
                         <div class="list-group-item list-group-item-success">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{{ ship.engine.name }}</h5>
+                                <h5 class="mb-1"><i class="bi bi-speedometer"></i> {{ ship.engine.name }}</h5>
                                 <ul class="list-group list-group-horizontal">
                                     <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.engine.requirements.crew }}</li>
                                     <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.engine.requirements.power }}</li>
@@ -252,6 +252,9 @@
             </div>
             <div class="col-6">
                 <div class="list-group" id="cargo">
+                    <div class='list-group-item list-group-item-primary'>
+                        {{ ship.cargo.current }}/{{ ship.cargo.capacity }}
+                    </div>
                     {% for c in ship.cargo.inventory %}
                         <div class='list-group-item list-group-item-primary'>
                             <div class="d-flex w-100 justify-content-between">

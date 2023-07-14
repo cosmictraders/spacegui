@@ -30,7 +30,7 @@ main_bp = Blueprint("main", __name__)
 @token_required
 def index(session):
     agent = Agent(session)
-    return render_template("index.html", agent=agent)
+    return render_template("index.html", agent=agent, ships=Ship.all(session), contracts=Contract.all(session))
 
 
 @main_bp.route("/map/")
@@ -165,9 +165,9 @@ def search(session):
                 if len(amap) // 100 > 4:
                     li.add(5)
     if len(amap) // 100 - 2 > 0:
-        li.add(len(amap) // 100 -2)
+        li.add(len(amap) // 100 - 2)
     if len(amap) // 100 - 1 > 0:
-        li.add(len(amap) // 100 -1)
+        li.add(len(amap) // 100 - 1)
     if len(amap) // 100 > 0:
         li.add(len(amap) // 100)
     li.add(page)
@@ -185,6 +185,57 @@ def search(session):
         new_li.append(i)
         prev = i
     return render_template(
-        "search.html", query=request.args.get("query"), map=amap[(page - 1) * 100: page * 100], time=str(t2 - t1), li=new_li, page=page,
+        "search.html", query=request.args.get("query"), map=amap[(page - 1) * 100: page * 100], time=str(t2 - t1),
+        li=new_li, page=page,
         pages=len(amap) // 100
+    )
+
+
+@main_bp.route("/agents/")
+@minify_html
+@token_required
+def agents(session):
+    page = int(request.args.get("page", default=1))
+    agents_list = Agent.all(session, page)
+    li = {
+        1
+    }
+    if agents_list.pages > 1:
+        li.add(2)
+        if agents_list.pages > 2:
+            li.add(3)
+            if agents_list.pages > 3:
+                li.add(4)
+                if agents_list.pages > 4:
+                    li.add(5)
+    if agents_list.pages > 0:
+        li.add(agents_list.pages - 2)
+    if agents_list.pages > 0:
+        li.add(agents_list.pages - 1)
+    if agents_list.pages > 0:
+        li.add(agents_list.pages)
+    li.add(page)
+    if page > min(li):
+        li.add(page - 1)
+    if page < max(li):
+        li.add(page + 1)
+    li = list(li)
+    li.sort()
+    new_li = []
+    prev = 0
+    for i in li:
+        if i != (prev + 1):
+            new_li.append("..")
+        new_li.append(i)
+        prev = i
+    return render_template("agents.html", agents=agents_list, li=new_li)
+
+
+@main_bp.route("/agent/<symbol>/")
+@minify_html
+@token_required
+def agent(symbol, session):
+    return render_template(
+        "agent.html",
+        agent=Agent(session, symbol)
     )

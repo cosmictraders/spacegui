@@ -42,11 +42,11 @@ Home
                 </div>
             </div>
             <div class="row justify-content-center">
-            {% for item in agent.ships[1] %}
-                {{ ship.ship_card(item) }}
-            {% endfor %}
+                {% for item in ships[1] %}
+                    {{ ship.ship_card(item) }}
+                {% endfor %}
             </div>
-            {% if agent.contracts[1].__len__() > 0 %}
+            {% if contracts[1].__len__() > 0 %}
                 <div class="row justify-content-center py-2">
                     <div class="shadow-sm card" style="width: 15rem">
                         <div class="card-body">
@@ -55,9 +55,9 @@ Home
                     </div>
                 </div>
                 <div class="row justify-content-center">
-                {% for item in agent.contracts[1] %}
-                    {{ contract.contract_card(item) }}
-                {% endfor %}
+                    {% for item in contracts[1] %}
+                        {{ contract.contract_card(item) }}
+                    {% endfor %}
                 </div>
             {% endif %}
         </div>

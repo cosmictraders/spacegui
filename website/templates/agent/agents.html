@@ -1,23 +1,13 @@
 {% extends 'base.html' %}
+{% import "agent/agent_templates.html" as display %}
 {% block title %}
 Agents
 {% endblock %}
 {% block body %}
-    <div class="container pt-3">
+    <div class="container-fluid pt-3">
         <div class="list-group list-group-flush">
             {% for agent in agents.current() %}
-                <a class="list-group-item gx-5 list-group-item-action" href="/agent/{{ agent.symbol }}">
-                    <div class="row gx-5 justify-content-between">
-                        <div class="col-md-auto">
-                            <h5><i class="bi bi-person-fill"></i> Agent {{ agent.symbol }}</h5>
-                        </div>
-                        <div class="col-md-auto"><p>{{ agent.starting_faction }}</p></div>
-                    </div>
-                    <div class="row gx-5 justify-content-between">
-                        <div class="col-md-auto"><i class="bi bi-credit-card"></i> {{ agent.credits }}</div>
-                        <div class="col-md-auto"><i class="bi bi-rocket-takeoff-fill"></i> {{ agent.ship_count }}</div>
-                    </div>
-                </a>
+                {{ display.agent_list(agent) }}
             {% endfor %}
         </div>
         <nav aria-label="Pagination">

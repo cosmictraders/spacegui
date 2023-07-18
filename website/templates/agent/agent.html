@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% import "agent/agent_templates.html" as display %}
+{% block title %}
+Agent - {{ agent.symbol }}
+{% endblock %}
+{% block body %}
+    {{ display.agent_display(agent) }}
+{% endblock %}
+{% block navid %}agents{% endblock %}

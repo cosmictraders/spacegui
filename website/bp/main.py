@@ -228,7 +228,7 @@ def agents(session):
             new_li.append("..")
         new_li.append(i)
         prev = i
-    return render_template("agents.html", agents=agents_list, li=new_li)
+    return render_template("agent/agents.html", agents=agents_list, li=new_li)
 
 
 @main_bp.route("/agent/<symbol>/")
@@ -236,6 +236,6 @@ def agents(session):
 @token_required
 def agent(symbol, session):
     return render_template(
-        "agent.html",
+        "agent/agent.html",
         agent=Agent(session, symbol)
     )

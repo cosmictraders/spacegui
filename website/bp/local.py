@@ -1,4 +1,6 @@
 import requests
+from autotraders.agent import Agent
+from autotraders.session import get_session
 from flask import *
 
 from website.model import db, User
@@ -27,7 +29,14 @@ def create_user_api():
 @local_bp.route("/select-user/")
 @minify_html
 def select_user():
-    return render_template("local/select_user.html", users=db.session.query(User).all())
+    users = []
+    for user in db.session.query(User).all():
+        try:
+            users.append(Agent(get_session(user.token)))
+        except Exception as e:
+            users.append(user.token)
+    return render_template("local/select_user.html",
+                           users=users)
 
 
 @local_bp.route("/select-user-api/<user_id>")

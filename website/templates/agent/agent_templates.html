@@ -1,8 +1,18 @@
-{% extends 'base.html' %}
-{% block title %}
-Agent - {{ agent.symbol }}
-{% endblock %}
-{% block body %}
+{% macro agent_list(agent) -%}
+    <a class="list-group-item gx-5 list-group-item-action" href="/agent/{{ agent.symbol }}">
+        <div class="row gx-5 justify-content-between">
+            <div class="col-md-auto">
+                <h5><i class="bi bi-person-fill"></i> Agent {{ agent.symbol }}</h5>
+            </div>
+            <div class="col-md-auto"><p>{{ agent.starting_faction }}</p></div>
+        </div>
+        <div class="row gx-5 justify-content-between">
+            <div class="col-md-auto"><i class="bi bi-credit-card"></i> {{ agent.credits }}</div>
+            <div class="col-md-auto"><i class="bi bi-rocket-takeoff-fill"></i> {{ agent.ship_count }}</div>
+        </div>
+    </a>
+{%- endmacro %}
+{% macro agent_display(agent) -%}
     <div class="container py-3">
         <div class="row justify-content-center text-center">
             <h1 class="col"><i class="bi bi-person-fill"></i> {{ agent.symbol }}</h1>
@@ -19,5 +29,4 @@ Agent - {{ agent.symbol }}
             </div>
         </div>
     </div>
-{% endblock %}
-{% block navid %}agents{% endblock %}
+{%- endmacro %}

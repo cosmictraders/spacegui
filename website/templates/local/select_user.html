@@ -8,7 +8,11 @@ Select User
         <div class="list-group">
             {% for user in users %}
                 <div onclick="setUser({{ user.id }})" class="list-group-item list-group-item-action {% if user.active %}active{% endif %}">
-                    <p>{{ user.token }}</p>
+                    {% if user.__class__.__name__ == "Agent" %}
+                        <p class="text-truncate"><i class="bi bi-person-fill"></i> {{ user.symbol }} - <i class="bi bi-credit-card"></i> {{ user.credits }} - {{ user.session.auth.token }}</p>
+                    {% else %}
+                        <p class="text-truncate">{{ user }}</p>
+                    {% endif %}
                     <button class="btn btn-danger" onclick="deleteUser({{ user.id }})">Delete</button>
                 </div>
             {% endfor %}

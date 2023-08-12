@@ -15,7 +15,7 @@ Create User
     <a class="p-3" href="/create-token">Don't have a token?</a>
     <script>
         function create() {
-            fetch("/create-user?token=" + document.getElementById("token").value).then(
+            fetch("/create-user-api?token=" + document.getElementById("token").value).then(
                 (data) => {
                     document.location.href = "/";
                 }

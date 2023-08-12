@@ -1,7 +1,7 @@
-import flask
+from autotraders.agent import Agent
 from flask import render_template
 
-from website.model import db
+from website.model import db, User
 from website.session import get_session
 from minify_html import minify
 
@@ -35,7 +35,22 @@ def token_required(func):
         except Exception as e:
             print(e)
             db.create_all()
-            return render_template("local/create_user.html")
+
+            class MockAgent:
+                def __init__(self, token, id, active):
+                    self.token = token
+                    self.id = id
+                    self.active = active
+
+            users = []
+            for user in db.session.query(User).all():
+                try:
+                    a = Agent(get_session(user.token))
+                    a.active = user.active
+                    users.append(a)
+                except Exception as e:
+                    users.append(MockAgent(user.token, user.id, user.active))
+            return render_template("local/select_user.html", users=users)
         result = func(*args, **kwargs, session=session)
         return result
 

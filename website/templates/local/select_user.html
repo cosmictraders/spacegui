@@ -7,17 +7,22 @@ Select User
     <div class="container">
         <div class="list-group">
             {% for user in users %}
-                <div onclick="setUser({{ user.id }})" class="list-group-item list-group-item-action {% if user.active %}active{% endif %}">
+                <div id="{{ user.id }}" class="list-group-item {% if user.active %}active{% endif %}">
                     {% if user.__class__.__name__ == "Agent" %}
                         <p class="text-truncate"><i class="bi bi-person-fill"></i> {{ user.symbol }} - <i class="bi bi-credit-card"></i> {{ user.credits }} - {{ user.session.auth.token }}</p>
                     {% else %}
-                        <p class="text-truncate">{{ user }}</p>
+                        <p class="text-truncate">{{ user.token }}</p>
                     {% endif %}
-                    <button class="btn btn-danger" onclick="deleteUser({{ user.id }})">Delete</button>
+                    <div class="btn-group" role="group" aria-label="Actions">
+                        {% if not user.active %}
+                            <button class="btn btn-success" onclick="setUser('{{ user.id }}')">Make Active</button>
+                        {% endif %}
+                        <button class="btn btn-danger" onclick="deleteUser('{{ user.id }}')">Delete</button>
+                    </div>
                 </div>
             {% endfor %}
         </div>
-        <a class="p-3" href="/create-user">Create User</a>
+        <a class="mt-3 btn btn-primary" role="button" href="/create-user"><i class="bi bi-person-plus-fill"></i> Create User</a>
     </div>
     <script>
         function setUser(user_id) {

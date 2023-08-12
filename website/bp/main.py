@@ -30,7 +30,12 @@ main_bp = Blueprint("main", __name__)
 @token_required
 def index(session):
     agent = Agent(session)
-    return render_template("index.html", agent=agent, ships=Ship.all(session), contracts=Contract.all(session))
+    return render_template(
+        "index.html",
+        agent=agent,
+        ships=Ship.all(session),
+        contracts=Contract.all(session),
+    )
 
 
 @main_bp.route("/map/")
@@ -130,7 +135,7 @@ def search(session):
         if weight(query, str(item.symbol)) > -0.2:
             for waypoint in item.waypoints:
                 if weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
-                        waypoint, filters
+                    waypoint, filters
                 ):
                     unweighted_map.append(
                         (waypoint, weight(query, str(waypoint.symbol)))
@@ -138,7 +143,7 @@ def search(session):
     t1_5 = time.time()
     for item in faction_data:
         if (
-                weight(query, item.symbol) > -0.25 or weight(query, item.name) > -0.25
+            weight(query, item.symbol) > -0.25 or weight(query, item.name) > -0.25
         ) and check_filters_faction(item, filters):
             unweighted_map.append((item, weight(query, str(item.symbol))))
     t1_6 = time.time()
@@ -146,16 +151,16 @@ def search(session):
         if weight(query, item.symbol) > -0.25 and check_filters_ship(item, filters):
             unweighted_map.append((item, weight(query, item.symbol)))
     for item in contract_data:
-        if weight(query, item.contract_id) > -0.7 and check_filters_contract(item, filters):
+        if weight(query, item.contract_id) > -0.7 and check_filters_contract(
+            item, filters
+        ):
             unweighted_map.append((item, weight(query, str(item.contract_id))))
     amap = [
         item for item, _ in sorted(unweighted_map, key=lambda x: x[1], reverse=True)
     ]
     t2 = time.time()
     print(t1_2 - t1, t1_3 - t1_2, t1_4 - t1_3, t1_5 - t1_4, t1_6 - t1_5, t2 - t1_6)
-    li = {
-        1
-    }
+    li = {1}
     if len(amap) // 100 > 1:
         li.add(2)
         if len(amap) // 100 > 2:
@@ -185,9 +190,13 @@ def search(session):
         new_li.append(i)
         prev = i
     return render_template(
-        "search.html", query=request.args.get("query"), map=amap[(page - 1) * 100: page * 100], time=str(t2 - t1),
-        li=new_li, page=page,
-        pages=len(amap) // 100
+        "search.html",
+        query=request.args.get("query"),
+        map=amap[(page - 1) * 100 : page * 100],
+        time=str(t2 - t1),
+        li=new_li,
+        page=page,
+        pages=len(amap) // 100,
     )
 
 
@@ -197,9 +206,7 @@ def search(session):
 def agents(session):
     page = int(request.args.get("page", default=1))
     agents_list = Agent.all(session, page)
-    li = {
-        1
-    }
+    li = {1}
     if agents_list.pages > 1:
         li.add(2)
         if agents_list.pages > 2:
@@ -235,7 +242,9 @@ def agents(session):
 @minify_html
 @token_required
 def agent(symbol, session):
-    return render_template(
-        "agent/agent.html",
-        agent=Agent(session, symbol)
-    )
+    return render_template("agent/agent.html", agent=Agent(session, symbol))
+
+
+@main_bp.app_errorhandler(404)
+def not_found(e):
+    return render_template("error/not_found.html")

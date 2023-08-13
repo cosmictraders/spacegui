@@ -44,10 +44,15 @@
             <li class="list-group-item"><i class="bi bi-rocket"></i> {{ ship.registration.faction_symbol }} {{ ship.registration.role }}</li>
             {% if not ship.nav.moving %}
                 <li class="list-group-item">{{ ship.nav.status.name }}</li>
+                <li class="list-group-item"><a href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.location }}</a></li>
             {% else %}
                 <li class="list-group-item">{{ ship.nav.status.name }}<br>Arrival: {{ macros.time_display(ship.nav.route.arrival) }}</li>
+                <li class="list-group-item">
+                    <a href="/waypoint/{{ ship.nav.route.departure }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.departure }}</a>
+                    <i class="bi bi-arrow-right squiggle-icon"></i>
+                    <a href="/waypoint/{{ ship.nav.route.destination }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.destination }}</a>
+                </li>
             {% endif %}
-            <li class="list-group-item"><a href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.location }}</a></li>
             <li class="list-group-item">
                 <ul class="list-group list-group-horizontal">
                     <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.crew.current }}/{{ ship.crew.capacity }}</li>
@@ -135,36 +140,46 @@
         </div>
         <div class="row gx-5 gy-3">
             <div class="col-6">
-                <div class="row py-3">
-                    {% if not ship.nav.moving %}
+                {% if not ship.nav.moving %}
+                    <div class="row py-3">
                         <p>Status: {{ ship.nav.status.name }}</p>
-                    {% else %}
-                        <p>Status: {{ ship.nav.status.name }} with flight mode {{ ship.nav.flight_mode.name }}
-                            <br>ETA: <span id="eta"></span> seconds</p>
-                        <script>
-                            function timer(element, start, on_end, original) {
-                                if (start === 0) {
-                                    element.innerHTML = original
-                                    on_end()
-                                } else {
-                                    element.innerHTML = start
-                                    setTimeout(function () {
-                                            timer(element, start - 1, on_end, original);
-                                        }, 1000
-                                    )
-                                }
+                    </div>
+                    <div class="row py-3">
+                        <p>Location:
+                            <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> <span id="waypoint">{{ ship.nav.location }}</span></a>, a waypoint of
+                            <a id="system_link" href="/system/{{ ship.nav.location.system }}"><i class="bi bi-stars"></i> <span id="system">{{ ship.nav.location.system }}</span></a>
+                        </p>
+                    </div>
+                {% else %}
+                    <div class="row py-3">
+                        <p>Status: {{ ship.nav.status.name }} with flight mode {{ ship.nav.flight_mode.name }}</p>
+                    </div>
+                    <div class="row py-3">
+                        <p>ETA: <span id="eta"></span> seconds</p>
+                    </div>
+                    <script>
+                        function timer(element, start, on_end, original) {
+                            if (start === 0) {
+                                element.innerHTML = original
+                                on_end()
+                            } else {
+                                element.innerHTML = start
+                                setTimeout(function () {
+                                        timer(element, start - 1, on_end, original);
+                                    }, 1000
+                                )
                             }
+                        }
 
-                            timer(document.getElementById("eta"), {{ -(now - ship.nav.route.arrival).total_seconds() // 1 }}, refresh, "");
-                        </script>
-                    {% endif %}
-                </div>
-                <div class="row py-3">
-                    <p>Location:
-                        <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> <span id="waypoint">{{ ship.nav.location }}</span></a>, a waypoint of
-                        <a id="system_link" href="/system/{{ ship.nav.location.system }}"><i class="bi bi-stars"></i> <span id="system">{{ ship.nav.location.system }}</span></a>
-                    </p>
-                </div>
+                        timer(document.getElementById("eta"), {{ -(now - ship.nav.route.arrival).total_seconds() // 1 }}, refresh, "");
+                    </script>
+                    <div class="row py-3">
+                        <p><a href="/waypoint/{{ ship.nav.route.departure }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.departure }}</a> <i class="bi bi-arrow-right squiggle-icon"></i> <a href="/waypoint/{{ ship.nav.route.destination }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.destination }}</a></p>
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Waiting ...</span>
+                        </div>
+                    </div>
+                {% endif %}
                 <div class="row py-3">
                     {% if ship.fuel.total != 0 %}
                         {% if 100*(ship.fuel.current/ship.fuel.total) > 70 %}

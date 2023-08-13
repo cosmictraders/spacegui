@@ -52,3 +52,21 @@ body {
     --bs-text-opacity: 1;
     color: rgba(var(--bs-body-color-rgb),var(--bs-text-opacity)) !important;
 }
+
+.squiggle-icon {
+    animation-name: squiggle;
+    animation-duration: 3s;
+
+}
+
+@keyframes squiggle {
+    0% {
+        scale: 100%
+    }
+    50% {
+        scale: 150%
+    }
+    100% {
+        scale: 100%
+    }
+}

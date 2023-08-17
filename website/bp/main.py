@@ -245,6 +245,10 @@ def agent(symbol, session):
     return render_template("agent/agent.html", agent=Agent(session, symbol))
 
 
+@main_bp.route("/leaderboard/")
+def leaderboard():
+    return render_template("leaderboard.html", status=autotraders.get_status())
+
 @main_bp.app_errorhandler(404)
 def not_found(e):
     return render_template("error/not_found.html")

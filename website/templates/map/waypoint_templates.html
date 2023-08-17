@@ -19,7 +19,7 @@
     </a>
 {%- endmacro %}
 {% macro waypoint_display(waypoint, marketplace, shipyard) -%}
-    <div class="container py-3">
+    <div class="container p-3">
         <div class="row justify-content-center text-center">
             <h1 class="col"><i class="bi bi-geo-alt-fill"></i> {{ waypoint.symbol }}</h1>
         </div>
@@ -30,15 +30,20 @@
             <div class="col-12">
                 <p>Coordinates: ({{ waypoint.x }}, {{ waypoint.y }})</p>
             </div>
-            {% if waypoint.faction.__len__() != 0  %}
-                <div class="col-12">
+            <div class="col-12">
+                {% if waypoint.faction != None %}
                     <p>Faction: {{ waypoint.faction }}</p>
-                </div>
-            {% else %}
-                <div class="col-12">
+                {% else %}
                     <p>No Faction</p>
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
+            <div class="col-12">
+                {% if waypoint.orbitals.__len__() != 0 %}
+                    <p>{{ waypoint.orbitals.__len__() }} orbitals: {{ macros.pretty_list(waypoint.orbitals) }}</p>
+                {% else %}
+                    <p>No Orbitals</p>
+                {% endif %}
+            </div>
             <div class="col-12">
                 {% if waypoint.traits.__len__() > 0 %}
                     <div class="list-group" id="traits">
@@ -57,29 +62,29 @@
             </div>
             {% if waypoint.marketplace %}
                 {% if marketplace.imports != [] and marketplace.imports != None  %}
-                <div class="col">
-                    <h3>Imports</h3>
-                    <ul class="list-group">
-                        {% for good in marketplace.imports %}
-                            <li class="list-group-item">{{ good }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                    <div class="col">
+                        <h3>Imports</h3>
+                        <ul class="list-group">
+                            {% for good in marketplace.imports %}
+                                <li class="list-group-item">{{ good }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 {% endif %}
                 {% if marketplace.exports != [] and marketplace.exports != None %}
-                <div class="col-4">
-                    <h3>Exports</h3>
-                    <ul class="list-group">
-                        {% for good in marketplace.exports %}
-                            <li class="list-group-item">{{ good }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                    <div class="col-4">
+                        <h3>Exports</h3>
+                        <ul class="list-group">
+                            {% for good in marketplace.exports %}
+                                <li class="list-group-item">{{ good }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 {% endif %}
                 {% if marketplace.trade_goods != [] and marketplace.trade_goods != None %}
-                <div class="col-4">
-                    <h3>Trades</h3>
-                    <table class="table">
+                    <div class="col-4">
+                        <h3>Trades</h3>
+                        <table class="table">
                             <tr>
                                 <th>Symbol</th>
                                 <th>Buy Price</th>
@@ -96,8 +101,8 @@
                                     <td>{{ good.trade_volume }}</td>
                                 </tr>
                             {% endfor %}
-                    </table>
-                </div>
+                        </table>
+                    </div>
                 {% endif %}
             {% endif %}
             {% if waypoint.shipyard %}
@@ -112,8 +117,17 @@
                                     <li class="list-group-item" style="min-width: 100px"><i class="bi bi-fuel-pump"></i> {{ ship.frame.fuel_capacity }}</li>
                                     <li class="list-group-item list-group-item-warning" style="min-width: 80px"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
                                     <li class="list-group-item list-group-item-success" style="min-width: 80px"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
-                                    <li class="list-group-item" style="min-width: 75px"><button class="btn btn-primary btn-sm" onclick="buy('{{ ship.ship_type }}')">Buy</button></li>
-                                    <li class="list-group-item" style="min-width: 75px"><button class="btn btn-info btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#{{ ship.ship_type }}Modal">Info</button></li>
+                                    <li class="list-group-item" style="min-width: 75px">
+                                        <button class="btn btn-primary btn-sm" onclick="buy('{{ ship.ship_type }}')">
+                                            Buy
+                                        </button>
+                                    </li>
+                                    <li class="list-group-item" style="min-width: 75px">
+                                        <button class="btn btn-info btn-sm" type="button" data-bs-toggle="modal"
+                                                data-bs-target="#{{ ship.ship_type }}Modal">
+                                            Info
+                                        </button>
+                                    </li>
                                 </ul>
                             {% endfor %}
                         </div>
@@ -126,6 +140,15 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="list-group">
+                                                        {{ ship_templates.display_frame(ship.frame) }}
+                                                        {{ ship_templates.display_reactor(ship.reactor) }}
+                                                        {{ ship_templates.display_engine(ship.engine) }}
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="row">
                                                 {{ ship_templates.modules_and_mounts(ship.modules, ship.mounts) }}
                                             </div>

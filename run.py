@@ -4,7 +4,7 @@ from website.app import create_app
 
 print(" * Running autotraders version check")
 accepted_autotraders_major_version = 1
-accepted_autotraders_minor_versions = [8]
+accepted_autotraders_minor_versions = [9]
 
 autotraders_major_version = int(autotraders.__version__.split(".")[0])
 autotraders_minor_version = int(autotraders.__version__.split(".")[1])
@@ -30,8 +30,8 @@ if (
         + ".x"
     )
 elif (
-    autotraders_minor_version not in accepted_autotraders_minor_versions
-    and autotraders_minor_version < max(accepted_autotraders_minor_versions)
+        autotraders_minor_version not in accepted_autotraders_minor_versions
+        and autotraders_minor_version < max(accepted_autotraders_minor_versions)
 ):
     raise ValueError(
         "Please downgrade autotraders to v"

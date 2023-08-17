@@ -214,3 +214,7 @@ def sell(name, symbol, quantity):
         return jsonify({})
     except SpaceTradersException as e:
         return jsonify({"error": "Failed to sell: " + str(e)})
+
+@ship_bp.route("/ships/fitting-manager")
+def fitting_manager():
+    return render_template("ship/fitting_manager.html")

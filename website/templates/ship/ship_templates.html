@@ -39,54 +39,65 @@
         </div>
     {% endif %}
     {% if modules.__len__() == 0 and mounts.__len__() == 0 %}
-    <p>No modules or mounts</p>
+        <p>No modules or mounts</p>
     {% endif %}
+{%- endmacro %}
+{% macro display_frame(frame) -%}
+    <div class="list-group-item">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1"><i class="bi bi-rocket-takeoff-fill"></i> {{ frame.name }}</h5>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ frame.requirements.crew }}</li>
+                <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ frame.requirements.power }}</li>
+            </ul>
+        </div>
+        <p class="mb-1">{{ frame.description }}</p>
+        <p class="mb-1">Module Slots: {{ frame.module_slots }}</p>
+        <p class="mb-1">Mounting Points: {{ frame.mounting_points }}</p>
+    </div>
+{%- endmacro %}
+{% macro display_crew(crew) -%}
+    <div class='list-group-item list-group-item-info'>
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1"><i class="bi bi-person-fill"></i> {{ crew.current }}</h5>
+            <p class="mb-1 small">{{ crew.required }} Required</p>
+        </div>
+        <p class="mb-1">The capacity of this ship is {{ crew.capacity }} people.
+            The crew has {{ crew.morale }} morale, {{ crew.rotation }} rotation, and has {{ crew.wages }} wages.
+        </p>
+    </div>
+{%- endmacro  %}
+{% macro display_reactor(reactor) -%}
+    <div class="list-group-item list-group-item-warning">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1"><i class="bi bi-lightning-charge-fill"></i> {{ reactor.name }}</h5>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ reactor.requirements.crew }}</li>
+            </ul>
+        </div>
+        <small>Power: {{ reactor.power_output }}</small>
+        <p class="mb-1">{{ reactor.description }}</p>
+    </div>
+{%- endmacro %}
+{% macro display_engine(engine) -%}
+    <div class="list-group-item list-group-item-success">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1"><i class="bi bi-speedometer"></i> {{ engine.name }}</h5>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ engine.requirements.crew }}</li>
+                <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ engine.requirements.power }}</li>
+            </ul>
+        </div>
+        <small>Speed: {{ engine.speed }}</small>
+        <p class="mb-1">{{ engine.description }}</p>
+    </div>
 {%- endmacro %}
 {% macro main_ship_details(ship) -%}
     <div class="list-group">
-        <div class="list-group-item">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1"><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.frame.name }}</h5>
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.frame.requirements.crew }}</li>
-                    <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.frame.requirements.power }}</li>
-                </ul>
-            </div>
-            <p class="mb-1">{{ ship.frame.description }}</p>
-            <p class="mb-1">Module Slots: {{ ship.frame.module_slots }}</p>
-            <p class="mb-1">Mounting Points: {{ ship.frame.mounting_points }}</p>
-            <p class="mb-1"></p>
-        </div>
-        <div class='list-group-item list-group-item-info'>
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1"><i class="bi bi-person-fill"></i> {{ ship.crew.current }}</h5>
-                <p class="mb-1 small">{{ ship.crew.required }} Required</p>
-            </div>
-            <p class="mb-1">The capacity of {{ ship.symbol }} is {{ ship.crew.capacity }} people.
-                The crew has {{ ship.crew.morale }} morale, {{ ship.crew.rotation }} rotation, and has {{ ship.crew.wages }} wages.
-            </p>
-        </div>
-        <div class="list-group-item list-group-item-warning">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.name }}</h5>
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.reactor.requirements.crew }}</li>
-                </ul>
-            </div>
-            <small>Power: {{ ship.reactor.power_output }}</small>
-            <p class="mb-1">{{ ship.reactor.description }}</p>
-        </div>
-        <div class="list-group-item list-group-item-success">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1"><i class="bi bi-speedometer"></i> {{ ship.engine.name }}</h5>
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ ship.engine.requirements.crew }}</li>
-                    <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ ship.engine.requirements.power }}</li>
-                </ul>
-            </div>
-            <small>Speed: {{ ship.engine.speed }}</small>
-            <p class="mb-1">{{ ship.engine.description }}</p>
-        </div>
+        {{ display_frame(ship.frame) }}
+        {{ display_crew(ship.crew) }}
+        {{ display_reactor(ship.reactor) }}
+        {{ display_engine(ship.engine) }}
     </div>
 {%- endmacro %}
 
@@ -191,7 +202,7 @@
     </div>
 {%- endmacro %}
 {% macro ship_display(ship, waypoint_options, now) -%}
-    <div class="container py-3">
+    <div class="container p-3">
         <div class="row justify-content-center text-center">
             <h1 class="col"><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}
                 <button type="button" class="btn btn-secondary" onclick="refresh()"><i

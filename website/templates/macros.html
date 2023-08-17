@@ -1,5 +1,5 @@
 {% macro pretty_list(li, attr) -%}
-     {% for item in li  %}{{ item[attr] }}{{ ", " if not loop.last else "" }}{% endfor %}
+    {% for item in li %}{{ item[attr] }}{{ ", " if not loop.last else "" }}{% endfor %}
 {%- endmacro %}
 
 {% macro time_display(time) -%}

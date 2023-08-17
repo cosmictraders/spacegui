@@ -1,4 +1,6 @@
+{% import "macros.html" as macros %}
 {% import "map/waypoint_templates.html" as display %}
+
 {% macro system_list(system) -%}
     <a class="list-group-item gx-5 list-group-item-action" href="/system/{{ system.symbol }}">
         <div class="row gx-5 justify-content-between">
@@ -25,16 +27,26 @@
             <div class="col-12">
                 <p>Coordinates: ({{ system.x }}, {{ system.y }})</p>
             </div>
-            <div class="col-12">
-                <p>Faction: {% for faction in system.factions %}{{ faction["symbol"] }} {% endfor %}</p>
-            </div>
+            {% if system.factions.__len__() != 0 %}
+                <div class="col-12">
+                    <p>Faction: {% for faction in system.factions %}{{ faction["symbol"] }} {% endfor %}</p>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <p>No Factions</p>
+                </div>
+            {% endif %}
             <div class="col-12">
                 <h2 class="center">Waypoints</h2>
-                <div class="list-group list-group-flush">
-                    {% for waypoint in waypoints %}
-                        {{ display.waypoint_list(waypoint) }}
-                    {% endfor %}
-                </div>
+                {% if system.waypoints.__len__() != 0 %}
+                    <div class="list-group list-group-flush">
+                        {% for waypoint in waypoints %}
+                            {{ display.waypoint_list(waypoint) }}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No Waypoints</p>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -1,4 +1,6 @@
+{% import "macros.html" as macros %}
 {% import 'ship/ship_templates.html' as ship_templates %}
+
 {% macro waypoint_list(waypoint) -%}
     <a class="list-group-item list-group-item-action" href = "/waypoint/{{ waypoint.symbol }}">
         <div class="row gx-5 justify-content-between">
@@ -9,9 +11,9 @@
         </div>
         <div class="row gx-5 justify-content-between">
             <div class="col-md-auto">{{ waypoint.orbitals.__len__() }} orbitals</div>
-            {% if waypoint.traits != None %}
-            <div class="col-md-auto">{% for trait in waypoint.traits %}{{ trait.name }} {% endfor %}</div>
-        {% endif %}
+            {% if waypoint.traits != None and waypoint.traits.__len__() != 0 %}
+                <div class="col-md-auto">{{ macros.pretty_list(waypoint.traits, "name") }}</div>
+            {% endif %}
             <div class="col-md-auto">({{ waypoint.x }}, {{ waypoint.y }})</div>
         </div>
     </a>
@@ -28,9 +30,15 @@
             <div class="col-12">
                 <p>Coordinates: ({{ waypoint.x }}, {{ waypoint.y }})</p>
             </div>
-            <div class="col-12">
-                <p>Faction: {{ waypoint.faction }}</p>
-            </div>
+            {% if waypoint.faction.__len__() != 0  %}
+                <div class="col-12">
+                    <p>Faction: {{ waypoint.faction }}</p>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <p>No Faction</p>
+                </div>
+            {% endif %}
             <div class="col-12">
                 {% if waypoint.traits.__len__() > 0 %}
                     <div class="list-group" id="traits">

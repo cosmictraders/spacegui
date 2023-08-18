@@ -172,6 +172,20 @@ def extract(name):
         return jsonify({"error": "Failed to extract: " + str(e)})
 
 
+@ship_bp.route("/ship/<name>/chart/")
+def chart(name):
+    s = get_session()
+    ship = Ship(
+        name,
+        s
+    )  # TODO: Fix extra api request
+    try:
+        ship.chart()
+        return jsonify({})
+    except SpaceTradersException as e:
+        return jsonify({"error": "Failed to chart: " + str(e)})
+
+
 @ship_bp.route("/ship/<name>/jettison/<symbol>/<quantity>")
 def jettison(name, symbol, quantity):
     s = get_session()

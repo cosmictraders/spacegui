@@ -145,6 +145,17 @@ Ship - {{ ship.symbol }}
                 refresh();
             }, (500));
         }
+
+        function chart() {
+            fetch("/ship/{{ ship.symbol }}/chart").then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
     </script>
 {% endblock %}
 {% block navid %}ships{% endblock %}

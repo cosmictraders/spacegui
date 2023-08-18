@@ -276,7 +276,7 @@
                     {{ main_ship_details(ship) }}
                 </div>
                 <div class="row py-3">
-                    <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-toolbar py-3" role="toolbar">
                         <div class="btn-group me-2" role="group" aria-label="Ship Controls">
                             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#navigateModal" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}><i class="bi bi-arrows-move"></i> Move</button>
                         </div>
@@ -288,7 +288,17 @@
                             <button type="button" class="btn btn-primary" onclick="refuel()" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}><i class="bi bi-fuel-pump"></i> Refuel</button>
                         </div>
                         <div class="btn-group me-2" role="group" aria-label="Ship Controls">
-                            <button type="button" class="btn btn-primary" onclick="extract()" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}>Extract</button>
+                            <button type="button" class="btn btn-primary" onclick="extract()" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}><i class="bi bi-hammer"></i> Extract</button>
+                        </div>
+                    </div>
+                    <div class="btn-toolbar py-3" role="toolbar">
+                        <div class="btn-group me-2" role="group" aria-label="Ship Controls">
+                            <button type="button" class="btn btn-primary" onclick="chart()"><i class="bi bi-binoculars"></i> Chart</button>
+                        </div>
+                        <div class="btn-group me-2" role="group" aria-label="Ship Controls">
+                            <button type="button" class="btn btn-primary" onclick="chart()" disabled><i class="bi bi-rocket-takeoff"></i> Scan Ships</button>
+                            <button type="button" class="btn btn-primary" onclick="chart()" disabled><i class="bi bi-stars"></i> Scan Waypoints</button>
+                            <button type="button" class="btn btn-primary" onclick="chart()" disabled><i class="bi bi-geo-alt"></i> Scan Systems</button>
                         </div>
                     </div>
                 </div>

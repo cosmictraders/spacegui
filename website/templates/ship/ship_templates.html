@@ -213,7 +213,7 @@
             <p class="col"><i
                     class="bi bi-rocket"></i> {{ ship.registration.faction_symbol }} {{ ship.registration.role }}</p>
         </div>
-        <div class="row gx-5 gy-3">
+        <div class="row g-3">
             <div class="col-6">
                 {% if not ship.nav.moving %}
                     <div class="row py-3">
@@ -326,6 +326,19 @@
                             </div>
                         </div>
                     {% endfor %}
+                    <form class="row g-3 py-3">
+                        <div class="form-floating col-8">
+                            <input class="form-control" id="buySymbol" placeholder="FUEL">
+                            <label for="buySymbol">Symbol</label>
+                        </div>
+                        <div class="form-floating col-2">
+                            <input type="number" class="form-control" id="buyAmount" min="0" max="{{ ship.cargo.capacity }}">
+                            <label for="buyAmount">Amount</label>
+                        </div>
+                        <button type="button" class="btn btn-success col-2"
+                                onclick="buy($('#buySymbol').val(), $('#buyAmount').val())"><i class="bi bi-currency-dollar"></i> Buy
+                        </button>
+                    </form>
                 </div>
             </div>
             {{ modules_and_mounts(ship.modules, ship.mounts) }}
@@ -366,7 +379,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    {# TODO: Add tooltips for disabled buttons with explainations#}
+                    {# TODO: Add tooltips for disabled buttons with explanations #}
                     {# TODO: make jump/warp only allowed if the ship has the capability to do so #}
                     {# TODO: Make cancel button float on left and the rest float on the right #}
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="jump()">Jump</button>

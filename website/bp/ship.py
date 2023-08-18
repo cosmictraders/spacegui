@@ -205,6 +205,17 @@ def transfer(name, symbol, quantity):
         return jsonify({"error": "Failed to transfer cargo: " + str(e)})
 
 
+@ship_bp.route("/ship/<name>/buy/<symbol>/<quantity>")
+def buy(name, symbol, quantity):
+    s = get_session()
+    ship = Ship(name, s, data={"modules": {}, "mounts": {}})
+    try:
+        ship.buy(symbol, quantity)
+        return jsonify({})
+    except SpaceTradersException as e:
+        return jsonify({"error": "Failed to sell: " + str(e)})
+
+
 @ship_bp.route("/ship/<name>/sell/<symbol>/<quantity>")
 def sell(name, symbol, quantity):
     s = get_session()

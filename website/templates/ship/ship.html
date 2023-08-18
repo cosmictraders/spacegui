@@ -124,6 +124,17 @@ Ship - {{ ship.symbol }}
             }, (500));
         }
 
+        function buy(symbol, quantity) {
+            fetch("/ship/{{ ship.symbol }}/buy/" + symbol + "/" + quantity).then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
+
         function sell(symbol, quantity) {
             fetch("/ship/{{ ship.symbol }}/sell/" + symbol + "/" + quantity).then(
                 (resp) => {

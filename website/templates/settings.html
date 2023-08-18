@@ -4,71 +4,70 @@ Settings
 {% endblock %}
 {% block body %}
     <div class="container p-3">
-    <h1 class="center">Settings</h1>
-    <div id="flash-box" class=flashes>
-        {% for announcement in announcements %}
-            <div class="alert alert-info" role="alert">
-                <div>{{ announcement|safe }}</div>
-            </div>
-        {% endfor %}
-    </div>
-    <div class="row g-3 p-3">
-        <div class="col">
-            <h2 class="center">Server Info</h2>
-            <p>Version: {{ status.version }}</p>
-            <p>Status: {{ status.status }}</p>
-            <p>Last Reset: {{ macros.time_display(status.reset_date) }}</p>
-            <p>Next Reset: {{ macros.time_display(status.next_reset) }}</p>
-            <h2 class="center">Links</h2>
-            <ul class="list-group  list-group-flush" style="max-width: 400px; margin-bottom: 10px">
-                {% for link in status.links %}
-                    <li class="list-group-item list-group-item-action" onclick="window.location.href = '{{ link.url }}'"><a href="{{ link.url }}" target="_blank">{{ link.name }}</a></li>
-                {% endfor %}
-            </ul>
+        <h1 class="center">Settings</h1>
+        <div id="flash-box" class=flashes>
+            {% for announcement in announcements %}
+                <div class="alert alert-info" role="alert">
+                    <div>{{ announcement|safe }}</div>
+                </div>
+            {% endfor %}
         </div>
-        <div class="col">
-            <h2 class="center">Client Settings</h2>
-            <form class="p-3 row g-3">
-                <div class="col-md-6">
-                    <label for="token" class="form-label">Token</label>
-                    <input type="text" class="form-control" id="token" value="{{ token }}">
-                </div>
-                <div class="col-md-6">
-                    <p>Theme</p>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="themeRadios" id="system" value="" onclick="setThemePreference('auto')">
-                        <label class="form-check-label" for="system">
-                            System
-                        </label>
+        <div class="row g-3 p-3">
+            <div class="col">
+                <h2 class="center">Server Info</h2>
+                <p>Version: {{ status.version }}</p>
+                <p>Status: {{ status.status }}</p>
+                <p>Last Reset: {{ macros.time_display(status.reset_date) }}</p>
+                <p>Next Reset: {{ macros.time_display(status.next_reset) }}</p>
+                <h2 class="center">Links</h2>
+                <ul class="list-group  list-group-flush" style="max-width: 400px; margin-bottom: 10px">
+                    {% for link in status.links %}
+                        <li class="list-group-item list-group-item-action" onclick="window.location.href = '{{ link.url }}'"><a href="{{ link.url }}" target="_blank">{{ link.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col">
+                <h2 class="center">Client Settings</h2>
+                <form class="p-3 row g-3">
+                    <div class="col-md-6">
+                        <label for="token" class="form-label">Token</label>
+                        <input type="text" class="form-control" id="token" value="{{ token }}">
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="themeRadios" id="light" value="light" onclick="setThemePreference('light')">
-                        <label class="form-check-label" for="light">
-                            Light
-                        </label>
+                    <div class="col-md-6">
+                        <p>Theme</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="themeRadios" id="system" value="" onclick="setThemePreference('auto')">
+                            <label class="form-check-label" for="system">
+                                System
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="themeRadios" id="light" value="light" onclick="setThemePreference('light')">
+                            <label class="form-check-label" for="light">
+                                Light
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="themeRadios" id="dark" value="dark" onclick="setThemePreference('dark')">
+                            <label class="form-check-label" for="dark">
+                                Dark
+                            </label>
+                        </div>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="themeRadios" id="dark" value="dark" onclick="setThemePreference('dark')">
-                        <label class="form-check-label" for="dark">
-                            Dark
-                        </label>
+                    <div class="col-12">
+                        <button type="button" class="btn btn-primary" onclick="save()">Save Token</button>
                     </div>
-                </div>
-                <div class="col-12">
-                    <button type="button" class="btn btn-primary" onclick="save()">Save Token</button>
-                </div>
-            </form>
-            <p>Timezone: {{ tz }}</p>
+                </form>
+                <p>Timezone: {{ tz }}</p>
+            </div>
         </div>
     </div>
     <script>
         if (localStorage.getItem("theme") === "light") {
             $("#light").prop("checked", true);
-        }
-        else if (localStorage.getItem("theme") === "dark") {
+        } else if (localStorage.getItem("theme") === "dark") {
             $("#dark").prop("checked", true);
-        }
-        else {
+        } else {
             $("#system").prop("checked", true);
         }
 

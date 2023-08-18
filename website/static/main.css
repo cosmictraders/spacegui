@@ -1,7 +1,6 @@
-/* TODO: Fix fira*/
 @font-face {
     font-family: "Fira Code";
-    src: url("/static/fira.tff");
+    src: url("/static/fira.ttf");
 }
 
 body {

@@ -1,0 +1,6 @@
+{% import "map/waypoint_templates.html" as display %}
+<div class="list-group">
+    {% for waypoint in waypoints %}
+        {{ display.waypoint_list(waypoint) }}
+    {% endfor %}
+</div>

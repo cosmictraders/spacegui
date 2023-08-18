@@ -4,6 +4,7 @@ from flask import render_template
 from website.model import db, User
 from website.session import get_session
 from minify_html import minify
+from autotraders.session import get_session as autotraders_get_session
 
 
 def minify_html(func):
@@ -45,7 +46,7 @@ def token_required(func):
             users = []
             for user in db.session.query(User).all():
                 try:
-                    a = Agent(get_session(user.token))
+                    a = Agent(autotraders_get_session(user.token))
                     a.active = user.active
                     users.append(a)
                 except Exception as e:

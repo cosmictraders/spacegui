@@ -113,7 +113,7 @@ Ship - {{ ship.symbol }}
             }, (500));
         }
 
-        function jettison(symbol, quantity) { // TODO: Add quantity support
+        function jettison(symbol, quantity) {
             fetch("/ship/{{ ship.symbol }}/jettison/" + symbol + "/" + quantity).then(
                 (resp) => {
                     alertIfErr(resp);

@@ -1,0 +1,6 @@
+{% import "ship/ship_templates.html" as display %}
+<div class="list-group">
+    {% for ship in ships %}
+        {{ display.ship_list(ship) }}
+    {% endfor %}
+</div>

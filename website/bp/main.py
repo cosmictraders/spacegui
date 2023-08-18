@@ -2,6 +2,7 @@ import inspect
 import pickle
 import time
 from datetime import datetime, timezone
+from functools import cache
 
 import autotraders
 import requests
@@ -85,10 +86,10 @@ def settings():
 
 @main_bp.route("/settings-api/")
 def settings_api():
-    users = db.session.execute(db.select(User)).first()
+    users = db.session.query(User).filter_by(active=True).first()
     if users is None:
-        # TODO: Fix
-        pass
+        resp = jsonify({"error": "No active user found."})
+        return resp
     t = users[0].token
     updated = []
     input_token = request.args.get("token", t).strip(" ").strip('"').strip("'")
@@ -112,6 +113,16 @@ def automation(name):
     return render_template("automation.html", name=name)
 
 
+@cache
+def load_system_data():
+    return pickle.load(open("./data.pickle", "rb"))
+
+
+@cache
+def load_faction_data():
+    return pickle.load(open("./factions.pickle", "rb"))
+
+
 @main_bp.route("/search/")
 @token_required
 def search(session):
@@ -120,9 +131,9 @@ def search(session):
         time.time()
     )  # TODO: Speed improvements by only querying whats needed (`is: waypoint` should not be getting ship,contract info)
     query, filters = read_query(request.args.get("query"))
-    system_data = pickle.load(open("./data.pickle", "rb"))
+    system_data = load_system_data()
     t1_2 = time.time()
-    faction_data = pickle.load(open("./factions.pickle", "rb"))
+    faction_data = load_faction_data()
     t1_3 = time.time()
     unweighted_map = []
     ship_data = Ship.all(session)[1]
@@ -135,7 +146,7 @@ def search(session):
         if weight(query, str(item.symbol)) > -0.2:
             for waypoint in item.waypoints:
                 if weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
-                    waypoint, filters
+                        waypoint, filters
                 ):
                     unweighted_map.append(
                         (waypoint, weight(query, str(waypoint.symbol)))
@@ -143,7 +154,7 @@ def search(session):
     t1_5 = time.time()
     for item in faction_data:
         if (
-            weight(query, item.symbol) > -0.25 or weight(query, item.name) > -0.25
+                weight(query, item.symbol) > -0.25 or weight(query, item.name) > -0.25
         ) and check_filters_faction(item, filters):
             unweighted_map.append((item, weight(query, str(item.symbol))))
     t1_6 = time.time()
@@ -152,7 +163,7 @@ def search(session):
             unweighted_map.append((item, weight(query, item.symbol)))
     for item in contract_data:
         if weight(query, item.contract_id) > -0.7 and check_filters_contract(
-            item, filters
+                item, filters
         ):
             unweighted_map.append((item, weight(query, str(item.contract_id))))
     amap = [
@@ -192,7 +203,7 @@ def search(session):
     return render_template(
         "search.html",
         query=request.args.get("query"),
-        map=amap[(page - 1) * 100 : page * 100],
+        map=amap[(page - 1) * 100: page * 100],
         time=str(t2 - t1),
         li=new_li,
         page=page,
@@ -249,6 +260,9 @@ def agent(symbol, session):
 def leaderboard():
     return render_template("leaderboard.html", status=autotraders.get_status())
 
+
 @main_bp.app_errorhandler(404)
 def not_found(e):
-    return render_template("error/not_found.html")
+    resp = Response(render_template("error/not_found.html"))
+    resp.status_code = 404
+    return resp

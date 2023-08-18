@@ -226,6 +226,31 @@ def sell(name, symbol, quantity):
     except SpaceTradersException as e:
         return jsonify({"error": "Failed to sell: " + str(e)})
 
+
+@ship_bp.route("/ship/<name>/scan-ships/")
+def scan_ships(name):
+    s = get_session()
+    ship = Ship(name, s)  # TODO: Fix extra api request
+    resp = ship.scan_ships()
+    return render_template("ship/scan_ships.html", ships=resp)
+
+
+@ship_bp.route("/ship/<name>/scan-waypoints/")
+def scan_waypoints(name):
+    s = get_session()  # TODO: Fix extra api request
+    ship = Ship(name, s)
+    resp = ship.scan_waypoints()
+    return render_template("ship/scan_waypoints.html", waypoints=resp)
+
+
+@ship_bp.route("/ship/<name>/scan-systems/")
+def scan_systems(name):
+    s = get_session()  # TODO: Fix extra api request
+    ship = Ship(name, s)
+    resp = ship.scan_systems()
+    return render_template("ship/scan_systems.html", waypoints=resp)
+
+
 @ship_bp.route("/ships/fitting-manager")
 def fitting_manager():
     return render_template("ship/fitting_manager.html")

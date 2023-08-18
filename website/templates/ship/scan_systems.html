@@ -1,0 +1,6 @@
+{% import "map/system_templates.html" as display %}
+<div class="list-group">
+    {% for system in systems %}
+        {{ display.system_list(system) }}
+    {% endfor %}
+</div>

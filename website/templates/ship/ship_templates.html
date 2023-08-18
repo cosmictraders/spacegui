@@ -336,7 +336,7 @@
                             <label for="buyAmount">Amount</label>
                         </div>
                         <button type="button" class="btn btn-success col-2"
-                                onclick="buy($('#buySymbol').val(), $('#buyAmount').val())"><i class="bi bi-currency-dollar"></i> Buy
+                                onclick="buy($('#buySymbol').val(), $('#buyAmount').val())" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}><i class="bi bi-currency-dollar"></i> Buy
                         </button>
                     </form>
                 </div>

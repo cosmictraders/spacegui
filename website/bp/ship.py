@@ -163,19 +163,8 @@ def extract(name):
     s = get_session()
     ship = Ship(
         name,
-        s,
-        data={
-            "modules": {},
-            "mounts": {},
-            "reactor": {
-                "symbol": "blank",
-                "name": "blank",
-                "powerOutput": 1,
-                "cooldown": "2000-01-01 00:00:00.000",
-                "requirements": {},
-            },
-        },
-    )
+        s
+    )  # TODO: Fix extra api request
     try:
         ship.extract()
         return jsonify({})

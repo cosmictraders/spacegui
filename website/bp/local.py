@@ -41,6 +41,7 @@ def select_user():
         try:
             a = Agent(get_session(user.token))
             a.active = user.active
+            a.id = user.id
             users.append(a)
         except Exception as e:
             users.append(MockAgent(user.token, user.id, user.active))

@@ -337,16 +337,19 @@
                         </div>
                     {% endfor %}
                     <form class="row g-3 py-3">
-                        <div class="form-floating col-8">
+                        <div class="form-floating col-9">
                             <input class="form-control" id="buySymbol" placeholder="FUEL">
                             <label for="buySymbol">Symbol</label>
                         </div>
-                        <div class="form-floating col-2">
+                        <div class="form-floating col-3">
                             <input type="number" class="form-control" id="buyAmount" min="0" max="{{ ship.cargo.capacity }}">
                             <label for="buyAmount">Amount</label>
                         </div>
                         <button type="button" class="btn btn-success col-2"
                                 onclick="buy($('#buySymbol').val(), $('#buyAmount').val())" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}><i class="bi bi-currency-dollar"></i> Buy
+                        </button>
+                        <button type="button" class="btn btn-primary col-3" disabled>
+                            Refine
                         </button>
                     </form>
                 </div>

@@ -24,6 +24,19 @@ Map
             <li class="list-group-item" style="color: blue">UNSTABLE: blue // repeated</li>
             <li class="list-group-item" style="color: green">OTHER: green</li>
         </ul>
+        <form class="row g-3 py-3">
+            <div class="form-floating col-8">
+                <input class="form-control" id="buySymbol" placeholder="FUEL">
+                <label for="buySymbol">Symbol</label>
+            </div>
+            <div class="form-floating col-2">
+                <input type="number" class="form-control" id="buyAmount" min="0" max="{{ ship.cargo.capacity }}">
+                <label for="buyAmount">Amount</label>
+            </div>
+            <button type="button" class="btn btn-success col-2"
+                    onclick="buy($('#buySymbol').val(), $('#buyAmount').val())" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}><i class="bi bi-currency-dollar"></i> Buy
+            </button>
+        </form>
     </div>
     <script>
         const data = JSON.parse(jQuery.ajax({
@@ -244,15 +257,18 @@ Map
 
 
         function draw() {
+            ctx.beginPath()
+            let path = ["X1-BB15", "X1-GV37", "X1-QN13"];
+            let coordinates = [];
             let zoom = 16/displayTransform.cscale;
             ctx.font = zoom + "px serif";
             for (const system of Object.keys(data)) {
-                if ((-displayTransform.matrix[4]-canvas.width)/displayTransform.matrix[0] < data[system].x * 10
+                if ((-displayTransform.matrix[4] - canvas.width) / displayTransform.matrix[0] < data[system].x * 10
                     &&
-                    (-displayTransform.matrix[4]+canvas.width)/displayTransform.matrix[0] > data[system].x * 10) { // x coord (5 is y)
-                    if ((-displayTransform.matrix[5]-canvas.height)/displayTransform.matrix[3] < data[system].y * 10
+                    (-displayTransform.matrix[4] + canvas.width) / displayTransform.matrix[0] > data[system].x * 10) { // x coord (5 is y)
+                    if ((-displayTransform.matrix[5] - canvas.height) / displayTransform.matrix[3] < data[system].y * 10
                         &&
-                        (-displayTransform.matrix[5]+canvas.height)/displayTransform.matrix[3] > data[system].y * 10) {
+                        (-displayTransform.matrix[5] + canvas.height) / displayTransform.matrix[3] > data[system].y * 10) {
                         ctx.fillStyle = colorMap[data[system].type] || "green"
                         ctx.beginPath();
                         if (displayTransform.scale < 1) {
@@ -268,13 +284,29 @@ Map
                         }
                     }
                 }
+                if (path.includes(system)) {
+                    coordinates.push([data[system].x * 10, data[system].y * 10]);
+                }
             }
+            ctx.strokeStyle = "green";
+            ctx.lineWidth = Math.min(zoom/2, 10);
+            ctx.beginPath();
+            if (coordinates.length > 0) {
+                ctx.moveTo(coordinates[0][0], coordinates[0][1]);
+                for (const coordinate of coordinates) {
+                    ctx.lineTo(coordinate[0], coordinate[1]);
+                }
+            }
+            ctx.closePath();
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.lineWidth = 1;
         }
 
         function update(_time) {
-            canvas.style.width ='100%';
-            canvas.style.height='100%';
-            canvas.width  = canvas.offsetWidth;
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
             // update the transform
             displayTransform.update();
@@ -297,6 +329,7 @@ Map
             // register update as the function to call to request the next frame
             requestAnimationFrame(update);
         }
+
         displayTransform.update();
         displayTransform.setHome();
         displayTransform.setTransform();

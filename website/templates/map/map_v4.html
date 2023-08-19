@@ -38,18 +38,18 @@ Map
 
         // Define 4 letters
         let a = addLetter('A', app.stage, 0xff0000, {x: 100, y: 100});
-        let b = addLetter('B', a,         0x00ff00, {x: 20,  y: 20});
-        let c = addLetter('C', a,         0x0000ff, {x: 20,  y: 40});
+        let b = addLetter('B', a, 0x00ff00, {x: 20, y: 20});
+        let c = addLetter('C', a, 0x0000ff, {x: 20, y: 40});
         let d = addLetter('D', app.stage, 0xff8800, {x: 140, y: 100});
 
         // Display them over time, in order
         let elapsed = 0.0;
         app.ticker.add((delta) => {
-          elapsed += delta / 60.0;
-          if (elapsed >= letters.length) { elapsed = 0.0; }
-          for (let i = 0; i < letters.length; i ++) {
-            letters[i].visible = elapsed >= i;
-          }
+            elapsed += delta / 60.0;
+            if (elapsed >= letters.length) { elapsed = 0.0; }
+            for (let i = 0; i < letters.length; i ++) {
+                letters[i].visible = elapsed >= i;
+            }
         });
     </script>
 {% endblock %}

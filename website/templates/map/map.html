@@ -29,12 +29,7 @@ Map
                 <input class="form-control" id="buySymbol" placeholder="FUEL">
                 <label for="buySymbol">Symbol</label>
             </div>
-            <div class="form-floating col-2">
-                <input type="number" class="form-control" id="buyAmount" min="0" max="{{ ship.cargo.capacity }}">
-                <label for="buyAmount">Amount</label>
-            </div>
-            <button type="button" class="btn btn-success col-2"
-                    onclick="buy($('#buySymbol').val(), $('#buyAmount').val())" {% if ship.nav.status != "DOCKED" %}disabled{% endif %}><i class="bi bi-currency-dollar"></i> Buy
+            <button type="button" class="btn btn-success col-2" disabled>Test
             </button>
         </form>
     </div>

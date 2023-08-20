@@ -11,6 +11,7 @@
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ module.requirements.crew }}</li>
                                 <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ module.requirements.power }}</li>
+                                <li class="list-group-item list-group-item-secondary"><i class="bi bi-shield-fill-check"></i> {{ module.condition }}</li>
                             </ul>
                         </div>
                         <p class="mb-1">{{ module.description }}</p>
@@ -30,6 +31,7 @@
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ mount.requirements.crew }}</li>
                                 <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ mount.requirements.power }}</li>
+                                <li class="list-group-item list-group-item-secondary"><i class="bi bi-shield-fill-check"></i> {{ mount.condition }}</li>
                             </ul>
                         </div>
                         <p class="mb-1">{{ mount.description }}</p>
@@ -49,6 +51,7 @@
             <ul class="list-group list-group-horizontal">
                 <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ frame.requirements.crew }}</li>
                 <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ frame.requirements.power }}</li>
+                <li class="list-group-item list-group-item-secondary"><i class="bi bi-shield-fill-check"></i> {{ frame.condition }}</li>
             </ul>
         </div>
         <p class="mb-1">{{ frame.description }}</p>
@@ -73,6 +76,7 @@
             <h5 class="mb-1"><i class="bi bi-lightning-charge-fill"></i> {{ reactor.name }}</h5>
             <ul class="list-group list-group-horizontal">
                 <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ reactor.requirements.crew }}</li>
+                <li class="list-group-item list-group-item-secondary"><i class="bi bi-shield-fill-check"></i> {{ reactor.condition }}</li>
             </ul>
         </div>
         <small>Power: {{ reactor.power_output }}</small>
@@ -86,6 +90,7 @@
             <ul class="list-group list-group-horizontal">
                 <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ engine.requirements.crew }}</li>
                 <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ engine.requirements.power }}</li>
+                <li class="list-group-item list-group-item-secondary"><i class="bi bi-shield-fill-check"></i> {{ engine.condition }}</li>
             </ul>
         </div>
         <small>Speed: {{ engine.speed }}</small>

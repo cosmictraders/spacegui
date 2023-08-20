@@ -13,7 +13,7 @@ Search
         <div class="row g-3 p-3">
             <div class="col-3">
                 <form class="row g-3 form-floating">
-                    <select class="form-select" id="typeSelect" aria-label="Type Select" disabled>
+                    <select class="form-select col-12" id="typeSelect" aria-label="Type Select" disabled>
                         <option value="any" selected>Any</option>
                         <option value="1">Systems</option>
                         <option value="2">Waypoints</option>
@@ -23,6 +23,7 @@ Search
                         <option value="3">Contracts</option>
                     </select>
                     <label for="floatingSelect">Type <span class="badge text-bg-warning">WIP</span></label>
+                    <button class="btn btn-primary">Apply</button>
                 </form>
             </div>
             <div class="col-9">
@@ -72,7 +73,7 @@ Search
             </div>
         </div>
         <button type="button" class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#helpModal">
-            Search Tips
+            <i class="bi bi-info-circle"></i> Search Tips
         </button>
     </div>
 

@@ -1,7 +1,8 @@
 {% import "macros.html" as macros %}
 
 {% macro contract_card(contract) %}
-    <div class="card shadow" style="width: 25rem; margin: 17px 10px">
+{#    TODO: Fix #}
+    <div class="card shadow" style="width: fit-content; margin: 17px 10px">
         <div class="card-body">
             <h5 class="card-title"><a href="/contract/{{ contract.contract_id }}"><i class="bi bi-file-earmark-text-fill"></i> {{ contract.contract_id }}</a></h5>
         </div>

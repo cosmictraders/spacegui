@@ -107,7 +107,8 @@
 {%- endmacro %}
 
 {% macro ship_card(ship) -%}
-    <div class="card shadow" style="width: 27rem; margin: 17px 10px">
+    {#    TODO: Fix #}
+    <div class="card shadow" style="width: fit-content; margin: 17px 10px">
         <div class="card-body">
             <h5 class="card-title"><a href="/ship/{{ ship.symbol }}"><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}</a></h5>
         </div>

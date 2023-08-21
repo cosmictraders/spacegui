@@ -61,7 +61,7 @@
                 {% endif %}
             </div>
             {% if waypoint.marketplace %}
-                {% if marketplace.imports != [] and marketplace.imports != None  %}
+                {% if marketplace.imports != [] and marketplace.imports != None %}
                     <div class="col">
                         <h3>Imports</h3>
                         <ul class="list-group">
@@ -72,7 +72,7 @@
                     </div>
                 {% endif %}
                 {% if marketplace.exports != [] and marketplace.exports != None %}
-                    <div class="col-4">
+                    <div class="col">
                         <h3>Exports</h3>
                         <ul class="list-group">
                             {% for good in marketplace.exports %}
@@ -81,8 +81,18 @@
                         </ul>
                     </div>
                 {% endif %}
+                {% if marketplace.exchange != [] and marketplace.exchange != None %}
+                    <div class="col">
+                        <h3>Exchange</h3>
+                        <ul class="list-group">
+                            {% for good in marketplace.exchange %}
+                                <li class="list-group-item">{{ good }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
                 {% if marketplace.trade_goods != [] and marketplace.trade_goods != None %}
-                    <div class="col-4">
+                    <div class="col">
                         <h3>Trades</h3>
                         <table class="table">
                             <tr>

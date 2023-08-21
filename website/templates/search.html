@@ -23,6 +23,12 @@ Search
                         <option value="3">Contracts</option>
                     </select>
                     <label for="floatingSelect">Type <span class="badge text-bg-warning">WIP</span></label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="fastSearch" disabled>
+                        <label class="form-check-label" for="fastSearch">
+                              Fast Search
+                        </label>
+                    </div>
                     <button class="btn btn-primary">Apply</button>
                 </form>
             </div>
@@ -99,7 +105,7 @@ Search
                     <h2>General Filters</h2>
                     <ul>
                         <li><code>is</code> - Filter by type i.e. <code>is: system</code>.
-                            Possible values are <code>system</code>, <code>waypoint</code>, <code>ship</code>, and
+                            Possible values are <code>system</code>, <code>waypoint</code>, <code>faction</code>, <code>ship</code>, and
                             <code>all</code>.
                         </li>
                     </ul>
@@ -116,7 +122,7 @@ Search
                     <h2>Waypoint Filters</h2>
                     <ul>
                         <li><code>type</code> - Filter by waypoint type</li>
-                        <li><code>trait</code> search for individual trait or multiple traits seperated by commas with
+                        <li><code>trait</code> - Search for individual trait or multiple traits seperated by commas with
                             no spaces.
                         </li>
                         <li><code>system</code> - Filter by system</li>

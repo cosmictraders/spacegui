@@ -105,7 +105,7 @@ def settings_api():
 
 @main_bp.route("/automations/")
 def automations():
-    return render_template("automations.html", automations=Automation.all())
+    return render_template("automations.html", automations=db.session.query(Automation).all())
 
 
 @main_bp.route("/automation/<name>/")

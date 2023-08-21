@@ -2,7 +2,9 @@
 {% macro modules_and_mounts(modules, mounts) -%}
     {% if modules.__len__() != 0 %}
         <div class="col-6">
-            <h2 class="center">Modules</h2>
+            <div class="row justify-content-center text-center">
+                <h2>Modules</h2>
+            </div>
             <div class="list-group" id="modules">
                 {% for module in modules %}
                     <div class="list-group-item {% if module.symbol == 'MODULE_CARGO_HOLD_I' %}list-group-item-primary{% elif module.symbol == 'MODULE_CREW_QUARTERS_I' %}list-group-item-info{% endif %}">
@@ -22,7 +24,9 @@
     {% endif %}
     {% if mounts.__len__() != 0 %}
         <div class="col-6">
-            <h2 class="center">Mounts</h2>
+            <div class="row justify-content-center text-center">
+                <h2>Mounts</h2>
+            </div>
             <div class="list-group" id="mounts">
                 {% for mount in mounts %}
                     <div class="list-group-item">

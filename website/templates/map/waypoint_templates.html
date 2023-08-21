@@ -106,9 +106,11 @@
                 {% endif %}
             {% endif %}
             {% if waypoint.shipyard %}
-                {% if shipyard.ships != None and shipyard.ships != [] %}
-                    <div class="col-12">
-                        <h2 class="center">Shipyard</h2>
+                <div class="col-12">
+                    <div class="row justify-content-center text-center">
+                        <h2>Shipyard</h2>
+                    </div>
+                    {% if shipyard.ships != None and shipyard.ships != [] %}
                         <table class="table">
                             <thead>
                             <tr>
@@ -174,17 +176,14 @@
                                 </div>
                             </div>
                         {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="col-12">
-                        <h2 class="center">Shipyard</h2>
+                    {% else %}
                         <ul class="list-group">
                             {% for ship in shipyard.ship_types %}
                                 <li class="list-group-item">{{ ship }}</li>
                             {% endfor %}
                         </ul>
-                    </div>
-                {% endif %}
+                    {% endif %}
+                </div>
                 <script>
                     function buy(ship) {
                         fetch("/waypoint/{{ waypoint.symbol }}/buy-ship/?ship="+ship)

@@ -23,7 +23,9 @@ Settings
                 <p>Status: {{ status.status }}</p>
                 <p>Last Reset: {{ macros.time_display(status.reset_date) }}</p>
                 <p>Next Reset: {{ macros.time_display(status.next_reset) }}</p>
-                <h2 class="center">Links</h2>
+                <div class="row justify-content-center text-center">
+                    <h2>Links</h2>
+                </div>
                 <ul class="list-group  list-group-flush" style="max-width: 400px; margin-bottom: 10px">
                     {% for link in status.links %}
                         <li class="list-group-item list-group-item-action" onclick="window.location.href = '{{ link.url }}'"><a href="{{ link.url }}" target="_blank">{{ link.name }}</a></li>

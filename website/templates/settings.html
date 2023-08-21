@@ -4,7 +4,9 @@ Settings
 {% endblock %}
 {% block body %}
     <div class="container p-3">
-        <h1 class="center">Settings</h1>
+        <div class="row justify-content-center text-center">
+            <h1>Settings</h1>
+        </div>
         <div id="flash-box" class=flashes>
             {% for announcement in announcements %}
                 <div class="alert alert-info" role="alert">
@@ -14,7 +16,9 @@ Settings
         </div>
         <div class="row g-3 p-3">
             <div class="col">
-                <h2 class="center">Server Info</h2>
+                <div class="row justify-content-center text-center">
+                    <h2>Server Info</h2>
+                </div>
                 <p>Version: {{ status.version }}</p>
                 <p>Status: {{ status.status }}</p>
                 <p>Last Reset: {{ macros.time_display(status.reset_date) }}</p>
@@ -27,8 +31,10 @@ Settings
                 </ul>
             </div>
             <div class="col">
-                <h2 class="center">Client Settings</h2>
-                <form class="p-3 row g-3">
+                <div class="row justify-content-center text-center">
+                    <h2>Client Settings</h2>
+                </div>
+                <form class="row py-3 g-3">
                     <div class="col-md-6">
                         <label for="token" class="form-label">Token</label>
                         <input type="text" class="form-control" id="token" value="{{ token }}">

@@ -107,30 +107,43 @@
             {% endif %}
             {% if waypoint.shipyard %}
                 {% if shipyard.ships != None and shipyard.ships != [] %}
-                    <div class="col-6">
+                    <div class="col-12">
                         <h2 class="center">Shipyard</h2>
-                        <div>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Ship Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Fuel Capacity</th>
+                                <th scope="col">Reactor Power</th>
+                                <th scope="col">Speed</th>
+                                <th scope="col">Buy</th>
+                                <th scope="col">Info</th>
+                            </tr>
+                            </thead>
+                            <tbody>
                             {% for ship in shipyard.ships %}
-                                <ul class="list-group list-group-horizontal">
-                                    <li class="list-group-item" style="min-width: 250px">{{ ship.ship_type }}</li>
-                                    <li class="list-group-item" style="min-width: 125px"><i class="bi bi-credit-card"></i> {{ ship.purchase_price }}</li>
-                                    <li class="list-group-item" style="min-width: 100px"><i class="bi bi-fuel-pump"></i> {{ ship.frame.fuel_capacity }}</li>
-                                    <li class="list-group-item list-group-item-warning" style="min-width: 80px"><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</li>
-                                    <li class="list-group-item list-group-item-success" style="min-width: 80px"><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</li>
-                                    <li class="list-group-item" style="min-width: 75px">
+                                <tr>
+                                    <th>{{ ship.ship_type }}</th>
+                                    <td><i class="bi bi-credit-card"></i> {{ ship.purchase_price }}</td>
+                                    <td><i class="bi bi-fuel-pump"></i> {{ ship.frame.fuel_capacity }}</td>
+                                    <td><i class="bi bi-lightning-charge-fill"></i> {{ ship.reactor.power_output }}</td>
+                                    <td><i class="bi bi-speedometer"></i> {{ ship.engine.speed }}</td>
+                                    <td>
                                         <button class="btn btn-primary btn-sm" onclick="buy('{{ ship.ship_type }}')">
                                             Buy
                                         </button>
-                                    </li>
-                                    <li class="list-group-item" style="min-width: 75px">
+                                    </td>
+                                    <td>
                                         <button class="btn btn-info btn-sm" type="button" data-bs-toggle="modal"
                                                 data-bs-target="#{{ ship.ship_type }}Modal">
                                             Info
                                         </button>
-                                    </li>
-                                </ul>
+                                    </td>
+                                </tr>
                             {% endfor %}
-                        </div>
+                            </tbody>
+                        </table>
                         {% for ship in shipyard.ships %}
                             <div class="modal fade" id="{{ ship.ship_type }}Modal" tabindex="-1" aria-labelledby="{{ ship.ship_type }}ModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-xl">

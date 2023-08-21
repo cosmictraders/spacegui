@@ -118,7 +118,7 @@
                 <li class="list-group-item">{{ ship.nav.status.name }}</li>
                 <li class="list-group-item"><a href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.location }}</a></li>
             {% else %}
-                <li class="list-group-item">{{ ship.nav.status.name }}<br>Arrival: {{ macros.time_display(ship.nav.route.arrival) }}</li>
+                <li class="list-group-item">{{ ship.nav.status.name }}, Arrival: {{ macros.time_display(ship.nav.route.arrival) }}</li>
                 <li class="list-group-item">
                     <a href="/waypoint/{{ ship.nav.route.departure }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.departure }}</a>
                     <i class="bi bi-arrow-right squiggle-icon"></i>

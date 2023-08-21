@@ -143,14 +143,13 @@ def search(session):
         if weight(query, str(item.symbol)) > -0.1:
             if check_filters_system(item, filters):
                 unweighted_map.append((item, weight(query, str(item.symbol))))
-        if weight(query, str(item.symbol)) > -0.2:
-            for waypoint in item.waypoints:
-                if weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
-                        waypoint, filters
-                ):
-                    unweighted_map.append(
-                        (waypoint, weight(query, str(waypoint.symbol)))
-                    )
+        for waypoint in item.waypoints:
+            if weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
+                    waypoint, filters
+            ):
+                unweighted_map.append(
+                    (waypoint, weight(query, str(waypoint.symbol)))
+                )
     t1_5 = time.time()
     for item in faction_data:
         if (

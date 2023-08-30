@@ -7,8 +7,10 @@ Ship - {{ ship.symbol }}
     <div id="errors"></div>
     <script>
         async function refresh() {
+            $("#refresh").prop("disabled", true);
             let data = await fetch("/ship/{{ ship.symbol }}/api");
             $("#ship-display").html(await data.text());
+            $("#refresh").prop("disabled", false);
         }
     </script>
     <div id="ship-display">

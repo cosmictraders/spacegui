@@ -6,6 +6,7 @@ from website.bp.local import local_bp
 from website.bp.main import main_bp
 from website.bp.ship import ship_bp
 from website.bp.system import system_bp
+from website.config import BaseConfig
 from website.model import db
 
 
@@ -13,10 +14,7 @@ def create_app():
     # create the app
     app = Flask(__name__)
     # configure the SQLite database, relative to the app instance folder
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///local.db"
-    app.config[
-        "SECRET_KEY"
-    ] = "secret@!%(@!%!@)*(#$)*$@!)*@!%)*@!)*&%@!132509831207549035213028579674138"
+    app.config.from_object(BaseConfig)
     # initialize the app with the extension
     db.init_app(app)
     app.register_blueprint(ship_bp)

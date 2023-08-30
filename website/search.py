@@ -199,6 +199,14 @@ def weight(query, s):
         return 0.5
 
 
+def quick_weight(query, s):
+    if query.strip() != "":
+        weight = difflib.SequenceMatcher(None, query.lower(), s.lower()).quick_ratio()
+        return weight * 2 - 1.5
+    else:
+        return 0.5
+
+
 def read_query(q):
     q += " "
     query = ""

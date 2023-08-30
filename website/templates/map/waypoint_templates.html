@@ -32,6 +32,7 @@
             </div>
             <div class="col-12">
                 {% if waypoint.faction != None %}
+                    {# TODO: make link #}
                     <p>Faction: {{ waypoint.faction }}</p>
                 {% else %}
                     <p>No Faction</p>
@@ -60,6 +61,7 @@
                     <p>No Traits</p>
                 {% endif %}
             </div>
+            {# TODO: Center headers #}
             {% if waypoint.marketplace %}
                 {% if marketplace.imports != [] and marketplace.imports != None %}
                     <div class="col">

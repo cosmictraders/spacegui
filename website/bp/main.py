@@ -19,7 +19,7 @@ from website.search import (
     check_filters_waypoint,
     check_filters_ship,
     check_filters_contract,
-    check_filters_faction,
+    check_filters_faction, quick_weight,
 )
 from website.wrappers import token_required, minify_html
 
@@ -129,7 +129,7 @@ def search(session):
     page = int(request.args.get("page", default=1))
     t1 = (
         time.time()
-    )  # TODO: Speed improvements by only querying whats needed (`is: waypoint` should not be getting ship,contract info)
+    )  # TODO: Speed improvements by only querying whats needed "is: waypoint" should not be getting ship,contract info
     query, filters = read_query(request.args.get("query"))
     system_data = load_system_data()
     t1_2 = time.time()
@@ -140,11 +140,11 @@ def search(session):
     contract_data = Contract.all(session)[1]
     t1_4 = time.time()
     for item in system_data:
-        if weight(query, str(item.symbol)) > -0.1:
+        if quick_weight(query, str(item.symbol)) > -0.1:
             if check_filters_system(item, filters):
                 unweighted_map.append((item, weight(query, str(item.symbol))))
         for waypoint in item.waypoints:
-            if weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
+            if quick_weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
                     waypoint, filters
             ):
                 unweighted_map.append(
@@ -153,15 +153,15 @@ def search(session):
     t1_5 = time.time()
     for item in faction_data:
         if (
-                weight(query, item.symbol) > -0.25 or weight(query, item.name) > -0.25
+                quick_weight(query, item.symbol) > -0.25 or quick_weight(query, item.name) > -0.25
         ) and check_filters_faction(item, filters):
             unweighted_map.append((item, weight(query, str(item.symbol))))
     t1_6 = time.time()
     for item in ship_data:
-        if weight(query, item.symbol) > -0.25 and check_filters_ship(item, filters):
+        if quick_weight(query, item.symbol) > -0.25 and check_filters_ship(item, filters):
             unweighted_map.append((item, weight(query, item.symbol)))
     for item in contract_data:
-        if weight(query, item.contract_id) > -0.7 and check_filters_contract(
+        if quick_weight(query, item.contract_id) > -0.7 and check_filters_contract(
                 item, filters
         ):
             unweighted_map.append((item, weight(query, str(item.contract_id))))

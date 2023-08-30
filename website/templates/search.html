@@ -13,7 +13,7 @@ Search
         <div class="row g-3 p-3">
             <div class="col-3">
                 <form class="row g-3 form-floating">
-                    <select class="form-select col-12" id="typeSelect" aria-label="Type Select" disabled>
+                    <select class="form-select col-12" id="typeSelect" aria-label="Type Select">
                         <option value="any" selected>Any</option>
                         <option value="1">Systems</option>
                         <option value="2">Waypoints</option>
@@ -29,7 +29,7 @@ Search
                               Fast Search
                         </label>
                     </div>
-                    <button class="btn btn-primary">Apply</button>
+                    <button class="btn btn-primary" onclick="applyFilters($('#typeSelect').val())"><i class="bi bi-filter"></i> Apply</button>
                 </form>
             </div>
             <div class="col-9">
@@ -147,6 +147,9 @@ Search
     </div>
 
     <script>
+        function applyFilters(type) {
+            search_filter(type);
+        }
         // TODO: fix hack
         $("#search-box").val("{{ query|safe }}");
     </script>

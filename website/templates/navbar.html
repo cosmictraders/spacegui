@@ -77,6 +77,7 @@
     function search() {
         this.window.location.href = "/search?query=" + encodeURIComponent($("#search-box").val());
     }
+
     function search_filter(filter) {
         this.window.location.href = "/search?query=" + encodeURIComponent($("#search-box").val() + " is: " + filter);
     }

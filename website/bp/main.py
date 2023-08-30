@@ -166,7 +166,7 @@ def search(session):
         ):
             unweighted_map.append((item, weight(query, str(item.contract_id))))
     amap = [
-        item for item, _ in sorted(unweighted_map, key=lambda x: x[1], reverse=True)
+        item for item, c in sorted(unweighted_map, key=lambda x: x[1], reverse=True) if c > -0.5
     ]
     t2 = time.time()
     print(t1_2 - t1, t1_3 - t1_2, t1_4 - t1_3, t1_5 - t1_4, t1_6 - t1_5, t2 - t1_6)

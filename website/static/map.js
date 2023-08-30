@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import {Stats} from './Stats.js';
-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import {GUI} from 'three/addons/libs/lil-gui.module.min.js';
 
-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import {FontLoader} from 'three/addons/loaders/FontLoader.js';
+import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
 
 import {MapControls} from 'three/addons/controls/MapControls.js';
 
@@ -28,12 +28,12 @@ function init() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000);
 
-    renderer = new THREE.WebGLRenderer({antialias: true, logarithmicDepthBuffer: true }) ;
+    renderer = new THREE.WebGLRenderer({antialias: true, logarithmicDepthBuffer: true});
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize( window.innerWidth, (window.innerHeight-100) );
-    document.body.appendChild( renderer.domElement );
+    renderer.setSize(window.innerWidth, (window.innerHeight - 100));
+    document.body.appendChild(renderer.domElement);
 
-    camera = new THREE.PerspectiveCamera(60, window.innerWidth / (window.innerHeight-100), 1, 100000);
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / (window.innerHeight - 100), 1, 100000);
     camera.position.set(0, 200, -400);
 
     // controls
@@ -62,29 +62,57 @@ function init() {
     const blue_material = new THREE.MeshPhongMaterial({color: 0x0074F0, flatShading: true, emissive: 0x005BBD});
     const dark_red_material = new THREE.MeshPhongMaterial({color: 0xDB2500, flatShading: true, emissive: 0x751400});
 
+    const defaultMesh = new THREE.InstancedMesh(geometry, material, 1000);
     const colorMap = {
-        "RED_STAR": red_material,
-        "ORANGE_STAR": orange_material,
-        "WHITE_DWARF": white_material,
-        "YOUNG_STAR": material,
-        "BLACK_HOLE": black_material,
-        "BLUE_STAR": blue_material,
-        "HYPERGIANT": dark_red_material,
-        "NEUTRON_STAR": white_material,
-        "UNSTABLE": material
+        "RED_STAR": new THREE.InstancedMesh(geometry, red_material, 8000),
+        "ORANGE_STAR": new THREE.InstancedMesh(geometry, orange_material, 8000),
+        "WHITE_DWARF": new THREE.InstancedMesh(geometry, white_material, 8000),
+        "YOUNG_STAR": new THREE.InstancedMesh(geometry, material, 8000),
+        "BLACK_HOLE": new THREE.InstancedMesh(geometry, black_material, 8000),
+        "BLUE_STAR": new THREE.InstancedMesh(geometry, blue_material, 8000),
+        "HYPERGIANT": new THREE.InstancedMesh(geometry, dark_red_material, 8000),
+        "NEUTRON_STAR": new THREE.InstancedMesh(geometry, white_material, 8000),
+        "UNSTABLE": new THREE.InstancedMesh(geometry, material, 8000)
     }
+    const position = new THREE.Vector3();
+    const rotation = new THREE.Euler();
+    const quaternion = new THREE.Quaternion();
+    const scale = new THREE.Vector3();
+
+    const getMatrix = function (matrix, system) {
+
+        position.x = system.x;
+        position.y = Math.random() * 200;
+        position.z = system.y;
+
+        rotation.x = 0;
+        rotation.y = 0;
+        rotation.z = 0;
+
+        quaternion.setFromEuler(rotation);
+
+        scale.x = scale.y = scale.z = 10;
+
+        matrix.compose(position, quaternion, scale);
+    }
+    const matrix = new THREE.Matrix4();
+    let i = 0;
     for (const system of Object.keys(data)) {
-        const mesh = new THREE.Mesh(geometry, colorMap[data[system].type] || material);
-        mesh.position.x = data[system].x;
-        mesh.position.y = Math.random() * 200;
-        mesh.position.z = data[system].y;
-        mesh.scale.x = 10;
-        mesh.scale.y = 10;
-        mesh.scale.z = 10;
-        mesh.updateMatrix();
-        mesh.matrixAutoUpdate = false;
-        scene.add(mesh);
+        getMatrix(matrix, data[system]);
+        const mesh = colorMap[data[system].type] || defaultMesh;
+        mesh.setMatrixAt(i, matrix);
+        i++;
     }
+    scene.add(defaultMesh);
+    scene.add(colorMap["RED_STAR"]);
+    scene.add(colorMap["ORANGE_STAR"]);
+    scene.add(colorMap["WHITE_DWARF"]);
+    scene.add(colorMap["YOUNG_STAR"]);
+    scene.add(colorMap["BLACK_HOLE"]);
+    scene.add(colorMap["BLUE_STAR"]);
+    scene.add(colorMap["HYPERGIANT"]);
+    scene.add(colorMap["NEUTRON_STAR"]);
+    scene.add(colorMap["UNSTABLE"]);
     var real_font;
     const loader = new FontLoader();
     loader.load('/static/font.typeface.json', function (font) {
@@ -114,12 +142,10 @@ function init() {
 }
 
 function onWindowResize() {
-
-    camera.aspect = window.innerWidth / (window.innerHeight-100);
+    camera.aspect = window.innerWidth / (window.innerHeight - 100);
     camera.updateProjectionMatrix();
 
     renderer.setSize(window.innerWidth, (window.innerHeight - 100));
-
 }
 
 function animate() {
@@ -131,5 +157,5 @@ function animate() {
 }
 
 function render() {
-    renderer.render( scene, camera );
+    renderer.render(scene, camera);
 }

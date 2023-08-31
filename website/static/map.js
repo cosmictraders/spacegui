@@ -219,6 +219,10 @@ function init() {
             const waypoint = systemCoords[value];
             controls.target.set(waypoint.x, waypoint.y, waypoint.z);
             camera.position.set(waypoint.x, waypoint.y, waypoint.z + 400);
+            controls.autoRotate = true;
+            controls.addEventListener('start', function(){
+                controls.autoRotate = false;
+            });
             controls.update();
         }
     });

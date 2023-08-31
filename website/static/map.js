@@ -9,7 +9,9 @@ import {MapControls} from 'three/addons/controls/MapControls.js';
 
 let peakValue = 900;
 let spread = 4000;
-
+const guiInterface = {
+    waypoint: ''
+};
 const data = JSON.parse(jQuery.ajax({
     url: "/static/systems.json",
     async: false
@@ -195,7 +197,7 @@ function init() {
     controls.minDistance = 50;
 
     controls.maxPolarAngle = Math.PI / 2;
-    loader.load('/static/font.typeface.json', function(font) {
+    loader.load('/static/font.typeface.json', function (font) {
         initMap(font)
     });
     // world
@@ -209,7 +211,13 @@ function init() {
     gui.add(controls, 'zoomToCursor').name('Zoom to cursor');
     gui.add(controls, 'screenSpacePanning').name('Screen space panning');
     gui.add(controls, 'enableDamping').name('Enable damping');
-
+    gui.add(guiInterface, 'waypoint').name('Waypoint').onChange(function (value) {
+        if (Object.keys(data).includes(value)) {
+            const waypoint = data[value];
+            controls.target.set(waypoint.x, 0, waypoint.y);
+            controls.update();
+        }
+    });
 }
 
 function onWindowResize() {

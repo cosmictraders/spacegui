@@ -7,82 +7,101 @@ import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
 
 import {MapControls} from 'three/addons/controls/MapControls.js';
 
+let peakValue = 900;
+let spread = 4000;
+
 const data = JSON.parse(jQuery.ajax({
     url: "/static/systems.json",
     async: false
 }).responseText)
+let real_font;
+let defaultInt = Object.keys(data).length;
+let meshInt = {
+    "RED_STAR": 0,
+    "ORANGE_STAR": 0,
+    "WHITE_DWARF": 0,
+    "YOUNG_STAR": 0,
+    "BLACK_HOLE": 0,
+    "BLUE_STAR": 0,
+    "HYPERGIANT": 0,
+    "NEUTRON_STAR": 0,
+    "UNSTABLE": 0
+}
+for (const system of Object.keys(data)) {
+    meshInt[data[system].type]++;
+    defaultInt--;
+}
+console.log(meshInt);
+console.log("Defaulted on: " + defaultInt);
+console.log("Total Systems: " + Object.keys(data).length)
+const textMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
+const geometry = new THREE.SphereGeometry();
+const material = new THREE.MeshPhongMaterial({color: 0x65F550, flatShading: true, emissive: 0x317527});
+const red_material = new THREE.MeshPhongMaterial({color: 0xF52900, flatShading: true, emissive: 0xB51E00});
+const orange_material = new THREE.MeshPhongMaterial({color: 0xF57500, flatShading: true, emissive: 0xDB6A00});
+const white_material = new THREE.MeshPhongMaterial({color: 0xffffff, flatShading: true, emissive: 0xffffff});
+const black_material = new THREE.MeshPhongMaterial({color: 0x000000, flatShading: true, emissive: 0x1b1b1b});
+const blue_material = new THREE.MeshPhongMaterial({color: 0x0074F0, flatShading: true, emissive: 0x005BBD});
+const dark_red_material = new THREE.MeshPhongMaterial({color: 0xDB2500, flatShading: true, emissive: 0x751400});
+const defaultMesh = new THREE.InstancedMesh(geometry, material, defaultInt);
+const colorMap = {
+    "RED_STAR": new THREE.InstancedMesh(geometry, red_material, meshInt["RED_STAR"]),
+    "ORANGE_STAR": new THREE.InstancedMesh(geometry, orange_material, meshInt["ORANGE_STAR"]),
+    "WHITE_DWARF": new THREE.InstancedMesh(geometry, white_material, meshInt["WHITE_DWARF"]),
+    "YOUNG_STAR": new THREE.InstancedMesh(geometry, material, meshInt["YOUNG_STAR"]),
+    "BLACK_HOLE": new THREE.InstancedMesh(geometry, black_material, meshInt["BLACK_HOLE"]),
+    "BLUE_STAR": new THREE.InstancedMesh(geometry, blue_material, meshInt["BLUE_STAR"]),
+    "HYPERGIANT": new THREE.InstancedMesh(geometry, dark_red_material, meshInt["HYPERGIANT"]),
+    "NEUTRON_STAR": new THREE.InstancedMesh(geometry, white_material, meshInt["NEUTRON_STAR"]),
+    "UNSTABLE": new THREE.InstancedMesh(geometry, material, meshInt["UNSTABLE"])
+}
+let labels = []
 
 let camera, controls, scene, renderer;
 const stats = new Stats()
 stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom)
-init();
-//render(); // remove when using next line for animation loop (requestAnimationFrame)
+
+await init();
 animate();
 
-function initStats() {
+function getZ(x, y, peakValue, spread) {
+    // Calculate distance from origin
+    const d = Math.sqrt(x * x + y * y);
+
+    // Compute Z based on Gaussian function
+    let Z = peakValue * Math.exp(-(d * d) / (2 * spread * spread));
+
+    // Add randomness to Z
+    Z = Z * Math.random();
+    if (Math.random() > 0.5) {
+        return Z;
+    } else {
+        return -Z;
+    }
 }
 
-function init() {
-    initStats();
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000000);
-
-    renderer = new THREE.WebGLRenderer({antialias: true, logarithmicDepthBuffer: true});
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, (window.innerHeight - 100));
-    document.body.appendChild(renderer.domElement);
-
-    camera = new THREE.PerspectiveCamera(60, window.innerWidth / (window.innerHeight - 100), 1, 100000);
-    camera.position.set(0, 200, -400);
-
-    // controls
-
-    controls = new MapControls(camera, renderer.domElement);
-
-    //controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
-
-    controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-    controls.dampingFactor = 0.05;
-
-    controls.screenSpacePanning = false;
-
-    controls.minDistance = 50;
-
-    controls.maxPolarAngle = Math.PI / 2;
-
-    // world
-
-    const geometry = new THREE.SphereGeometry();
-    const material = new THREE.MeshPhongMaterial({color: 0x65F550, flatShading: true, emissive: 0x317527});
-    const red_material = new THREE.MeshPhongMaterial({color: 0xF52900, flatShading: true, emissive: 0xB51E00});
-    const orange_material = new THREE.MeshPhongMaterial({color: 0xF57500, flatShading: true, emissive: 0xDB6A00});
-    const white_material = new THREE.MeshPhongMaterial({color: 0xffffff, flatShading: true, emissive: 0xffffff});
-    const black_material = new THREE.MeshPhongMaterial({color: 0x000000, flatShading: true, emissive: 0xa1a1a1});
-    const blue_material = new THREE.MeshPhongMaterial({color: 0x0074F0, flatShading: true, emissive: 0x005BBD});
-    const dark_red_material = new THREE.MeshPhongMaterial({color: 0xDB2500, flatShading: true, emissive: 0x751400});
-
-    const defaultMesh = new THREE.InstancedMesh(geometry, material, 1000);
-    const colorMap = {
-        "RED_STAR": new THREE.InstancedMesh(geometry, red_material, 8000),
-        "ORANGE_STAR": new THREE.InstancedMesh(geometry, orange_material, 8000),
-        "WHITE_DWARF": new THREE.InstancedMesh(geometry, white_material, 8000),
-        "YOUNG_STAR": new THREE.InstancedMesh(geometry, material, 8000),
-        "BLACK_HOLE": new THREE.InstancedMesh(geometry, black_material, 8000),
-        "BLUE_STAR": new THREE.InstancedMesh(geometry, blue_material, 8000),
-        "HYPERGIANT": new THREE.InstancedMesh(geometry, dark_red_material, 8000),
-        "NEUTRON_STAR": new THREE.InstancedMesh(geometry, white_material, 8000),
-        "UNSTABLE": new THREE.InstancedMesh(geometry, material, 8000)
+function initMap() {
+    meshInt = {
+        "RED_STAR": 0,
+        "ORANGE_STAR": 0,
+        "WHITE_DWARF": 0,
+        "YOUNG_STAR": 0,
+        "BLACK_HOLE": 0,
+        "BLUE_STAR": 0,
+        "HYPERGIANT": 0,
+        "NEUTRON_STAR": 0,
+        "UNSTABLE": 0
     }
     const position = new THREE.Vector3();
     const rotation = new THREE.Euler();
     const quaternion = new THREE.Quaternion();
     const scale = new THREE.Vector3();
 
-    const getMatrix = function (matrix, system) {
+    const getMatrix = function (matrix, system, y) {
 
         position.x = system.x;
-        position.y = Math.random() * 200;
+        position.y = y;
         position.z = system.y;
 
         rotation.x = 0;
@@ -91,17 +110,30 @@ function init() {
 
         quaternion.setFromEuler(rotation);
 
-        scale.x = scale.y = scale.z = 10;
+        scale.x = scale.y = scale.z = 15;
 
         matrix.compose(position, quaternion, scale);
     }
     const matrix = new THREE.Matrix4();
     let i = 0;
     for (const system of Object.keys(data)) {
-        getMatrix(matrix, data[system]);
+        let y = getZ(data[system].x, data[system].y, peakValue, spread);
+        getMatrix(matrix, data[system], y);
         const mesh = colorMap[data[system].type] || defaultMesh;
-        mesh.setMatrixAt(i, matrix);
-        i++;
+        if (!Object.keys(meshInt).includes(data[system].type)) {
+            mesh.setMatrixAt(i, matrix);
+            i++;
+        } else {
+            mesh.setMatrixAt(meshInt[data[system].type], matrix);
+            meshInt[data[system].type]++;
+        }
+        let textGeo = new TextGeometry(system);
+        let textMesh = new THREE.Mesh(textGeo, textMaterial)
+        textMesh.position.set(data[system].x, y, data[system].y);
+        labels.push(textMesh);
+    }
+    for (const mesh of labels) {
+        scene.add(mesh);
     }
     scene.add(defaultMesh);
     scene.add(colorMap["RED_STAR"]);
@@ -113,11 +145,9 @@ function init() {
     scene.add(colorMap["HYPERGIANT"]);
     scene.add(colorMap["NEUTRON_STAR"]);
     scene.add(colorMap["UNSTABLE"]);
-    var real_font;
-    const loader = new FontLoader();
-    loader.load('/static/font.typeface.json', function (font) {
-        real_font = font;
-    });
+}
+
+function initLights() {
     // lights
     const dirLight1 = new THREE.DirectionalLight(0xffffff, 3);
     dirLight1.position.set(1, 1, 1);
@@ -129,16 +159,48 @@ function init() {
 
     const ambientLight = new THREE.AmbientLight(0x000000);
     scene.add(ambientLight);
+}
 
+async function init() {
+    scene = new THREE.Scene();
+    // font
+    const loader = new FontLoader();
+    let font = loader.load('/static/font.typeface.json');
+    scene.background = new THREE.Color(0x000000);
+
+    renderer = new THREE.WebGLRenderer({antialias: true, logarithmicDepthBuffer: true});
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, (window.innerHeight - 100));
+    document.body.appendChild(renderer.domElement);
+
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / (window.innerHeight - 100), 1, 100000);
+    camera.position.set(0, 500, -400);
+
+    // controls
+    controls = new MapControls(camera, renderer.domElement);
+    controls.enableDamping = true; // an animation loop is required when either damping or autorotation are enabled
+    controls.dampingFactor = 0.05;
+
+    controls.screenSpacePanning = false;
+
+    controls.minDistance = 50;
+
+    controls.maxPolarAngle = Math.PI / 2;
+    real_font = await font;
+
+    // world
+    initMap()
+    initLights()
     // resize event
-
     window.addEventListener('resize', onWindowResize);
 
-
+    // gui
     const gui = new GUI();
     gui.domElement.id = 'gui-container';
     gui.add(controls, 'zoomToCursor').name('Zoom to cursor');
     gui.add(controls, 'screenSpacePanning').name('Screen space panning');
+    gui.add(controls, 'enableDamping').name('Enable damping');
+
 }
 
 function onWindowResize() {
@@ -149,11 +211,15 @@ function onWindowResize() {
 }
 
 function animate() {
-    requestAnimationFrame(animate);
     stats.begin();
+    for (const label of labels) {
+        let distance = camera.position.distanceTo(label.position);
+        label.visible = distance < 1000;
+    }
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     render();
     stats.end();
+    requestAnimationFrame(animate);
 }
 
 function render() {

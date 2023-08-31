@@ -133,10 +133,13 @@ function initMap(font) {
             height: 1,
             curveSegments: 3,
         });
+        var center = new THREE.Vector3();
         textGeo.computeBoundingBox();
-        const centerOffset = -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+        textGeo.boundingBox.getCenter(center);
+        textGeo.center();
+        position.copy(center);
         let textMesh = new THREE.Mesh(textGeo, textMaterial)
-        textMesh.position.set(data[system].x + centerOffset, y + 20, data[system].y);
+        textMesh.position.set(data[system].x, y + 20, data[system].y);
         labels.push(textMesh);
     }
     for (const mesh of labels) {
@@ -221,6 +224,9 @@ function animate() {
     for (const label of labels) {
         let distance = camera.position.distanceTo(label.position);
         label.visible = distance < 1000;
+        if (label.visible) {
+            label.rotation.y = Math.atan2((camera.position.x - label.position.x), (camera.position.z - label.position.z));
+        }
     }
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     render();

@@ -16,7 +16,9 @@ const data = JSON.parse(jQuery.ajax({
     url: "/static/systems.json",
     async: false
 }).responseText)
-let real_font;
+
+const systemCoords = {};
+
 let defaultInt = Object.keys(data).length;
 let meshInt = {
     "RED_STAR": 0,
@@ -120,6 +122,7 @@ function initMap(font) {
     let i = 0;
     for (const system of Object.keys(data)) {
         let y = getZ(data[system].x, data[system].y, peakValue, spread);
+        systemCoords[system] = {x: data[system].x, y: y, z: data[system].y};
         getMatrix(matrix, data[system], y);
         const mesh = colorMap[data[system].type] || defaultMesh;
         if (!Object.keys(meshInt).includes(data[system].type)) {
@@ -212,9 +215,10 @@ function init() {
     gui.add(controls, 'screenSpacePanning').name('Screen space panning');
     gui.add(controls, 'enableDamping').name('Enable damping');
     gui.add(guiInterface, 'waypoint').name('Waypoint').onChange(function (value) {
-        if (Object.keys(data).includes(value)) {
-            const waypoint = data[value];
-            controls.target.set(waypoint.x, 0, waypoint.y);
+        if (Object.keys(systemCoords).includes(value)) {
+            const waypoint = systemCoords[value];
+            controls.target.set(waypoint.x, waypoint.y, waypoint.z);
+            camera.position.set(waypoint.x, waypoint.y, waypoint.z + 400);
             controls.update();
         }
     });

@@ -10,7 +10,8 @@ import {MapControls} from 'three/addons/controls/MapControls.js';
 let peakValue = 900;
 let spread = 4000;
 const guiInterface = {
-    waypoint: ''
+    waypoint: '',
+    maxLabelDistance: 1500
 };
 const data = JSON.parse(jQuery.ajax({
     url: "/static/systems.json",
@@ -226,6 +227,7 @@ function init() {
             controls.update();
         }
     });
+    gui.add(guiInterface, 'maxLabelDistance', 500, 5000).name('Max label distance');
 }
 
 function onWindowResize() {
@@ -239,9 +241,9 @@ function animate() {
     stats.begin();
     for (const label of labels) {
         let distance = camera.position.distanceTo(label.position);
-        label.visible = distance < 1000;
+        label.visible = distance < guiInterface.maxLabelDistance;
         if (label.visible) {
-            label.rotation.y = Math.atan2((camera.position.x - label.position.x), (camera.position.z - label.position.z));
+            label.quaternion.rotateTowards(camera.quaternion, 0.25);
         }
     }
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true

@@ -62,7 +62,7 @@ const stats = new Stats()
 stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom)
 
-await init();
+init();
 animate();
 
 function getZ(x, y, peakValue, spread) {
@@ -81,7 +81,7 @@ function getZ(x, y, peakValue, spread) {
     }
 }
 
-function initMap() {
+function initMap(font) {
     meshInt = {
         "RED_STAR": 0,
         "ORANGE_STAR": 0,
@@ -127,9 +127,16 @@ function initMap() {
             mesh.setMatrixAt(meshInt[data[system].type], matrix);
             meshInt[data[system].type]++;
         }
-        let textGeo = new TextGeometry(system);
+        let textGeo = new TextGeometry(system, {
+            font: font,
+            size: 10,
+            height: 1,
+            curveSegments: 3,
+        });
+        textGeo.computeBoundingBox();
+        const centerOffset = -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
         let textMesh = new THREE.Mesh(textGeo, textMaterial)
-        textMesh.position.set(data[system].x, y, data[system].y);
+        textMesh.position.set(data[system].x + centerOffset, y + 20, data[system].y);
         labels.push(textMesh);
     }
     for (const mesh of labels) {
@@ -161,14 +168,13 @@ function initLights() {
     scene.add(ambientLight);
 }
 
-async function init() {
+function init() {
     scene = new THREE.Scene();
     // font
     const loader = new FontLoader();
-    let font = loader.load('/static/font.typeface.json');
     scene.background = new THREE.Color(0x000000);
 
-    renderer = new THREE.WebGLRenderer({antialias: true, logarithmicDepthBuffer: true});
+    renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, (window.innerHeight - 100));
     document.body.appendChild(renderer.domElement);
@@ -186,10 +192,10 @@ async function init() {
     controls.minDistance = 50;
 
     controls.maxPolarAngle = Math.PI / 2;
-    real_font = await font;
-
+    loader.load('/static/font.typeface.json', function(font) {
+        initMap(font)
+    });
     // world
-    initMap()
     initLights()
     // resize event
     window.addEventListener('resize', onWindowResize);

@@ -177,13 +177,27 @@ function initLights() {
     scene.add(ambientLight);
 }
 
+function onTransitionEnd(event) {
+    event.target.remove();
+}
+
 function init() {
     scene = new THREE.Scene();
     // font
-    const loader = new FontLoader();
     scene.background = new THREE.Color(0x000000);
 
-    renderer = new THREE.WebGLRenderer({antialias: true});
+    const loadingManager = new THREE.LoadingManager( () => {
+
+        const loadingScreen = document.getElementById( 'loading-screen' );
+        loadingScreen.classList.add('fade-out');
+
+        // optional: remove loader from DOM via event listener
+        loadingScreen.addEventListener('transitionend', onTransitionEnd);
+
+    });
+    const loader = new FontLoader(loadingManager);
+
+    renderer = new THREE.WebGLRenderer({antialias: true, powerPreference: "high-performance"});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, (window.innerHeight - 100));
     document.body.appendChild(renderer.domElement);
@@ -241,9 +255,16 @@ function animate() {
     stats.begin();
     for (const label of labels) {
         let distance = camera.position.distanceTo(label.position);
-        label.visible = distance < guiInterface.maxLabelDistance;
+        if (distance < guiInterface.maxLabelDistance && !label.visible) {
+            label.rotation.x = 0
+            label.rotation.y = 0
+            label.rotation.z = 0
+            label.visible = true;
+        } else if (distance > guiInterface.maxLabelDistance) {
+            label.visible = false;
+        }
         if (label.visible) {
-            label.quaternion.rotateTowards(camera.quaternion, 0.25);
+            label.quaternion.rotateTowards(camera.quaternion, 0.2);
         }
     }
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true

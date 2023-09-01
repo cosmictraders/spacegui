@@ -17,6 +17,6 @@
   },
   "dependencies": {
     "html-webpack-plugin": "^5.5.1",
-    "three": "^0.155.0"
+    "three": "^0.156.0"
   }
 }

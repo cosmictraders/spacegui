@@ -20,7 +20,6 @@ const data = JSON.parse(jQuery.ajax({
 }).responseText);
 
 const systemCoords = {};
-const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2(1, 1);
 let mouseDown = false;
 window.onmousedown = (event) => {
@@ -52,6 +51,11 @@ for (const system of Object.keys(data)) {
     meshInt[data[system].type]++;
     defaultInt--;
 }
+
+function setProgress(amount) {
+    $("#progressBar").html(amount);
+}
+
 console.log(meshInt);
 console.log("Defaulted on: " + defaultInt);
 console.log("Total Systems: " + Object.keys(data).length);
@@ -80,9 +84,11 @@ let camera, controls, scene, renderer;
 const stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 
-init();
+init().then(() => {
+    animate();
+});
 document.body.appendChild(stats.dom);
-animate();
+
 
 function getZ(x, y, peakValue, spread) {
     // Calculate distance from origin
@@ -100,7 +106,7 @@ function getZ(x, y, peakValue, spread) {
     }
 }
 
-function initMap(font) {
+function initMap() {
     meshInt = {
         "RED_STAR": 0,
         "ORANGE_STAR": 0,
@@ -169,24 +175,6 @@ function initMap(font) {
             mesh.setMatrixAt(meshInt[data[system].type], matrix);
             meshInt[data[system].type]++;
         }
-        let textGeo = new TextGeometry(system, {
-            font: font,
-            size: 10,
-            height: 1,
-            curveSegments: 3,
-        });
-        var center = new THREE.Vector3();
-        textGeo.computeBoundingBox();
-        textGeo.boundingBox.getCenter(center);
-        textGeo.center();
-        position.copy(center);
-        let textMesh = new THREE.Mesh(textGeo, textMaterial)
-        textMesh.position.set(data[system].x, y + 20, data[system].y);
-        textMesh.hidden = true;
-        labels.push(textMesh);
-    }
-    for (const mesh of labels) {
-        scene.add(mesh);
     }
     scene.add(defaultMesh);
     scene.add(redStarInstancedMesh);
@@ -198,6 +186,31 @@ function initMap(font) {
     scene.add(hyperGiantInstancedMesh);
     scene.add(neutronStarInstancedMesh);
     scene.add(unstableStarInstancedMesh);
+}
+
+function initLabels(font) {
+    setProgress(1);
+    let count = 0;
+    let total = Object.keys(systemCoords).length;
+    for (const system of Object.keys(systemCoords)) {
+        console.log(count / total * 100);
+        let textGeo = new TextGeometry(system, {
+            font: font,
+            size: 10,
+            height: 1,
+            curveSegments: 3,
+        });
+        textGeo.computeBoundingBox();
+        textGeo.center();
+        let textMesh = new THREE.Mesh(textGeo, textMaterial)
+        textMesh.position.set(systemCoords[system].x, systemCoords[system].y + 20, systemCoords[system].z);
+        textMesh.hidden = true;
+        labels.push(textMesh);
+        count++;
+    }
+    for (const mesh of labels) {
+        scene.add(mesh);
+    }
 }
 
 function initLights() {
@@ -239,7 +252,7 @@ function initGui() { // TODO: Create own gui with autocomplete etc.
     gui.add(guiInterface, 'maxLabelDistance', 500, 5000).name('Max label distance');
 }
 
-function init() {
+async function init() {
     scene = new THREE.Scene();
     // font
     scene.background = new THREE.Color(0x000000);
@@ -254,7 +267,10 @@ function init() {
 
     });
     const loader = new FontLoader(loadingManager);
-
+    let font = new Promise((resolve, reject) => {
+        loader.load('/static/font.typeface.json', data=> resolve(data), null, reject);
+    });
+    initMap();
     renderer = new THREE.WebGLRenderer({antialias: true, powerPreference: "high-performance"});
     renderer.domElement.id = 'canvas';
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -274,14 +290,12 @@ function init() {
     controls.minDistance = 50;
 
     controls.maxPolarAngle = Math.PI / 2;
-    loader.load('/static/font.typeface.json', function (font) {
-        initMap(font)
-    });
     // world
     initLights()
     // events
     window.addEventListener('resize', onWindowResize);
     document.addEventListener('mousemove', onMouseMove);
+    initLabels(await font);
     // gui
     initGui();
 }
@@ -306,7 +320,6 @@ function onWindowResize() {
 
 function animate() {
     stats.begin();
-    raycaster.setFromCamera(mouse, camera);
     for (const label of labels) {
         let distance = camera.position.distanceTo(label.position);
         if (distance > guiInterface.maxLabelDistance && label.visible) {
@@ -322,10 +335,6 @@ function animate() {
         }
     }
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-    let intersects = raycaster.intersectObjects([redStarInstancedMesh, orangeStarInstancedMesh], true);
-    if (mouseDown && intersects.length > 0 && intersects[0].distance < 1500) {  // TODO: add configurable max distance
-        console.log(intersects[0]);
-    }
     render();
     stats.end();
     requestAnimationFrame(animate);

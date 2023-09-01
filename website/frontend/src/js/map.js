@@ -1,25 +1,14 @@
 // TODO: Port to webpack
 import * as THREE from 'three';
+import {getMapZ, getData} from './mapUtils.js';
+import {getScene, getRenderer, getCamera, getLoadingManager, getMapControls, initLights} from './worldInit.js';
 import {Stats} from './Stats.js';
-import {GUI} from 'three/addons/libs/lil-gui.module.min.js';
 
 import {FontLoader} from 'three/addons/loaders/FontLoader.js';
 import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
+import {GUI} from "three/addons/libs/lil-gui.module.min";
 
-import {MapControls} from 'three/addons/controls/MapControls.js';
 
-let peakValue = 900;
-let spread = 4000;
-const guiInterface = {
-    waypoint: '',
-    maxLabelDistance: 1500
-};
-const data = JSON.parse(jQuery.ajax({
-    url: "/static/systems.json",
-    async: false
-}).responseText);
-
-const systemCoords = {};
 const mouse = new THREE.Vector2(1, 1);
 let mouseDown = false;
 window.onmousedown = (event) => {
@@ -35,6 +24,18 @@ window.onmouseup = (event) => {
     }
     mouseDown = false;
 }
+
+const guiInterface = {
+    waypoint: '',
+    maxLabelDistance: 1500
+};
+
+let peakValue = 900;
+let spread = 4000;
+
+const data = getData();
+
+const systemCoords = {};
 let defaultInt = Object.keys(data).length;
 let meshInt = {
     "RED_STAR": 0,
@@ -56,57 +57,83 @@ function setProgress(amount) {
     $("#progressBar").html(amount);
 }
 
+function initGui() { // TODO: Create own gui with autocomplete etc.
+    const gui = new GUI();
+    gui.domElement.id = 'gui-container';
+    gui.add(controls, 'zoomToCursor').name('Zoom to cursor');
+    gui.add(controls, 'screenSpacePanning').name('Screen space panning');
+    gui.add(controls, 'enableDamping').name('Enable damping');
+    gui.add(guiInterface, 'waypoint').name('Waypoint').onChange(function (value) {
+        if (Object.keys(systemCoords).includes(value)) {  // TODO: Make case-insensitive
+            const waypoint = systemCoords[value];
+            controls.target.set(waypoint.x, waypoint.y, waypoint.z);
+            camera.position.set(waypoint.x, waypoint.y, waypoint.z + 400);
+            controls.autoRotate = true;
+            controls.addEventListener('start', function () {
+                controls.autoRotate = false;
+            });
+            controls.update();
+        }
+    });
+    gui.add(guiInterface, 'maxLabelDistance', 500, 5000).name('Max label distance');
+}
+
+
+
 console.log(meshInt);
 console.log("Defaulted on: " + defaultInt);
 console.log("Total Systems: " + Object.keys(data).length);
 const textMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
-const geometry = new THREE.SphereGeometry();
-const material = new THREE.MeshPhongMaterial({color: 0x65F550, flatShading: true, emissive: 0x317527});
-const red_material = new THREE.MeshPhongMaterial({color: 0xF52900, flatShading: true, emissive: 0xB51E00});
-const orange_material = new THREE.MeshPhongMaterial({color: 0xF57500, flatShading: true, emissive: 0xDB6A00});
-const white_material = new THREE.MeshPhongMaterial({color: 0xffffff, flatShading: true, emissive: 0xffffff});
-const black_material = new THREE.MeshPhongMaterial({color: 0x000000, flatShading: true, emissive: 0x1b1b1b});
-const blue_material = new THREE.MeshPhongMaterial({color: 0x0074F0, flatShading: true, emissive: 0x005BBD});
-const dark_red_material = new THREE.MeshPhongMaterial({color: 0xDB2500, flatShading: true, emissive: 0x751400});
-const defaultMesh = new THREE.InstancedMesh(geometry, material, defaultInt);
-let redStarInstancedMesh = new THREE.InstancedMesh(geometry, red_material, meshInt["RED_STAR"]);
-let orangeStarInstancedMesh = new THREE.InstancedMesh(geometry, orange_material, meshInt["ORANGE_STAR"]);
-let whiteStarInstancedMesh = new THREE.InstancedMesh(geometry, white_material, meshInt["WHITE_DWARF"]);
-let youngStarInstancedMesh = new THREE.InstancedMesh(geometry, material, meshInt["YOUNG_STAR"]);
-let blackHoleInstancedMesh = new THREE.InstancedMesh(geometry, black_material, meshInt["BLACK_HOLE"]);
-let blueStarInstancedMesh = new THREE.InstancedMesh(geometry, blue_material, meshInt["BLUE_STAR"]);
-let hyperGiantInstancedMesh = new THREE.InstancedMesh(geometry, dark_red_material, meshInt["HYPERGIANT"]);
-let neutronStarInstancedMesh = new THREE.InstancedMesh(geometry, white_material, meshInt["NEUTRON_STAR"]);
-let unstableStarInstancedMesh = new THREE.InstancedMesh(geometry, material, meshInt["UNSTABLE"]);
 let labels = []
 
 let camera, controls, scene, renderer;
 const stats = new Stats();
-stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-
 init().then(() => {
+    document.body.appendChild(stats.dom);
     animate();
 });
-document.body.appendChild(stats.dom);
+stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 
-
-function getZ(x, y, peakValue, spread) {
-    // Calculate distance from origin
-    const d = Math.sqrt(x * x + y * y);
-
-    // Compute Z based on Gaussian function
-    let Z = peakValue * Math.exp(-(d * d) / (2 * spread * spread));
-
-    // Add randomness to Z
-    Z = Z * Math.random();
-    if (Math.random() > 0.5) {
-        return Z;
-    } else {
-        return -Z;
-    }
-}
-
-function initMap() {
+function initMap(scene, data, textures) {
+    const geometry = new THREE.SphereGeometry();
+    const material = new THREE.MeshPhongMaterial({color: 0x65F550, emissive: 0x317527});
+    const redStarMaterial = new THREE.MeshPhongMaterial({
+        map: textures["red_star"],
+        emissive: 0xffffff,
+        emissiveIntensity: 0.5,
+        emissiveMap: textures["red_star"]
+    });
+    const orangeStarMaterial = new THREE.MeshPhongMaterial({
+        color: textures["orange_star"],
+        emissive: 0xffffff,
+        emissiveIntensity: 0.5,
+        emissiveMap: textures["orange_star"]
+    });
+    const white_material = new THREE.MeshPhongMaterial({color: 0xffffff, emissive: 0xffffff});
+    const black_material = new THREE.MeshPhongMaterial({color: 0x000000, emissive: 0x1b1b1b});
+    const blueStarMaterial = new THREE.MeshPhongMaterial({
+        map: textures["blue_star"],
+        emissive: 0xffffff,
+        emissiveIntensity: 0.5,
+        emissiveMap: textures["blue_star"]
+    });
+    const hyperGiantMaterial = new THREE.MeshPhongMaterial({
+        map: textures["hypergiant"],
+        roughness: 1,
+        emissive: 0xffffff,
+        emissiveIntensity: 0.5,
+        emissiveMap: textures["hypergiant"] // TODO: Possibly set intensity and color
+    });
+    const defaultMesh = new THREE.InstancedMesh(geometry, material, defaultInt);
+    let redStarInstancedMesh = new THREE.InstancedMesh(geometry, redStarMaterial, meshInt["RED_STAR"]);
+    let orangeStarInstancedMesh = new THREE.InstancedMesh(geometry, orangeStarMaterial, meshInt["ORANGE_STAR"]);
+    let whiteStarInstancedMesh = new THREE.InstancedMesh(geometry, white_material, meshInt["WHITE_DWARF"]);
+    let youngStarInstancedMesh = new THREE.InstancedMesh(geometry, material, meshInt["YOUNG_STAR"]);
+    let blackHoleInstancedMesh = new THREE.InstancedMesh(geometry, black_material, meshInt["BLACK_HOLE"]);
+    let blueStarInstancedMesh = new THREE.InstancedMesh(geometry, blueStarMaterial, meshInt["BLUE_STAR"]);
+    let hyperGiantInstancedMesh = new THREE.InstancedMesh(geometry, hyperGiantMaterial, meshInt["HYPERGIANT"]);
+    let neutronStarInstancedMesh = new THREE.InstancedMesh(geometry, white_material, meshInt["NEUTRON_STAR"]);
+    let unstableStarInstancedMesh = new THREE.InstancedMesh(geometry, material, meshInt["UNSTABLE"]);
     meshInt = {
         "RED_STAR": 0,
         "ORANGE_STAR": 0,
@@ -142,7 +169,7 @@ function initMap() {
     const matrix = new THREE.Matrix4();
     let i = 0;
     for (const system of Object.keys(data)) {
-        let y = getZ(data[system].x, data[system].y, peakValue, spread);
+        let y = getMapZ(data[system].x, data[system].y, peakValue, spread);
         systemCoords[system] = {x: data[system].x, y: y, z: data[system].y};
         getMatrix(matrix, data[system], y);
         let systemType = data[system].type;
@@ -188,12 +215,15 @@ function initMap() {
     scene.add(unstableStarInstancedMesh);
 }
 
+
+
+
 function initLabels(font) {
     setProgress(1);
     let count = 0;
     let total = Object.keys(systemCoords).length;
     for (const system of Object.keys(systemCoords)) {
-        console.log(count / total * 100);
+        console.log(Math.round(count / total * 100));
         let textGeo = new TextGeometry(system, {
             font: font,
             size: 10,
@@ -213,85 +243,46 @@ function initLabels(font) {
     }
 }
 
-function initLights() {
-    // lights
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, 3);
-    dirLight1.position.set(1, 1, 1);
-    scene.add(dirLight1);
-
-    const dirLight2 = new THREE.DirectionalLight(0x002288, 3);
-    dirLight2.position.set(-1, -1, -1);
-    scene.add(dirLight2);
-
-    const ambientLight = new THREE.AmbientLight(0x000000);
-    scene.add(ambientLight);
-}
-
-function onTransitionEnd(event) {
-    event.target.remove();
-}
-
-function initGui() { // TODO: Create own gui with autocomplete etc.
-    const gui = new GUI();
-    gui.domElement.id = 'gui-container';
-    gui.add(controls, 'zoomToCursor').name('Zoom to cursor');
-    gui.add(controls, 'screenSpacePanning').name('Screen space panning');
-    gui.add(controls, 'enableDamping').name('Enable damping');
-    gui.add(guiInterface, 'waypoint').name('Waypoint').onChange(function (value) {
-        if (Object.keys(systemCoords).includes(value)) {  // TODO: Make case-insensitive
-            const waypoint = systemCoords[value];
-            controls.target.set(waypoint.x, waypoint.y, waypoint.z);
-            camera.position.set(waypoint.x, waypoint.y, waypoint.z + 400);
-            controls.autoRotate = true;
-            controls.addEventListener('start', function () {
-                controls.autoRotate = false;
-            });
-            controls.update();
-        }
-    });
-    gui.add(guiInterface, 'maxLabelDistance', 500, 5000).name('Max label distance');
-}
-
 async function init() {
-    scene = new THREE.Scene();
-    // font
-    scene.background = new THREE.Color(0x000000);
+    scene = getScene();
 
-    const loadingManager = new THREE.LoadingManager(() => {
-
-        const loadingScreen = document.getElementById('loading-screen');
-        loadingScreen.classList.add('fade-out');
-
-        // optional: remove loader from DOM via event listener
-        loadingScreen.addEventListener('transitionend', onTransitionEnd);
-
-    });
+    const loadingManager = getLoadingManager();
     const loader = new FontLoader(loadingManager);
-    let font = new Promise((resolve, reject) => {
-        loader.load('/static/font.typeface.json', data=> resolve(data), null, reject);
+    const textureLoader = new THREE.TextureLoader();
+    let hyperGiantTexture = new Promise((resolve, reject) => {
+        textureLoader.load('/static/images/hypergiant.jpg', data => resolve(data), null, reject);
     });
-    initMap();
-    renderer = new THREE.WebGLRenderer({antialias: true, powerPreference: "high-performance"});
-    renderer.domElement.id = 'canvas';
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, (window.innerHeight - 100));
+    let redStarTexture = new Promise((resolve, reject) => {
+        textureLoader.load('/static/images/red_star.jpg', data => resolve(data), null, reject);
+    });
+    let blueStarTexture = new Promise((resolve, reject) => {
+        textureLoader.load('/static/images/blue_star.jpg', data => resolve(data), null, reject);
+    });
+    let orangeStarTexture = new Promise((resolve, reject) => {
+        textureLoader.load('/static/images/orange_star.jpg', data => resolve(data), null, reject);
+    });
+    let neutronStarTexture = new Promise((resolve, reject) => {
+        textureLoader.load('/static/images/neutron_star.jpg', data => resolve(data), null, reject);
+    });
+    let font = new Promise((resolve, reject) => {
+        loader.load('/static/font.typeface.json', data => resolve(data), null, reject);
+    });
+    initMap(scene, data, {
+        "hypergiant": await hyperGiantTexture,
+        "blue_star": await blueStarTexture,
+        "red_star": await redStarTexture,
+        "orange_star": await orangeStarTexture,
+        "neutron_star": await neutronStarTexture
+    });
+    renderer = getRenderer();
     document.body.appendChild(renderer.domElement);
 
-    camera = new THREE.PerspectiveCamera(60, window.innerWidth / (window.innerHeight - 100), 1, 100000);
-    camera.position.set(0, 500, -400);
+    camera = getCamera();
 
     // controls
-    controls = new MapControls(camera, renderer.domElement);
-    controls.enableDamping = true; // an animation loop is required when either damping or autorotation are enabled
-    controls.dampingFactor = 0.05;
-
-    controls.screenSpacePanning = false;
-
-    controls.minDistance = 50;
-
-    controls.maxPolarAngle = Math.PI / 2;
+    controls = getMapControls(camera, renderer);
     // world
-    initLights()
+    initLights(scene);
     // events
     window.addEventListener('resize', onWindowResize);
     document.addEventListener('mousemove', onMouseMove);
@@ -318,8 +309,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, (window.innerHeight - 100));
 }
 
-function animate() {
-    stats.begin();
+function updateLabels() {
     for (const label of labels) {
         let distance = camera.position.distanceTo(label.position);
         if (distance > guiInterface.maxLabelDistance && label.visible) {
@@ -334,12 +324,17 @@ function animate() {
             label.quaternion.rotateTowards(camera.quaternion, 0.2);
         }
     }
+}
+
+function animate() {
+    stats.begin();
+    updateLabels();
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-    render();
+    render(renderer);
     stats.end();
     requestAnimationFrame(animate);
 }
 
-function render() {
+function render(renderer) {
     renderer.render(scene, camera);
 }

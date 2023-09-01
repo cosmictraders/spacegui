@@ -1,3 +1,4 @@
+// TODO: Port to webpack
 import * as THREE from 'three';
 import {Stats} from './Stats.js';
 import {GUI} from 'three/addons/libs/lil-gui.module.min.js';
@@ -16,11 +17,25 @@ const guiInterface = {
 const data = JSON.parse(jQuery.ajax({
     url: "/static/systems.json",
     async: false
-}).responseText)
+}).responseText);
 
 const systemCoords = {};
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2(1, 1);
+let mouseDown = false;
+window.onmousedown = (event) => {
+    // Check if it's a left click
+    if (event.button !== 0) {
+        return;
+    }
+    mouseDown = true;
+}
+window.onmouseup = (event) => {
+    if (event.button !== 0) {
+        return;
+    }
+    mouseDown = false;
+}
 let defaultInt = Object.keys(data).length;
 let meshInt = {
     "RED_STAR": 0,
@@ -32,14 +47,14 @@ let meshInt = {
     "HYPERGIANT": 0,
     "NEUTRON_STAR": 0,
     "UNSTABLE": 0
-}
+};
 for (const system of Object.keys(data)) {
     meshInt[data[system].type]++;
     defaultInt--;
 }
 console.log(meshInt);
 console.log("Defaulted on: " + defaultInt);
-console.log("Total Systems: " + Object.keys(data).length)
+console.log("Total Systems: " + Object.keys(data).length);
 const textMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
 const geometry = new THREE.SphereGeometry();
 const material = new THREE.MeshPhongMaterial({color: 0x65F550, flatShading: true, emissive: 0x317527});
@@ -50,25 +65,23 @@ const black_material = new THREE.MeshPhongMaterial({color: 0x000000, flatShading
 const blue_material = new THREE.MeshPhongMaterial({color: 0x0074F0, flatShading: true, emissive: 0x005BBD});
 const dark_red_material = new THREE.MeshPhongMaterial({color: 0xDB2500, flatShading: true, emissive: 0x751400});
 const defaultMesh = new THREE.InstancedMesh(geometry, material, defaultInt);
-const meshMap = {
-    "RED_STAR": new THREE.InstancedMesh(geometry, red_material, meshInt["RED_STAR"]),
-    "ORANGE_STAR": new THREE.InstancedMesh(geometry, orange_material, meshInt["ORANGE_STAR"]),
-    "WHITE_DWARF": new THREE.InstancedMesh(geometry, white_material, meshInt["WHITE_DWARF"]),
-    "YOUNG_STAR": new THREE.InstancedMesh(geometry, material, meshInt["YOUNG_STAR"]),
-    "BLACK_HOLE": new THREE.InstancedMesh(geometry, black_material, meshInt["BLACK_HOLE"]),
-    "BLUE_STAR": new THREE.InstancedMesh(geometry, blue_material, meshInt["BLUE_STAR"]),
-    "HYPERGIANT": new THREE.InstancedMesh(geometry, dark_red_material, meshInt["HYPERGIANT"]),
-    "NEUTRON_STAR": new THREE.InstancedMesh(geometry, white_material, meshInt["NEUTRON_STAR"]),
-    "UNSTABLE": new THREE.InstancedMesh(geometry, material, meshInt["UNSTABLE"])
-}
+let redStarInstancedMesh = new THREE.InstancedMesh(geometry, red_material, meshInt["RED_STAR"]);
+let orangeStarInstancedMesh = new THREE.InstancedMesh(geometry, orange_material, meshInt["ORANGE_STAR"]);
+let whiteStarInstancedMesh = new THREE.InstancedMesh(geometry, white_material, meshInt["WHITE_DWARF"]);
+let youngStarInstancedMesh = new THREE.InstancedMesh(geometry, material, meshInt["YOUNG_STAR"]);
+let blackHoleInstancedMesh = new THREE.InstancedMesh(geometry, black_material, meshInt["BLACK_HOLE"]);
+let blueStarInstancedMesh = new THREE.InstancedMesh(geometry, blue_material, meshInt["BLUE_STAR"]);
+let hyperGiantInstancedMesh = new THREE.InstancedMesh(geometry, dark_red_material, meshInt["HYPERGIANT"]);
+let neutronStarInstancedMesh = new THREE.InstancedMesh(geometry, white_material, meshInt["NEUTRON_STAR"]);
+let unstableStarInstancedMesh = new THREE.InstancedMesh(geometry, material, meshInt["UNSTABLE"]);
 let labels = []
 
 let camera, controls, scene, renderer;
-const stats = new Stats()
-stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
+const stats = new Stats();
+stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 
 init();
-document.body.appendChild(stats.dom)
+document.body.appendChild(stats.dom);
 animate();
 
 function getZ(x, y, peakValue, spread) {
@@ -126,7 +139,29 @@ function initMap(font) {
         let y = getZ(data[system].x, data[system].y, peakValue, spread);
         systemCoords[system] = {x: data[system].x, y: y, z: data[system].y};
         getMatrix(matrix, data[system], y);
-        const mesh = meshMap[data[system].type] || defaultMesh;
+        let systemType = data[system].type;
+        let mesh;
+        if (systemType === "RED_STAR") {
+            mesh = redStarInstancedMesh;
+        } else if (systemType === "ORANGE_STAR") {
+            mesh = orangeStarInstancedMesh;
+        } else if (systemType === "WHITE_DWARF") {
+            mesh = whiteStarInstancedMesh;
+        } else if (systemType === "YOUNG_STAR") {
+            mesh = youngStarInstancedMesh;
+        } else if (systemType === "BLACK_HOLE") {
+            mesh = blackHoleInstancedMesh;
+        } else if (systemType === "BLUE_STAR") {
+            mesh = blueStarInstancedMesh;
+        } else if (systemType === "HYPERGIANT") {
+            mesh = hyperGiantInstancedMesh;
+        } else if (systemType === "NEUTRON_STAR") {
+            mesh = neutronStarInstancedMesh;
+        } else if (systemType === "UNSTABLE") {
+            mesh = unstableStarInstancedMesh;
+        } else {
+            mesh = defaultMesh;
+        }
         if (!Object.keys(meshInt).includes(data[system].type)) {
             mesh.setMatrixAt(i, matrix);
             i++;
@@ -147,21 +182,22 @@ function initMap(font) {
         position.copy(center);
         let textMesh = new THREE.Mesh(textGeo, textMaterial)
         textMesh.position.set(data[system].x, y + 20, data[system].y);
+        textMesh.hidden = true;
         labels.push(textMesh);
     }
     for (const mesh of labels) {
         scene.add(mesh);
     }
     scene.add(defaultMesh);
-    scene.add(meshMap["RED_STAR"]);
-    scene.add(meshMap["ORANGE_STAR"]);
-    scene.add(meshMap["WHITE_DWARF"]);
-    scene.add(meshMap["YOUNG_STAR"]);
-    scene.add(meshMap["BLACK_HOLE"]);
-    scene.add(meshMap["BLUE_STAR"]);
-    scene.add(meshMap["HYPERGIANT"]);
-    scene.add(meshMap["NEUTRON_STAR"]);
-    scene.add(meshMap["UNSTABLE"]);
+    scene.add(redStarInstancedMesh);
+    scene.add(orangeStarInstancedMesh);
+    scene.add(whiteStarInstancedMesh);
+    scene.add(youngStarInstancedMesh);
+    scene.add(blackHoleInstancedMesh);
+    scene.add(blueStarInstancedMesh);
+    scene.add(hyperGiantInstancedMesh);
+    scene.add(neutronStarInstancedMesh);
+    scene.add(unstableStarInstancedMesh);
 }
 
 function initLights() {
@@ -208,9 +244,9 @@ function init() {
     // font
     scene.background = new THREE.Color(0x000000);
 
-    const loadingManager = new THREE.LoadingManager( () => {
+    const loadingManager = new THREE.LoadingManager(() => {
 
-        const loadingScreen = document.getElementById( 'loading-screen' );
+        const loadingScreen = document.getElementById('loading-screen');
         loadingScreen.classList.add('fade-out');
 
         // optional: remove loader from DOM via event listener
@@ -286,9 +322,9 @@ function animate() {
         }
     }
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-    let intersects = raycaster.intersectObject(meshMap["RED_STAR"], true);
-    if (Math.random() < 0.01) {
-        console.log(intersects);
+    let intersects = raycaster.intersectObjects([redStarInstancedMesh, orangeStarInstancedMesh], true);
+    if (mouseDown && intersects.length > 0 && intersects[0].distance < 1500) {  // TODO: add configurable max distance
+        console.log(intersects[0]);
     }
     render();
     stats.end();

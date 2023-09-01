@@ -19,7 +19,8 @@ const data = JSON.parse(jQuery.ajax({
 }).responseText)
 
 const systemCoords = {};
-
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2(1, 1);
 let defaultInt = Object.keys(data).length;
 let meshInt = {
     "RED_STAR": 0,
@@ -49,7 +50,7 @@ const black_material = new THREE.MeshPhongMaterial({color: 0x000000, flatShading
 const blue_material = new THREE.MeshPhongMaterial({color: 0x0074F0, flatShading: true, emissive: 0x005BBD});
 const dark_red_material = new THREE.MeshPhongMaterial({color: 0xDB2500, flatShading: true, emissive: 0x751400});
 const defaultMesh = new THREE.InstancedMesh(geometry, material, defaultInt);
-const colorMap = {
+const meshMap = {
     "RED_STAR": new THREE.InstancedMesh(geometry, red_material, meshInt["RED_STAR"]),
     "ORANGE_STAR": new THREE.InstancedMesh(geometry, orange_material, meshInt["ORANGE_STAR"]),
     "WHITE_DWARF": new THREE.InstancedMesh(geometry, white_material, meshInt["WHITE_DWARF"]),
@@ -65,9 +66,9 @@ let labels = []
 let camera, controls, scene, renderer;
 const stats = new Stats()
 stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
-document.body.appendChild(stats.dom)
 
 init();
+document.body.appendChild(stats.dom)
 animate();
 
 function getZ(x, y, peakValue, spread) {
@@ -125,7 +126,7 @@ function initMap(font) {
         let y = getZ(data[system].x, data[system].y, peakValue, spread);
         systemCoords[system] = {x: data[system].x, y: y, z: data[system].y};
         getMatrix(matrix, data[system], y);
-        const mesh = colorMap[data[system].type] || defaultMesh;
+        const mesh = meshMap[data[system].type] || defaultMesh;
         if (!Object.keys(meshInt).includes(data[system].type)) {
             mesh.setMatrixAt(i, matrix);
             i++;
@@ -152,15 +153,15 @@ function initMap(font) {
         scene.add(mesh);
     }
     scene.add(defaultMesh);
-    scene.add(colorMap["RED_STAR"]);
-    scene.add(colorMap["ORANGE_STAR"]);
-    scene.add(colorMap["WHITE_DWARF"]);
-    scene.add(colorMap["YOUNG_STAR"]);
-    scene.add(colorMap["BLACK_HOLE"]);
-    scene.add(colorMap["BLUE_STAR"]);
-    scene.add(colorMap["HYPERGIANT"]);
-    scene.add(colorMap["NEUTRON_STAR"]);
-    scene.add(colorMap["UNSTABLE"]);
+    scene.add(meshMap["RED_STAR"]);
+    scene.add(meshMap["ORANGE_STAR"]);
+    scene.add(meshMap["WHITE_DWARF"]);
+    scene.add(meshMap["YOUNG_STAR"]);
+    scene.add(meshMap["BLACK_HOLE"]);
+    scene.add(meshMap["BLUE_STAR"]);
+    scene.add(meshMap["HYPERGIANT"]);
+    scene.add(meshMap["NEUTRON_STAR"]);
+    scene.add(meshMap["UNSTABLE"]);
 }
 
 function initLights() {
@@ -181,6 +182,27 @@ function onTransitionEnd(event) {
     event.target.remove();
 }
 
+function initGui() { // TODO: Create own gui with autocomplete etc.
+    const gui = new GUI();
+    gui.domElement.id = 'gui-container';
+    gui.add(controls, 'zoomToCursor').name('Zoom to cursor');
+    gui.add(controls, 'screenSpacePanning').name('Screen space panning');
+    gui.add(controls, 'enableDamping').name('Enable damping');
+    gui.add(guiInterface, 'waypoint').name('Waypoint').onChange(function (value) {
+        if (Object.keys(systemCoords).includes(value)) {  // TODO: Make case-insensitive
+            const waypoint = systemCoords[value];
+            controls.target.set(waypoint.x, waypoint.y, waypoint.z);
+            camera.position.set(waypoint.x, waypoint.y, waypoint.z + 400);
+            controls.autoRotate = true;
+            controls.addEventListener('start', function () {
+                controls.autoRotate = false;
+            });
+            controls.update();
+        }
+    });
+    gui.add(guiInterface, 'maxLabelDistance', 500, 5000).name('Max label distance');
+}
+
 function init() {
     scene = new THREE.Scene();
     // font
@@ -198,6 +220,7 @@ function init() {
     const loader = new FontLoader(loadingManager);
 
     renderer = new THREE.WebGLRenderer({antialias: true, powerPreference: "high-performance"});
+    renderer.domElement.id = 'canvas';
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, (window.innerHeight - 100));
     document.body.appendChild(renderer.domElement);
@@ -220,28 +243,22 @@ function init() {
     });
     // world
     initLights()
-    // resize event
+    // events
     window.addEventListener('resize', onWindowResize);
-
+    document.addEventListener('mousemove', onMouseMove);
     // gui
-    const gui = new GUI();
-    gui.domElement.id = 'gui-container';
-    gui.add(controls, 'zoomToCursor').name('Zoom to cursor');
-    gui.add(controls, 'screenSpacePanning').name('Screen space panning');
-    gui.add(controls, 'enableDamping').name('Enable damping');
-    gui.add(guiInterface, 'waypoint').name('Waypoint').onChange(function (value) {
-        if (Object.keys(systemCoords).includes(value)) {
-            const waypoint = systemCoords[value];
-            controls.target.set(waypoint.x, waypoint.y, waypoint.z);
-            camera.position.set(waypoint.x, waypoint.y, waypoint.z + 400);
-            controls.autoRotate = true;
-            controls.addEventListener('start', function(){
-                controls.autoRotate = false;
-            });
-            controls.update();
-        }
-    });
-    gui.add(guiInterface, 'maxLabelDistance', 500, 5000).name('Max label distance');
+    initGui();
+}
+
+
+function onMouseMove(event) {
+    event.preventDefault();
+    const rect = renderer.domElement.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    mouse.x = (x / canvas.clientWidth) * 2 - 1;
+    mouse.y = (y / canvas.clientHeight) * -2 + 1
 }
 
 function onWindowResize() {
@@ -253,21 +270,26 @@ function onWindowResize() {
 
 function animate() {
     stats.begin();
+    raycaster.setFromCamera(mouse, camera);
     for (const label of labels) {
         let distance = camera.position.distanceTo(label.position);
-        if (distance < guiInterface.maxLabelDistance && !label.visible) {
+        if (distance > guiInterface.maxLabelDistance && label.visible) {
             label.rotation.x = 0
             label.rotation.y = 0
             label.rotation.z = 0
-            label.visible = true;
-        } else if (distance > guiInterface.maxLabelDistance) {
             label.visible = false;
+        } else if (distance < guiInterface.maxLabelDistance) {
+            label.visible = true;
         }
         if (label.visible) {
             label.quaternion.rotateTowards(camera.quaternion, 0.2);
         }
     }
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+    let intersects = raycaster.intersectObject(meshMap["RED_STAR"], true);
+    if (Math.random() < 0.01) {
+        console.log(intersects);
+    }
     render();
     stats.end();
     requestAnimationFrame(animate);

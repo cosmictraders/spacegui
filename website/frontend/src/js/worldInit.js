@@ -48,15 +48,6 @@ export function getMapControls(camera, renderer) {
 }
 
 export function initLights(s) {
-    // lights
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, 3);
-    dirLight1.position.set(1, 1, 1);
-    s.add(dirLight1);
-
-    const dirLight2 = new THREE.DirectionalLight(0x002288, 3);
-    dirLight2.position.set(-1, -1, -1);
-    s.add(dirLight2);
-
     const ambientLight = new THREE.AmbientLight(0x000000);
     s.add(ambientLight);
 }

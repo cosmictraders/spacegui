@@ -96,33 +96,48 @@ stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 
 function initMap(scene, data, textures) {
     const geometry = new THREE.SphereGeometry();
-    const material = new THREE.MeshPhongMaterial({color: 0x65F550, emissive: 0x317527});
-    const redStarMaterial = new THREE.MeshPhongMaterial({
+    const material = new THREE.MeshStandardMaterial({color: 0x65F550, emissive: 0x317527});
+    const redStarMaterial = new THREE.MeshStandardMaterial({
         map: textures["red_star"],
-        emissive: 0xffffff,
-        emissiveIntensity: 0.5,
+        metalness: 0,
+        roughness: 1,
+        emissive: 0xff1100,
+        emissiveIntensity: 2,
         emissiveMap: textures["red_star"]
     });
-    const orangeStarMaterial = new THREE.MeshPhongMaterial({
+    const orangeStarMaterial = new THREE.MeshStandardMaterial({
         color: textures["orange_star"],
-        emissive: 0xffffff,
-        emissiveIntensity: 0.5,
+        metalness: 0,
+        roughness: 1,
+        emissive: 0xff6f00,
+        emissiveIntensity: 2,
         emissiveMap: textures["orange_star"]
     });
-    const white_material = new THREE.MeshPhongMaterial({color: 0xffffff, emissive: 0xffffff});
-    const black_material = new THREE.MeshPhongMaterial({color: 0x000000, emissive: 0x1b1b1b});
-    const blueStarMaterial = new THREE.MeshPhongMaterial({
+    const white_material = new THREE.MeshStandardMaterial({color: 0xffffff, emissive: 0xffffff});
+    const black_material = new THREE.MeshBasicMaterial({color: 0x1b1b1b, emissive: 0x3b3b3b});
+    const blueStarMaterial = new THREE.MeshStandardMaterial({
         map: textures["blue_star"],
-        emissive: 0xffffff,
-        emissiveIntensity: 0.5,
+        metalness: 0,
+        roughness: 1,
+        emissive: 0x0066ff,
+        emissiveIntensity: 2,
         emissiveMap: textures["blue_star"]
     });
-    const hyperGiantMaterial = new THREE.MeshPhongMaterial({
+    const hyperGiantMaterial = new THREE.MeshStandardMaterial({
         map: textures["hypergiant"],
+        metalness: 0,
         roughness: 1,
-        emissive: 0xffffff,
-        emissiveIntensity: 0.5,
-        emissiveMap: textures["hypergiant"] // TODO: Possibly set intensity and color
+        emissive: 0xfffd99,
+        emissiveIntensity: 2,
+        emissiveMap: textures["hypergiant"]
+    });
+    const neutronStarMaterial = new THREE.MeshStandardMaterial({
+        map: textures["neutron_star"],
+        metalness: 0,
+        roughness: 1,
+        emissive: 0x9eadb5,
+        emissiveIntensity: 1,
+        emissiveMap: textures["neutron_star"]
     });
     const defaultMesh = new THREE.InstancedMesh(geometry, material, defaultInt);
     let redStarInstancedMesh = new THREE.InstancedMesh(geometry, redStarMaterial, meshInt["RED_STAR"]);
@@ -132,7 +147,7 @@ function initMap(scene, data, textures) {
     let blackHoleInstancedMesh = new THREE.InstancedMesh(geometry, black_material, meshInt["BLACK_HOLE"]);
     let blueStarInstancedMesh = new THREE.InstancedMesh(geometry, blueStarMaterial, meshInt["BLUE_STAR"]);
     let hyperGiantInstancedMesh = new THREE.InstancedMesh(geometry, hyperGiantMaterial, meshInt["HYPERGIANT"]);
-    let neutronStarInstancedMesh = new THREE.InstancedMesh(geometry, white_material, meshInt["NEUTRON_STAR"]);
+    let neutronStarInstancedMesh = new THREE.InstancedMesh(geometry, neutronStarMaterial, meshInt["NEUTRON_STAR"]);
     let unstableStarInstancedMesh = new THREE.InstancedMesh(geometry, material, meshInt["UNSTABLE"]);
     meshInt = {
         "RED_STAR": 0,
@@ -156,9 +171,9 @@ function initMap(scene, data, textures) {
         position.y = y;
         position.z = system.y;
 
-        rotation.x = 0;
-        rotation.y = 0;
-        rotation.z = 0;
+        rotation.x = Math.random() * 180;
+        rotation.y = Math.random() * 180;
+        rotation.z = Math.random() * 180;
 
         quaternion.setFromEuler(rotation);
 
@@ -217,29 +232,32 @@ function initMap(scene, data, textures) {
 
 
 
+function addLabel(text, x, y, z, font) {
+    let textGeo = new TextGeometry(text, {
+        font: font,
+        size: 10,
+        height: 1,
+        curveSegments: 3,
+    });
+    textGeo.computeBoundingBox();
+    textGeo.center();
+    let textMesh = new THREE.Mesh(textGeo, textMaterial)
+    textMesh.position.set(x, y + 20, z);
+    textMesh.hidden = true;
+    labels.push(textMesh);
+    scene.add(textMesh);
+}
+
 
 function initLabels(font) {
     setProgress(1);
     let count = 0;
     let total = Object.keys(systemCoords).length;
     for (const system of Object.keys(systemCoords)) {
-        console.log(Math.round(count / total * 100));
-        let textGeo = new TextGeometry(system, {
-            font: font,
-            size: 10,
-            height: 1,
-            curveSegments: 3,
-        });
-        textGeo.computeBoundingBox();
-        textGeo.center();
-        let textMesh = new THREE.Mesh(textGeo, textMaterial)
-        textMesh.position.set(systemCoords[system].x, systemCoords[system].y + 20, systemCoords[system].z);
-        textMesh.hidden = true;
-        labels.push(textMesh);
+        setTimeout(() => {
+            addLabel(system, systemCoords[system].x, systemCoords[system].y, systemCoords[system].z, font);
+        }, count / 2);
         count++;
-    }
-    for (const mesh of labels) {
-        scene.add(mesh);
     }
 }
 

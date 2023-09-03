@@ -1,7 +1,7 @@
 import autotraders
 import requests
 from autotraders.agent import Agent
-from autotraders.session import get_session
+from autotraders.session import AutoTradersSession
 from flask import *
 
 from website.model import db, User
@@ -39,7 +39,7 @@ def select_user():
     users = []
     for user in db.session.query(User).all():
         try:
-            a = Agent(get_session(user.token))
+            a = Agent(AutoTradersSession(user.token))
             a.active = user.active
             a.id = user.id
             users.append(a)

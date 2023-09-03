@@ -94,7 +94,7 @@ def ship_api(name):
 def navigate(name):
     try:
         s = get_session()
-        ship = Ship(name, s)
+        ship = Ship(name, s)  # TODO: Fix extra api request
         if ship.nav.flight_mode != request.args.get("mode", ship.nav.flight_mode):
             ship.patch_navigation(request.args.get("mode", ship.nav.flight_mode))
         ship.navigate(request.args.get("place").strip())
@@ -107,7 +107,7 @@ def navigate(name):
 def jump(name):
     try:
         s = get_session()
-        ship = Ship(name, s, data={"modules": {}, "mounts": {}})
+        ship = Ship(name, s)  # TODO: Fix extra api request
         ship.jump(request.args.get("place").strip())
         return jsonify({})
     except SpaceTradersException as e:
@@ -118,7 +118,7 @@ def jump(name):
 def warp(name):
     try:
         s = get_session()
-        ship = Ship(name, s, data={"modules": {}, "mounts": {}})
+        ship = Ship(name, s)  # TODO: Fix extra api request
         ship.warp(request.args.get("place").strip())
         return jsonify({})
     except SpaceTradersException as e:
@@ -128,7 +128,7 @@ def warp(name):
 @ship_bp.route("/ship/<name>/dock/")
 def dock(name):
     s = get_session()
-    ship = Ship(name, s, data={"modules": {}, "mounts": {}})
+    ship = Ship(name, s)  # TODO: Fix extra api request
     try:
         ship.dock()
         return jsonify({})
@@ -139,7 +139,7 @@ def dock(name):
 @ship_bp.route("/ship/<name>/orbit/")
 def orbit(name):
     s = get_session()
-    ship = Ship(name, s, data={"modules": {}, "mounts": {}})
+    ship = Ship(name, s)  # TODO: Fix extra api request
     try:
         ship.orbit()
         return jsonify({})
@@ -150,7 +150,7 @@ def orbit(name):
 @ship_bp.route("/ship/<name>/refuel/")
 def refuel(name):
     s = get_session()
-    ship = Ship(name, s, data={"modules": {}, "mounts": {}})
+    ship = Ship(name, s)  # TODO: Fix extra api request
     try:
         ship.refuel()
         return jsonify({})
@@ -161,10 +161,7 @@ def refuel(name):
 @ship_bp.route("/ship/<name>/extract/")
 def extract(name):
     s = get_session()
-    ship = Ship(
-        name,
-        s
-    )  # TODO: Fix extra api request
+    ship = Ship(name, s)  # TODO: Fix extra api request
     try:
         ship.extract()
         return jsonify({})

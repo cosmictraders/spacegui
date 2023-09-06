@@ -13,7 +13,6 @@
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ module.requirements.crew }}</li>
                                 <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ module.requirements.power }}</li>
-                                <li class="list-group-item list-group-item-secondary"><i class="bi bi-shield-fill-check"></i> {{ module.condition }}</li>
                             </ul>
                         </div>
                         <small>{{ module.symbol }}</small>
@@ -36,7 +35,6 @@
                             <ul class="list-group list-group-horizontal">
                                 <li class="list-group-item list-group-item-info"><i class="bi bi-person-fill"></i> {{ mount.requirements.crew }}</li>
                                 <li class="list-group-item list-group-item-warning"><i class="bi bi-lightning-charge-fill"></i> {{ mount.requirements.power }}</li>
-                                <li class="list-group-item list-group-item-secondary"><i class="bi bi-shield-fill-check"></i> {{ mount.condition }}</li>
                             </ul>
                         </div>
                         <small>{{ mount.symbol }}</small>
@@ -73,7 +71,7 @@
             <p class="mb-1 small">{{ crew.required }} Required</p>
         </div>
         <p class="mb-1">The capacity of this ship is {{ crew.capacity }} people.
-            The crew has {{ crew.morale }} morale, {{ crew.rotation }} rotation, and has {{ crew.wages }} wages.
+            The crew has {{ crew.morale }} morale, {{ crew.rotation.value }} rotation, and has {{ crew.wages }} wages.
         </p>
     </div>
 {%- endmacro %}
@@ -175,15 +173,14 @@
             <div class="row g-5 gy-5 justify-content-between">
                 <div class="col-md-auto">{{ ship.nav.status.value }}</div>
                 {% if not ship.nav.moving %}
-                    <div class="col-md-auto"><a href="/waypoint/{{ ship.nav.route.departure }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.location }}</a></div>
+                    <div class="col-md-auto">{{ macros.waypoint_link(ship.nav.location) }}</div>
                 {% else %}
                     <div class="col-md-auto">
-                        <a href="/waypoint/{{ ship.nav.route.departure }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.departure }}</a>
+                        {{ macros.waypoint_link(ship.nav.route.departure) }}
                         <i class="bi bi-arrow-right squiggle-icon"></i>
-                        <a href="/waypoint/{{ ship.nav.route.destination }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.destination }}</a>
+                        {{ macros.waypoint_link(ship.nav.route.destination) }}
                     </div>
                 {% endif %}
-                <div class="col-md-auto"><a href="/waypoint/{{ ship.nav.route.departure }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.departure }}</a></div>
                 {% if ship.fuel.capacity != 0 %}
                     {% if 100*(ship.fuel.current/ship.fuel.capacity) > 70 %}
                         {% set pb_color = "bg-success" %}
@@ -236,8 +233,8 @@
                     </div>
                     <div class="row py-3">
                         <p>Location:
-                            <a id="waypoint_link" href="/waypoint/{{ ship.nav.location }}"><i class="bi bi-geo-alt-fill"></i> <span id="waypoint">{{ ship.nav.location }}</span></a>, a waypoint of
-                            <a id="system_link" href="/system/{{ ship.nav.location.system }}"><i class="bi bi-stars"></i> <span id="system">{{ ship.nav.location.system }}</span></a>
+                            {{ macros.waypoint_link(ship.nav.location) }}, a waypoint of
+                            {{ macros.system_link(ship.nav.location.system) }}
                         </p>
                     </div>
                 {% else %}
@@ -264,7 +261,7 @@
                         timer(document.getElementById("eta"), {{ -(now - ship.nav.route.arrival).total_seconds() // 1 }}, refresh, "");
                     </script>
                     <div class="row py-3">
-                        <p><a href="/waypoint/{{ ship.nav.route.departure }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.departure }}</a> <i class="bi bi-arrow-right squiggle-icon"></i> <a href="/waypoint/{{ ship.nav.route.destination }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.destination }}</a></p>
+                        <p>{{ macros.waypoint_link(ship.nav.route.departure) }} <i class="bi bi-arrow-right squiggle-icon"></i> {{ macros.waypoint_link(ship.nav.route.destination) }}</p>
                     </div>
                 {% endif %}
                 <div class="row py-3">

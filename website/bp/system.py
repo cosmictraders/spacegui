@@ -54,6 +54,25 @@ def system(symbol, session):
     )
 
 
+@system_bp.route("/system/<symbol>/api-json")
+@token_required
+def system_api_json(symbol, session):
+    system = System(symbol, session)
+    json_dict = {
+        "symbol": str(system.symbol),
+        "type": system.star_type,
+        "x": system.x,
+        "y": system.y,
+        "waypoints": [{
+            "symbol": str(waypoint.symbol),
+            "type": waypoint.waypoint_type,
+            "x": waypoint.x,
+            "y": waypoint.y,
+        } for waypoint in system.waypoints]
+    }
+    return jsonify(json_dict)
+
+
 @system_bp.route("/waypoint/<symbol>/")
 @minify_html
 @token_required

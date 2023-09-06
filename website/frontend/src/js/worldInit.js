@@ -21,7 +21,7 @@ export function getRenderer() {
 
 export function getCamera() {
     let camera = new THREE.PerspectiveCamera(60, window.innerWidth / (window.innerHeight - 100), 1, 100000);
-    camera.position.set(0, 500, -400);
+    camera.position.set(449, 5000, -1000);
     return camera
 }
 

@@ -1,3 +1,30 @@
+{% macro agent_link(agent_symbol) %}
+    <a href="/agent/{{ agent_symbol }}"><i class="bi bi-person-fill"></i> {{ agent_symbol }}</a>
+{%- endmacro %}
+
+{% macro contract_link(contract_id) %}
+    <a href="/contract/{{ contract_id }}"><i class="bi bi-file-earmark-text-fill"></i> {{ contract_id }}</a>
+{%- endmacro %}
+
+{% macro faction_link(faction_symbol, faction_name) %}
+    <a href="/faction/{{ faction_symbol }}"><i class="bi bi bi-building-fill"></i> {{ faction_name }}</a>
+{%- endmacro %}
+
+{% macro ship_link(ship_symbol) %}
+    <a href="/ship/{{ ship_symbol }}"><i class="bi bi-file-earmark-text-fill"></i> {{ ship_symbol }}</a>
+{%- endmacro %}
+
+{% macro system_link(system_symbol) %}
+    <a href="/system/{{ system_symbol }}"><i class="bi bi-stars"></i> {{ system_symbol }}</a>
+{%- endmacro %}
+
+{% macro waypoint_link(waypoint_symbol) %}
+    <a href="/waypoint/{{ waypoint_symbol }}"><i class="bi bi-geo-alt-fill"></i> {{ waypoint_symbol }}</a>
+{%- endmacro %}
+
+
+
+
 {% macro pretty_list(li, attr=None) -%}
     {% if attr == None %}
         {% for item in li %}{{ item }}{{ ", " if not loop.last else "" }}{% endfor %}
@@ -6,6 +33,6 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro time_display(time) -%}
-    {{ time.astimezone(tz=None).strftime('%Y-%m-%d %I:%M:%S') }}
+{% macro time_display(time, show_icon=True) -%}
+    {% if show_icon %}<i class="bi bi-clock"></i> {% endif %}{{ time.astimezone(tz=None).strftime('%Y-%m-%d %I:%M:%S') }}
 {%- endmacro %}

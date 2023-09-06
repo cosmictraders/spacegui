@@ -45,6 +45,23 @@ def ships(session):
     return render_template("ship/ships.html", ships=ships, page=page, li=new_li)
 
 
+@ship_bp.route("/ships/api-json/")
+def ships_json_api():
+    s = get_session()
+    ships = Ship.all(s, 1)[1]
+    li_json = []
+    for ship in ships:
+        li_json.append({
+            "symbol": ship.symbol,
+            "role": ship.registration.role,
+            "nav": {
+                "location": str(ship.nav.location),
+                "status": ship.nav.status,
+                "flight_mode": ship.nav.flight_mode,
+            }
+        })
+    return jsonify(li_json)
+
 @ship_bp.route("/ship/<name>/")
 @minify_html
 @token_required

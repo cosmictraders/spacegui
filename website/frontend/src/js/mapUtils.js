@@ -22,3 +22,17 @@ export function getData() {
         async: false
     }).responseText);
 }
+
+export function getSystemData(systemName) {
+    return JSON.parse(jQuery.ajax({
+        url: "/system/" + systemName + "/api-json",
+        async: false
+    }).responseText);
+}
+
+export function getShipData() {
+    return JSON.parse(jQuery.ajax({
+        url: "/ships/api-json",
+        async: false
+    }).responseText);
+}

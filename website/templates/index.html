@@ -35,7 +35,7 @@ Home
                             <p><i class="bi bi-credit-card"></i> {{ agent.credits }}</p>
                         </div>
                         <div class="row justify-content-center text-center">
-                            <p><a href="/faction/{{ agent.starting_faction }}"><i class="bi bi-building"></i> {{ agent.starting_faction }}</a> <a href="/waypoint/{{ agent.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ agent.headquarters }}</a></p>
+                            <p>{{ macros.faction_link(agent.starting_faction, agent.starting_faction) }} {{ macros.waypoint_link(agent.headquarters) }}</p>
                         </div>
                     </div>
                 </div>

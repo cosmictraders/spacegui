@@ -1,7 +1,6 @@
-// TODO: Port to webpack
 import * as THREE from 'three';
-import {getMapZ, getData} from './mapUtils.js';
-import {getScene, getRenderer, getCamera, getLoadingManager, getMapControls, initLights} from './worldInit.js';
+import {getData, getMapZ, getSystemData} from './mapUtils.js';
+import {getCamera, getLoadingManager, getMapControls, getRenderer, getScene, initLights} from './worldInit.js';
 import {Stats} from './Stats.js';
 
 import {FontLoader} from 'three/addons/loaders/FontLoader.js';
@@ -27,13 +26,22 @@ window.onmouseup = (event) => {
 
 const guiInterface = {
     waypoint: '',
-    maxLabelDistance: 1500
+    maxLabelDistance: 1500,
+    showLabels: true,
+    path: '',
 };
+
+const raycaster = new THREE.Raycaster();
+
+var prevInstanceId = -1;
+var highlightColor = new THREE.Color("pink");
 
 let peakValue = 900;
 let spread = 4000;
 
 const data = getData();
+
+const systemData = {};
 
 const systemCoords = {};
 let defaultInt = Object.keys(data).length;
@@ -63,9 +71,11 @@ function initGui() { // TODO: Create own gui with autocomplete etc.
     gui.add(controls, 'zoomToCursor').name('Zoom to cursor');
     gui.add(controls, 'screenSpacePanning').name('Screen space panning');
     gui.add(controls, 'enableDamping').name('Enable damping');
+    gui.add(guiInterface, 'showLabels').name('Show labels');
+    gui.add(guiInterface, 'maxLabelDistance', 500, 5000).name('Max label distance');
     gui.add(guiInterface, 'waypoint').name('Waypoint').onChange(function (value) {
-        if (Object.keys(systemCoords).includes(value)) {  // TODO: Make case-insensitive
-            const waypoint = systemCoords[value];
+        if (Object.keys(systemCoords).includes(value.toUpperCase())) {
+            const waypoint = systemCoords[value.toUpperCase()];
             controls.target.set(waypoint.x, waypoint.y, waypoint.z);
             camera.position.set(waypoint.x, waypoint.y, waypoint.z + 400);
             controls.autoRotate = true;
@@ -75,7 +85,16 @@ function initGui() { // TODO: Create own gui with autocomplete etc.
             controls.update();
         }
     });
-    gui.add(guiInterface, 'maxLabelDistance', 500, 5000).name('Max label distance');
+    gui.add(guiInterface, 'path').name('Path').onChange(function (value) {
+        let coordList = [];
+        for (const systemSymbol of value.split(',')) {
+            if (Object.keys(systemCoords).includes(value.toUpperCase())) {
+                const system = systemCoords[value.toUpperCase()];
+                coordList.push(new THREE.Vector3(system.x, system.y, system.z));
+            }
+        }
+        path.geometry = new THREE.BufferGeometry().setFromPoints(coordList);
+    });
 }
 
 
@@ -85,10 +104,13 @@ console.log("Defaulted on: " + defaultInt);
 console.log("Total Systems: " + Object.keys(data).length);
 const textMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
 let labels = []
-
+const pathMaterial = new THREE.LineBasicMaterial({color: 0x0000ff});
+let pathGeo = new THREE.BufferGeometry().setFromPoints([]);
+const path = new THREE.Line(pathGeo, pathMaterial);
 let camera, controls, scene, renderer;
 const stats = new Stats();
 init().then(() => {
+    scene.add(path);
     document.body.appendChild(stats.dom);
     animate();
 });
@@ -140,15 +162,15 @@ function initMap(scene, data, textures) {
         emissiveMap: textures["neutron_star"]
     });
     const defaultMesh = new THREE.InstancedMesh(geometry, material, defaultInt);
-    let redStarInstancedMesh = new THREE.InstancedMesh(geometry, redStarMaterial, meshInt["RED_STAR"]);
-    let orangeStarInstancedMesh = new THREE.InstancedMesh(geometry, orangeStarMaterial, meshInt["ORANGE_STAR"]);
-    let whiteStarInstancedMesh = new THREE.InstancedMesh(geometry, white_material, meshInt["WHITE_DWARF"]);
-    let youngStarInstancedMesh = new THREE.InstancedMesh(geometry, material, meshInt["YOUNG_STAR"]);
-    let blackHoleInstancedMesh = new THREE.InstancedMesh(geometry, black_material, meshInt["BLACK_HOLE"]);
-    let blueStarInstancedMesh = new THREE.InstancedMesh(geometry, blueStarMaterial, meshInt["BLUE_STAR"]);
-    let hyperGiantInstancedMesh = new THREE.InstancedMesh(geometry, hyperGiantMaterial, meshInt["HYPERGIANT"]);
-    let neutronStarInstancedMesh = new THREE.InstancedMesh(geometry, neutronStarMaterial, meshInt["NEUTRON_STAR"]);
-    let unstableStarInstancedMesh = new THREE.InstancedMesh(geometry, material, meshInt["UNSTABLE"]);
+    const redStarInstancedMesh = new THREE.InstancedMesh(geometry, redStarMaterial, meshInt["RED_STAR"]);
+    const orangeStarInstancedMesh = new THREE.InstancedMesh(geometry, orangeStarMaterial, meshInt["ORANGE_STAR"]);
+    const whiteStarInstancedMesh = new THREE.InstancedMesh(geometry, white_material, meshInt["WHITE_DWARF"]);
+    const youngStarInstancedMesh = new THREE.InstancedMesh(geometry, material, meshInt["YOUNG_STAR"]);
+    const blackHoleInstancedMesh = new THREE.InstancedMesh(geometry, black_material, meshInt["BLACK_HOLE"]);
+    const blueStarInstancedMesh = new THREE.InstancedMesh(geometry, blueStarMaterial, meshInt["BLUE_STAR"]);
+    const hyperGiantInstancedMesh = new THREE.InstancedMesh(geometry, hyperGiantMaterial, meshInt["HYPERGIANT"]);
+    const neutronStarInstancedMesh = new THREE.InstancedMesh(geometry, neutronStarMaterial, meshInt["NEUTRON_STAR"]);
+    const unstableStarInstancedMesh = new THREE.InstancedMesh(geometry, material, meshInt["UNSTABLE"]);
     meshInt = {
         "RED_STAR": 0,
         "ORANGE_STAR": 0,
@@ -218,6 +240,17 @@ function initMap(scene, data, textures) {
             meshInt[data[system].type]++;
         }
     }
+
+    // defaultMesh.layers.set(0);
+    // redStarInstancedMesh.layers.set(0);
+    // orangeStarInstancedMesh.layers.set(0);
+    // whiteStarInstancedMesh.layers.set(0);
+    // youngStarInstancedMesh.layers.set(0);
+    // blackHoleInstancedMesh.layers.set(0);
+    // blueStarInstancedMesh.layers.set(0);
+    // hyperGiantInstancedMesh.layers.set(0);
+    // neutronStarInstancedMesh.layers.set(0);
+    // unstableStarInstancedMesh.layers.set(0);
     scene.add(defaultMesh);
     scene.add(redStarInstancedMesh);
     scene.add(orangeStarInstancedMesh);
@@ -229,7 +262,6 @@ function initMap(scene, data, textures) {
     scene.add(neutronStarInstancedMesh);
     scene.add(unstableStarInstancedMesh);
 }
-
 
 
 function addLabel(text, x, y, z, font) {
@@ -244,6 +276,7 @@ function addLabel(text, x, y, z, font) {
     let textMesh = new THREE.Mesh(textGeo, textMaterial)
     textMesh.position.set(x, y + 20, z);
     textMesh.hidden = true;
+    // textMesh.layers.set(1);
     labels.push(textMesh);
     scene.add(textMesh);
 }
@@ -252,11 +285,10 @@ function addLabel(text, x, y, z, font) {
 function initLabels(font) {
     setProgress(1);
     let count = 0;
-    let total = Object.keys(systemCoords).length;
     for (const system of Object.keys(systemCoords)) {
         setTimeout(() => {
             addLabel(system, systemCoords[system].x, systemCoords[system].y, systemCoords[system].z, font);
-        }, count / 2);
+        }, count / 3);
         count++;
     }
 }
@@ -344,8 +376,30 @@ function updateLabels() {
     }
 }
 
-function animate() {
+
+function detailSystem(system) {
+    // Get system symbol
+    let symbol = null;
+    for (system of Object.keys(systemCoords)) {
+        if (systemCoords[system].x === system.position.x && systemCoords[system].z === system.position.z && systemCoords[system].y === system.position.y) {
+            symbol = system;
+        }
+    }
+    // Get system data
+    if (!Object.keys(systemData).includes(symbol)) {
+        systemData[symbol] = getSystemData(symbol);
+    }
+    let sysData = systemData[symbol];
+    // Display system data
+}
+
+function animate() {  // TODO: Add zooming into a system to view it's waypoints
     stats.begin();
+    raycaster.setFromCamera(mouse, camera);
+    let intersection = raycaster.intersectObject();
+    if (intersection.length > 0) {
+        console.log(intersection[0].instanceId);
+    }
     updateLabels();
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     render(renderer);

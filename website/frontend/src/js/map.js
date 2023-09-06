@@ -396,10 +396,10 @@ function detailSystem(system) {
 function animate() {  // TODO: Add zooming into a system to view it's waypoints
     stats.begin();
     raycaster.setFromCamera(mouse, camera);
-    let intersection = raycaster.intersectObject();
-    if (intersection.length > 0) {
-        console.log(intersection[0].instanceId);
-    }
+    // let intersection = raycaster.intersectObject();
+    // if (intersection.length > 0) {
+    //     console.log(intersection[0].instanceId);
+    // }
     updateLabels();
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     render(renderer);

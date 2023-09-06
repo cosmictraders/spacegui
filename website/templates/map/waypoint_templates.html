@@ -230,6 +230,37 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
+                    {% if shipyard.transactions != [] and shipyard.transactions != None %}
+                        <div class="col">
+                            <h3>Recent Transactions</h3>
+                            {# <ul class="list-group">#}
+                            {#     {% for transaction in marketplace.transactions %}#}
+                            {#         <li class="list-group-item">{{ transaction.ship_symbol.split("-")[0] }}'s ship#}
+                            {#             {{ transaction.ship_symbol }}#}
+                            {#             {% if transaction.transaction_type == "PURCHASE" %} purchased {% else %} sold {% endif %}#}
+                            {#             {{ transaction.item }} for {{ transaction.price_per_unit }} per a unit,#}
+                            {#             amounting to a total of {{ transaction.total_price }}#}
+                            {#             at {{ macros.time_display(transaction.timestamp) }}</li>#}
+                            {#     {% endfor %}#}
+                            {# </ul>#}
+                            <table class="table">
+                                <tr>
+                                    <th>Agent Symbol</th>
+                                    <th>Ship Symbol</th>
+                                    <th>Price</th>
+                                    <th>Time</th>
+                                </tr>
+                                {% for transaction in shipyard.transactions %}
+                                    <tr>
+                                        <td>{{ macros.agent_link(transaction.agent_symbol) }}</td>
+                                        <td><i class="bi bi-rocket-takeoff-fill"></i> {{ transaction.ship_symbol }}</td>
+                                        <td><i class="bi bi-credit-card"></i> {{ transaction.price }}</td>
+                                        <td>{{ macros.time_display(transaction.timestamp) }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    {% endif %}
                 </div>
                 <script>
                     function buy(ship) {

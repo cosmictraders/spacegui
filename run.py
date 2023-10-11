@@ -51,4 +51,4 @@ elif autotraders_minor_version not in accepted_autotraders_minor_versions:
 print(" * Acceptable version found: Autotraders v" + autotraders.__version__)
 
 if __name__ == "__main__":
-    create_app().run(debug=True)
+    create_app().run(debug=False)

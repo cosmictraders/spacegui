@@ -3,9 +3,6 @@
 Create Token
 {% endblock %}
 {% block body %}
-    <div class="alert alert-warning" role="alert">
-        If you already have a user, submitting data here will wipe the db.
-    </div>
     <div class="row justify-content-center text-center">
         <h1>Create Token</h1>
     </div>
@@ -14,11 +11,11 @@ Create Token
         <input id="symbol" required>
         <label class="label" for="faction">Faction:</label>
         <input id="faction" required>
-        <label class="label" for="email">Email:</label>
+        <label class="label" for="email">Email (optional):</label>
         <input id="email" type="email">
         <button class="btn btn-primary" type="button" onclick="create()">Create</button>
     </form>
-    <p class="p-3">Note that this automatically saves the token,
+    <p class="p-3">This automatically saves the token to the sqlite database,
         it can be always accessed from
         <a href="/settings">the settings page</a>.</p>
     <script>
@@ -31,4 +28,4 @@ Create Token
         }
     </script>
 {% endblock %}
-{% block navid %}home{% endblock %}
+{% block navid %}settings{% endblock %}

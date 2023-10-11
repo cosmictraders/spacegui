@@ -1,8 +1,9 @@
+import autotraders.token
 from autotraders.agent import Agent
 from flask import render_template
 
 from website.model import db, User
-from website.session import get_session
+from website.session import get_session, get_token
 from minify_html import minify
 from autotraders.session import AutoTradersSession as AutotradersSession
 
@@ -33,6 +34,9 @@ def token_required(func):
     def wrap(*args, **kwargs):
         try:
             session = get_session()
+            token = get_token()
+            parsed_token = autotraders.token.parse_token(token)
+            # parsed_token.payload.reset_date
         except Exception as e:
             print(e)
             db.create_all()

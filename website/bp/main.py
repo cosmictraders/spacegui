@@ -265,3 +265,9 @@ def not_found(e):
     resp = Response(render_template("error/not_found.html"))
     resp.status_code = 404
     return resp
+
+@main_bp.app_errorhandler(500)
+def error_500(e):
+    resp = Response(render_template("error/500.html"))
+    resp.status_code = 500
+    return resp

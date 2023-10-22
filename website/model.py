@@ -11,4 +11,7 @@ class User(db.Model):
 
 class Automation(db.Model):
     id = db.Column(db.String, primary_key=True, nullable=False, unique=True)
+    name = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=True)
+    icon = db.Column(db.String, nullable=True)
     text = db.Column(db.String, nullable=False)

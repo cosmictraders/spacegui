@@ -3,8 +3,13 @@
 Automation
 {% endblock %}
 {% block body %}
-    <div class="row justify-content-center text-center">
-        <h1>Automation {{ name }} <span class="badge bg-warning">WIP</span></h1>
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <h1>Automation - {{ automation.name }} <span class="badge bg-warning">WIP</span></h1>
+        </div>
+        <textarea class="form-control">
+            {{ automation.text }}
+        </textarea>
     </div>
 {% endblock %}
 {% block navid %}automations{% endblock %}

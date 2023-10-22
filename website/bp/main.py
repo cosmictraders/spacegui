@@ -108,9 +108,14 @@ def automations():
     return render_template("automations.html", automations=db.session.query(Automation).all())
 
 
-@main_bp.route("/automation/<name>/")
-def automation(name):
-    return render_template("automation.html", name=name)
+@main_bp.route("/new-automation/")
+def new_automation():
+    return render_template("new_automation.html")
+
+
+@main_bp.route("/automation/<i>/")
+def automation(i):
+    return render_template("automation.html", automation=db.session.query(Automation).filter_by(id=i).first())
 
 
 @cache
@@ -265,6 +270,7 @@ def not_found(e):
     resp = Response(render_template("error/not_found.html"))
     resp.status_code = 404
     return resp
+
 
 @main_bp.app_errorhandler(500)
 def error_500(e):

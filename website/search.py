@@ -215,9 +215,9 @@ def read_query(q):
     filter_name = None
     filter_condition = None
     in_condition = (
-        False  # do we know we are in the condition part (comes after the ":")?
+        False  # flag for if we are in the condition part (comes after the ":")?
     )
-    filter_ending = False  # does next space mean end
+    filter_ending = False  # flag for if the next space means end of filter
     for char in q:
         if char not in [" ", "<", ">", "="] and in_condition:
             filter_ending = True

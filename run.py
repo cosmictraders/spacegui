@@ -51,10 +51,12 @@ elif autotraders_minor_version not in accepted_autotraders_minor_versions:
     )
 print(" * Acceptable version found: Autotraders v" + autotraders.__version__)
 
+
 @click.command()
 @click.option("--debug", is_flag=True)
 def cmd(debug):
     create_app().run(debug=debug)
+
 
 if __name__ == "__main__":
     cmd()

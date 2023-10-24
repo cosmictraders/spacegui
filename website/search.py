@@ -211,7 +211,7 @@ def read_query(q):
     q += " "
     query = ""
     filters = []
-    current = ""
+    current: str = ""
     filter_name = None
     filter_condition = None
     in_condition = (

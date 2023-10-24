@@ -30,7 +30,33 @@ Select User
                 <p>No users saved, you should create one ...</p>
             {% endif %}
         </div>
-        <a class="mt-3 btn btn-primary" role="button" href="/create-user"><i class="bi bi-person-plus-fill"></i> Create User</a>
+        <a class="btn btn-primary m-3" role="button" href="/create-user"><i class="bi bi-person-plus-fill"></i> Create User</a>
+        <button type="button" class="btn btn-secondary m-3" data-bs-toggle="modal" data-bs-target="#helpModal"><i class="bi bi-question-circle"></i> Help</button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalTitle" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="helpModalTitle">Help</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        This page allows you to select a user to use. The rest of the website depends on the "Active User".
+                        To make a user active, click the "Make Active" button on the user you want to use, the highlighted user is the current active user.
+                        If you have been redirected to this page, then:
+                        <ol>
+                            <li>There is no active user (in which case create an user or make one active)</li>
+                            <li>The current user is invalid: Delete it and create a new one.</li>
+                        </ol>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
     <script>
         function setUser(user_id) {
@@ -40,6 +66,7 @@ Select User
                 }
             )
         }
+
         function deleteUser(user_id) {
             fetch("/delete-user-api/" + user_id).then(
                 (_) => {

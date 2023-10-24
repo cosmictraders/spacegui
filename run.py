@@ -54,8 +54,10 @@ print(" * Acceptable version found: Autotraders v" + autotraders.__version__)
 
 @click.command()
 @click.option("--debug", is_flag=True)
-def cmd(debug):
-    create_app().run(debug=debug)
+@click.option("--port", default=5000)
+@click.option("--threaded", is_flag=True)
+def cmd(debug, port, threaded):
+    create_app().run(debug=debug, port=port, threaded=threaded)
 
 
 if __name__ == "__main__":

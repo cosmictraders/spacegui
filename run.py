@@ -1,4 +1,5 @@
 import autotraders
+import click
 
 from website.app import create_app
 
@@ -19,8 +20,8 @@ if autotraders_major_version > accepted_autotraders_major_version:
     )
 
 if (
-    autotraders_minor_version not in accepted_autotraders_minor_versions
-    and autotraders_minor_version < min(accepted_autotraders_minor_versions)
+        autotraders_minor_version not in accepted_autotraders_minor_versions
+        and autotraders_minor_version < min(accepted_autotraders_minor_versions)
 ):
     raise ValueError(
         "Please upgrade autotraders to v"
@@ -50,5 +51,10 @@ elif autotraders_minor_version not in accepted_autotraders_minor_versions:
     )
 print(" * Acceptable version found: Autotraders v" + autotraders.__version__)
 
+@click.command()
+@click.option("--debug", is_flag=True)
+def cmd(debug):
+    create_app().run(debug=debug)
+
 if __name__ == "__main__":
-    create_app().run(debug=False)
+    cmd()

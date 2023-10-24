@@ -1,5 +1,6 @@
 flask
 requests
+click
 autotraders>=1.6.1
 flask_sqlalchemy==3.0.5
 Pillow

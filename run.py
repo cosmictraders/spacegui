@@ -5,7 +5,7 @@ from website.app import create_app
 
 print(" * Running autotraders version check")
 accepted_autotraders_major_version = 2
-accepted_autotraders_minor_versions = [0]
+accepted_autotraders_minor_versions = [0, 1]
 
 autotraders_major_version = int(autotraders.__version__.split(".")[0])
 autotraders_minor_version = int(autotraders.__version__.split(".")[1])

@@ -199,7 +199,7 @@ function initMap(scene, data, textures) {
 
         quaternion.setFromEuler(rotation);
 
-        scale.x = scale.y = scale.z = 15;
+        scale.x = scale.y = scale.z = 25;
 
         matrix.compose(position, quaternion, scale);
     }
@@ -274,7 +274,7 @@ function addLabel(text, x, y, z, font) {
     textGeo.computeBoundingBox();
     textGeo.center();
     let textMesh = new THREE.Mesh(textGeo, textMaterial)
-    textMesh.position.set(x, y + 20, z);
+    textMesh.position.set(x, y + 35, z);
     textMesh.hidden = true;
     // textMesh.layers.set(1);
     labels.push(textMesh);

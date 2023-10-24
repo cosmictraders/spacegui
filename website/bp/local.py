@@ -1,6 +1,11 @@
+import pickle
+import traceback
+
 import autotraders
 import requests
 from autotraders.agent import Agent
+from autotraders.faction import Faction
+from autotraders.map.system import System
 from autotraders.session import AutoTradersSession
 from flask import *
 
@@ -87,3 +92,42 @@ def delete_user_api(user_id):
     db.session.commit()
     flash("Deleted User", "success")
     return jsonify({})
+
+
+@local_bp.route("/update-local-data/")
+@token_required
+def update_local_data(session):
+    print("Getting Factions")
+    all_factions = Faction.all(session)
+    print("Saving Factions")
+    sanitized = all_factions[1]
+    for faction in sanitized:
+        faction.session = None
+    pickle.dump(sanitized, open("factions.pickle", "wb"))
+    print("Getting Systems")
+    try:
+        all_systems = []
+        data = session.get(session.b_url + "systems.json").json()
+        for jsys in data:
+            all_systems.append(System(jsys["symbol"], session, jsys))
+        sanitized = all_systems
+        for system in sanitized:
+            system.session = None
+            for waypoint in system.waypoints:
+                waypoint.session = None
+        pickle.dump(all_systems, open("data.pickle", "wb"), protocol=pickle.HIGHEST_PROTOCOL)
+    except Exception as e:
+        print("Error getting systems from systems.json, getting from api: " + str(e))
+        raise e  # TODO: switch to thread
+        all_systems = System.all(session)
+        for i in range(1, all_systems.pages + 1):
+            all_systems.next()
+        print("Writing ...")
+        sanitized = all_systems.stitch()
+        for system in sanitized:
+            system.session = None
+            for waypoint in system.waypoints:
+                waypoint.session = None
+
+        pickle.dump(sanitized, open("data.pickle", "wb"), protocol=pickle.HIGHEST_PROTOCOL)
+    return "Success<br><a href=\"/\">Back to the home page</a>"

@@ -1,14 +1,13 @@
 import pickle
-import traceback
+from typing import Any
 
 import autotraders
-import requests
 from autotraders.agent import Agent
 from autotraders.faction import Faction
 from autotraders.map.system import System
 from autotraders.session import AutoTradersSession
-from flask import *
-
+from flask import Blueprint, render_template, request, jsonify, flash
+import json
 from website.model import db, User
 from website.wrappers import token_required, minify_html
 
@@ -107,7 +106,7 @@ def update_local_data(session):
     print("Getting Systems")
     try:
         all_systems = []
-        data = session.get(session.b_url + "systems.json").json()
+        data: list[dict[str, Any]] = session.get(session.b_url + "systems.json").json()
         for jsys in data:
             all_systems.append(System(jsys["symbol"], session, jsys))
         sanitized = all_systems
@@ -130,4 +129,29 @@ def update_local_data(session):
                 waypoint.session = None
 
         pickle.dump(sanitized, open("data.pickle", "wb"), protocol=pickle.HIGHEST_PROTOCOL)
+
+    data: list[System] = pickle.load(open("data.pickle", "rb"))
+    data_dict = {}
+    for i in data:
+        waypoints = {}
+        for w in i.waypoints:
+            traits = []
+            if w.traits is not None:
+                for trait in w.traits:
+                    traits.append(trait.symbol)
+            waypoints[str(w.symbol)] = {
+                "x": w.x,
+                "y": w.y,
+                "traits": traits,
+                "type": w.waypoint_type,
+            }
+        data_dict[str(i.symbol)] = {
+            "type": i.star_type,
+            "x": i.x,
+            "y": i.y,
+            "factions": i.factions,
+            "waypoints": waypoints,
+            "num_waypoints": len(waypoints),
+        }
+    json.dump(data_dict, open("./website/static/systems.json", "w"), indent=4)
     return "Success<br><a href=\"/\">Back to the home page</a>"

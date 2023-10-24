@@ -276,7 +276,7 @@ def not_found(e):
 @main_bp.app_errorhandler(500)
 def error_500(e):
     original_exception = e.original_exception
-    if isinstance(original_exception, SpaceTradersException):
+    if isinstance(original_exception, SpaceTradersException):  # TODO: Not for every issue though
         return redirect(url_for("local.select_user"))
     resp = Response(render_template("error/500.html"))
     resp.status_code = 500

@@ -1,7 +1,8 @@
 .idea/*
+.vs/*
+.fleet/*
 venv/*
 *.pyc
-secret.py
 sandbox.py
 website/frontend/node_modules/*
 website/frontend/Cargo.lock

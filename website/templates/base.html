@@ -17,11 +17,11 @@
 <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
 <div id="containing">
     {% include "navbar.html" %}
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
             <div id="flash-box" class=flashes>
-                {% for message in messages %}
-                    <div class="alert alert-primary alert-dismissible" role="alert">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible" role="alert">
                         <div>{{ message }}</div>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>

@@ -2,7 +2,7 @@
 {% import 'ship/ship_templates.html' as ship_templates %}
 
 {% macro waypoint_list(waypoint) -%}
-    <a class="list-group-item list-group-item-action" href = "/waypoint/{{ waypoint.symbol }}">
+    <a class="list-group-item list-group-item-action" href="/waypoint/{{ waypoint.symbol }}">
         <div class="row gx-5 justify-content-between">
             <div class="col-md-auto">
                 <h5><i class="bi bi-geo-alt-fill"></i> Waypoint {{ waypoint.symbol }}</h5>
@@ -28,7 +28,7 @@
         </div>
         <div class="row gx-5 gy-3">
             <div class="col-12">
-                <p>Coordinates: ({{ waypoint.x }}, {{ waypoint.y }})</p>
+                <p><b>Coordinates</b> ({{ waypoint.x }}, {{ waypoint.y }})</p>
             </div>
             <div class="col-12">
                 {% if waypoint.faction != None %}

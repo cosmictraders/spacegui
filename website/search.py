@@ -207,7 +207,7 @@ def quick_weight(query, s):
         return 0.5
 
 
-def read_query(q):
+def read_query(q: str):
     q += " "
     query = ""
     filters = []

@@ -60,8 +60,8 @@
         </div>
         <small>{{ frame.symbol }}</small>
         <p class="mb-1">{{ frame.description }}</p>
-        <p class="mb-1">Module Slots: {{ frame.module_slots }}</p>
-        <p class="mb-1">Mounting Points: {{ frame.mounting_points }}</p>
+        <p class="mb-1"><b>Module Slots</b> {{ frame.module_slots }}</p>
+        <p class="mb-1"><b>Mounting Points</b> {{ frame.mounting_points }}</p>
     </div>
 {%- endmacro %}
 {% macro display_crew(crew) -%}
@@ -85,7 +85,7 @@
             </ul>
         </div>
         <small>{{ reactor.symbol }}</small><br>
-        <small>Power: {{ reactor.power_output }}</small>
+        <small><b>Power</b> {{ reactor.power_output }}</small>
         <p class="mb-1">{{ reactor.description }}</p>
     </div>
 {%- endmacro %}
@@ -100,7 +100,7 @@
             </ul>
         </div>
         <small>{{ engine.symbol }}</small><br>
-        <small>Speed: {{ engine.speed }}</small>
+        <small><b>Speed</b> {{ engine.speed }}</small>
         <p class="mb-1">{{ engine.description }}</p>
     </div>
 {%- endmacro %}

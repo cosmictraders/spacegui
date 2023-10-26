@@ -7,11 +7,11 @@
             <h5 class="card-title">{{ macros.contract_link(contract.contract_id) }}</h5>
         </div>
         <ul class="list-group list-group-flush">
-            <li class="list-group-item">Accept By: {{ macros.time_display(contract.accept_deadline) }}</li>
-            <li class="list-group-item">Deadline: {{ macros.time_display(contract.deadline) }}</li>
-            <li class="list-group-item">If Accepted: <i class="bi bi-credit-card"></i> {{ contract.on_accepted }}</li>
-            <li class="list-group-item">If Fulfilled: <i class="bi bi-credit-card"></i> {{ contract.on_fulfilled }}</li>
-            <li class="list-group-item">Status: {% if contract.fulfilled %}Fulfilled{% elif contract.accepted %}Accepted{% else %}Not Accepted{% endif %}</li>
+            <li class="list-group-item"><b>Accept By</b> {{ macros.time_display(contract.accept_deadline) }}</li>
+            <li class="list-group-item"><b>Deadline</b> {{ macros.time_display(contract.deadline) }}</li>
+            <li class="list-group-item"><b>If Accepted</b> <i class="bi bi-credit-card"></i> {{ contract.on_accepted }}</li>
+            <li class="list-group-item"><b>If Fulfilled</b> <i class="bi bi-credit-card"></i> {{ contract.on_fulfilled }}</li>
+            <li class="list-group-item"><b>Status</b> {% if contract.fulfilled %}Fulfilled{% elif contract.accepted %}Accepted{% else %}Not Accepted{% endif %}</li>
         </ul>
     </div>
 {%- endmacro %}
@@ -24,8 +24,8 @@
             <div class="col-md-auto"><p>{{ contract.contract_type }}</p></div>
         </div>
         <div class="row gx-5 justify-content-between">
-            <div class="col-md-auto">Accepted: {{ contract.on_accepted }} {% if contract.accepted %}(Claimed){% endif %}</div>
-            <div class="col-md-auto">Fulfilled: {{ contract.on_fulfilled }} {% if contract.fulfilled %}(Claimed){% endif %}</div>
+            <div class="col-md-auto"><b>Accepted</b> {{ contract.on_accepted }} {% if contract.accepted %}(Claimed){% endif %}</div>
+            <div class="col-md-auto"><b>Fulfilled</b> {{ contract.on_fulfilled }} {% if contract.fulfilled %}(Claimed){% endif %}</div>
         </div>
     </a>
 {%- endmacro %}
@@ -35,19 +35,19 @@
             <h1 class="col"><i class="bi bi-file-earmark-text-fill"></i> {{ contract.contract_id }}</h1>
         </div>
         <div class="row justify-content-center text-center">
-            <div class="col"><p>Complete By: {{ macros.time_display(contract.deadline) }}</p></div>
+            <div class="col"><p><b>Complete By</b> {{ macros.time_display(contract.deadline) }}</p></div>
         </div>
         <div class="row gx-5 gy-3">
             <div class="col-12">
-                <p>Accepted: <i class="bi bi-credit-card"></i> <span id="on_accepted">{{ contract.on_accepted }}</span></p>
+                <p><b>Accepted</b> <i class="bi bi-credit-card"></i> <span id="on_accepted">{{ contract.on_accepted }}</span></p>
             </div>
             <div class="col-12">
-                <p>Fulfilled: <i class="bi bi-credit-card"></i> <span id="on_fulfilled">{{ contract.on_fulfilled }}</span></p>
+                <p><b>Fulfilled</b> <i class="bi bi-credit-card"></i> <span id="on_fulfilled">{{ contract.on_fulfilled }}</span></p>
             </div>
         </div>
         <div class="row gx-5 gy-3">
             {% if not contract.accepted %}
-                <p>Accept By: {{ macros.time_display(contract.accept_deadline) }}</p>
+                <p><b>Accept By</b> {{ macros.time_display(contract.accept_deadline) }}</p>
             {% endif %}
         </div>
         <div class="row gx-5 gy-3 justify-content-center text-center">
@@ -56,7 +56,7 @@
         <div class="row gx-5 gy-3">
             {% if contract.contract_type == "PROCUREMENT" %}
                 {% for delivery in contract.contract_data %}
-                    <p>Deliver {{ delivery.trade_symbol.symbol }} to <a
+                    <p><b>Deliver</b> {{ delivery.trade_symbol.symbol }} to <a
                             href="/waypoint/{{ delivery.destination_symbol }}">{{ delivery.destination_symbol }}</a>
                         ({{ delivery.units_fulfilled }}/{{ delivery.units_required }}).</p>
                 {% endfor %}

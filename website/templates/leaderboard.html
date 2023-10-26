@@ -4,22 +4,28 @@ Leaderboard
 {% endblock %}
 {% block body %}
     <div class="container p-3">
-        <div class="row justify-content-center text-center">
-            <h1 class="col">Top Credits</h1>
+        <div class="row">
+            <div class="col-6">
+                <div class="row justify-content-center text-center">
+                    <h1 class="col">Top Credits</h1>
+                </div>
+                <ul class="list-group">
+                    {% for agent in status.leaderboards["mostCredits"] %}
+                        <a class="list-group-item list-group-item-action" href="/agent/{{ agent["agentSymbol"] }}"><b class="float-start">{{ agent["agentSymbol"] }}</b> <span class="float-end"><i class="bi bi-credit-card"></i> {{ agent["credits"] }}</span></a>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-6">
+                <div class="row justify-content-center text-center">
+                    <h1 class="col">Top Charters</h1>
+                </div>
+                <ul class="list-group">
+                    {% for agent in status.leaderboards["mostSubmittedCharts"] %}
+                        <a class="list-group-item list-group-item-action" href="/agent/{{ agent["agentSymbol"] }}"><b class="float-start">{{ agent["agentSymbol"] }}</b> <span class="float-end">{{ agent["chartCount"] }}</span></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
-        <ul class="list-group">
-            {% for agent in status.leaderboards["mostCredits"] %}
-                <a class="list-group-item list-group-item-action" href="/agent/{{ agent["agentSymbol"] }}">{{ agent["agentSymbol"] }}, <i class="bi bi-credit-card"></i> {{ agent["credits"] }}</a>
-            {% endfor %}
-        </ul>
-        <div class="row justify-content-center text-center">
-            <h1 class="col">Top Charters</h1>
-        </div>
-        <ul class="list-group">
-            {% for agent in status.leaderboards["mostSubmittedCharts"] %}
-                <a class="list-group-item list-group-item-action" href="/agent/{{ agent["agentSymbol"] }}">{{ agent["agentSymbol"] }}, {{ agent["chartCount"] }}</a></li>
-            {% endfor %}
-        </ul>
     </div>
 {% endblock %}
 {% block navid %}leaderboard{% endblock %}

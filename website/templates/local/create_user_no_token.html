@@ -20,7 +20,7 @@ Create Token
         <a href="/settings">the settings page</a>.</p>
     <script>
         function create() {
-            fetch("/create-token-api?symbol=" + $("#symbol").val() + "&faction=" + $("#faction").val() + "&email=" + $("#email").val()).then(
+            fetch("/create-user-no-token-api?symbol=" + $("#symbol").val() + "&faction=" + $("#faction").val() + "&email=" + $("#email").val()).then(
                 (_) => {
                     document.location.href = "/";
                 }
@@ -28,4 +28,4 @@ Create Token
         }
     </script>
 {% endblock %}
-{% block navid %}settings{% endblock %}
+{% block navid %}select-user{% endblock %}

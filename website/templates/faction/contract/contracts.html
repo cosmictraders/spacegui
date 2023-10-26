@@ -5,10 +5,11 @@ Contracts
 {% endblock %}
 {% block body %}
     <div class="container pt-3">
-    <div class="list-group list-group-flush">
-        {% for contract in contracts[1] %}
-            {{ display.contract_list(contract) }}
-        {% endfor %}
+        <div class="list-group list-group-flush">
+            {% for contract in contracts[1] %}
+                {{ display.contract_list(contract) }}
+            {% endfor %}
+        </div>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#negotiateModal">
             <i class="bi bi-plus-circle-fill"></i> New Contract
         </button>

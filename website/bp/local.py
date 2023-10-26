@@ -6,7 +6,7 @@ from autotraders.agent import Agent
 from autotraders.faction import Faction
 from autotraders.map.system import System
 from autotraders.session import AutoTradersSession
-from flask import Blueprint, render_template, request, jsonify, flash
+from flask import Blueprint, render_template, request, jsonify, flash, redirect, url_for
 import json
 from website.model import db, User
 from website.wrappers import token_required, minify_html
@@ -20,8 +20,14 @@ def create_user():
     return render_template("local/create_user.html")
 
 
-@local_bp.route("/create-user-api/")
-def create_user_api():
+@local_bp.route("/create-user-with-token/")
+@minify_html
+def create_user_with_token():
+    return render_template("local/create_user_with_token.html")
+
+
+@local_bp.route("/create-user-with-token-api/")
+def create_user_with_token_api():
     db.create_all()
     user = User(token=request.args.get("token").strip(), active=False)
     print(request.args.get("token"))
@@ -34,6 +40,10 @@ def create_user_api():
 @local_bp.route("/select-user/")
 @minify_html
 def select_user():
+    if db.session.query(User).count() == 0:
+        flash("No users found, please create one", "info")
+        return redirect(url_for("local.create_user"))
+
     class MockAgent:
         def __init__(self, token, id, active):
             self.token = token
@@ -64,13 +74,13 @@ def select_user_api(user_id):
     return jsonify({})
 
 
-@local_bp.route("/create-token/")
-def create_token():
-    return render_template("local/create_token.html")
+@local_bp.route("/create-user-no-token/")
+def create_user_no_token():
+    return render_template("local/create_user_no_token.html")
 
 
-@local_bp.route("/create-token-api/")
-def create_token_api():
+@local_bp.route("/create-user-no-token-api/")
+def create_user_no_token_api():
     db.create_all()
     t = autotraders.register_agent(
         request.args.get("symbol").strip(),

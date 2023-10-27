@@ -246,7 +246,7 @@
                     </div>
                     <script>
                         function timer(element, start, on_end, original) {
-                            if (start === 0) {
+                            if (start <= 0) {
                                 element.innerHTML = original
                                 on_end()
                             } else {
@@ -262,6 +262,11 @@
                     </script>
                     <div class="row py-3">
                         <p>{{ macros.waypoint_link(ship.nav.route.departure) }} <i class="bi bi-arrow-right squiggle-icon"></i> {{ macros.waypoint_link(ship.nav.route.destination) }}</p>
+                    </div>
+                {% endif %}
+                {% if ship.cooldown != None and ship.cooldown.active  %}
+                    <div class="row py-3">
+                        <p>Cooldown active ... refresh for updates for now.</p>
                     </div>
                 {% endif %}
                 <div class="row py-3">

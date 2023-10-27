@@ -2,10 +2,10 @@
     <div class="container-fluid">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a id="home" class="nav-link" href="/"><i class="bi bi-house-fill"></i> Home</a>
+                <a id="home" class="nav-link" href="{{ url_for('main.index') }}"><i class="bi bi-house-fill"></i> Home</a>
             </li>
             <li class="nav-item">
-                <a id="contracts" class="nav-link" href="/contracts/"><i class="bi bi-file-earmark-text-fill"></i> Contracts</a>
+                <a id="contracts" class="nav-link" href="{{ url_for('faction.contracts') }}"><i class="bi bi-file-earmark-text-fill"></i> Contracts</a>
             </li>
             <li class="nav-item">
                 <a id="ships" class="nav-link" href="/ships/"><i class="bi bi-rocket-takeoff-fill"></i> Ships</a>
@@ -14,7 +14,7 @@
                 <a id="systems" class="nav-link" href="/systems/"><i class="bi bi-stars"></i> Systems</a>
             </li>
             <li class="nav-item">
-                <a id="factions" class="nav-link" href="/factions/"><i class="bi bi-building-fill"></i> Factions</a>
+                <a id="factions" class="nav-link" href="{{ url_for('faction.factions') }}"><i class="bi bi-building-fill"></i> Factions</a>
             </li>
             <li class="nav-item">
                 <a id="agents" class="nav-link" href="/agents/"><i class="bi bi-person-fill"></i> Agents</a>

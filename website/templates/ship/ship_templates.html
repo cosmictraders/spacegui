@@ -311,6 +311,7 @@
                         </div>
                         <div class="btn-group me-2" role="group" aria-label="Ship Controls">
                             <button type="button" class="btn btn-primary" onclick="extract()" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}><i class="bi bi-hammer"></i> Extract</button>
+                            <button type="button" class="btn btn-primary" onclick="siphon()" {% if ship.nav.status != "IN_ORBIT" %}disabled{% endif %}><i class="bi bi-hammer"></i> Siphon</button>
                         </div>
                     </div>
                     <div class="btn-toolbar py-3" role="toolbar">

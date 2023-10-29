@@ -82,6 +82,17 @@ Ship - {{ ship.symbol }}
             }, (500));
         }
 
+        function siphon() {
+            fetch("/ship/{{ ship.symbol }}/siphon").then(
+                (resp) => {
+                    alertIfErr(resp);
+                }
+            );
+            setTimeout(function() {
+                refresh();
+            }, (500));
+        }
+
         function dock() {
             fetch("/ship/{{ ship.symbol }}/dock").then(
                 (resp) => {

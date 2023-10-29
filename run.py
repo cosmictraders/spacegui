@@ -5,8 +5,8 @@ from website.app import create_app
 
 print(f" * Running autotraders version check for version v{autotraders.__version__}")
 accepted_autotraders_major_version = 2
-accepted_autotraders_minor_versions = [2]
-warning_autotraders_minor_versions = []
+accepted_autotraders_minor_versions = [2, 3]
+warning_autotraders_minor_versions = [2]
 blacklisted_versions = ["2.2.0", "2.2.1", "2.2.3", "2.2.4"]
 
 autotraders_major_version = int(autotraders.__version__.split(".")[0])

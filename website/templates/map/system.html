@@ -12,8 +12,8 @@ System - {{ system.symbol }}
         </div>
         <form class="row">
             <div class="input-group">
-                <input class="form-control" type="search" placeholder="Filter (WIP)" id="filter-box" aria-label="Filter" value="" disabled>
-                <button class="btn btn-success" onclick="search()" id="filterbutton" type="button" disabled><i class="bi bi-funnel-fill"></i></button>
+                <input class="form-control" type="search" placeholder="Filter (WIP)" id="filter-box" aria-label="Filter" value="">
+                <button class="btn btn-success" onclick="filter()" id="filterbutton" type="button"><i class="bi bi-funnel-fill"></i></button>
             </div>
         </form>
         {% if waypoints.current().__len__() != 0 %}
@@ -48,6 +48,18 @@ System - {{ system.symbol }}
                 {% endif %}
             </ul>
         </nav>
+        <script>
+            $("#filter-box").val("{{ query }}");
+            $("#filter-box").keypress(function (event) {
+                if (event.keyCode === 13 || event.which === 13) {
+                    filter();
+                    event.preventDefault();
+                }
+            });
+            function filter() {
+                this.window.location.href = "/system/{{ system.symbol }}/?query=" + $("#filter-box").val();
+            }
+        </script>
     </div>
 {% endblock %}
 {% block navid %}systems{% endblock %}

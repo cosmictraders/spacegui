@@ -4,6 +4,8 @@ from autotraders.error import SpaceTradersException
 from flask import *
 
 from autotraders.ship import Ship
+
+from website.paginated_return import paginated_return
 from website.session import get_session
 from website.wrappers import token_required, minify_html
 
@@ -16,32 +18,7 @@ ship_bp = Blueprint("ship", __name__)
 def ships(session):
     page = int(request.args.get("page", default=1))
     ships = Ship.all(session, page)
-    li = {
-        1
-    }
-    if ships.pages > 1:
-        li.add(2)
-        if ships.pages > 2:
-            li.add(3)
-            if ships.pages > 3:
-                li.add(4)
-                if ships.pages > 4:
-                    li.add(5)
-    if ships.pages > 0:
-        li.add(ships.pages - 2)
-    if ships.pages > 0:
-        li.add(ships.pages - 1)
-    if ships.pages > 0:
-        li.add(ships.pages)
-    li = list(li)
-    li.sort()
-    new_li = []
-    prev = 0
-    for i in li:
-        if i != (prev + 1):
-            new_li.append("..")
-        new_li.append(i)
-        prev = i
+    new_li = paginated_return(ships, page)
     return render_template("ship/ships.html", ships=ships, page=page, li=new_li)
 
 

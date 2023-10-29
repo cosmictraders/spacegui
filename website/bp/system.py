@@ -4,6 +4,7 @@ from autotraders.map.system import System
 from autotraders.map.waypoint import Waypoint
 from flask import *
 
+from website.paginated_return import paginated_return
 from website.wrappers import token_required, minify_html
 
 system_bp = Blueprint("system", __name__)
@@ -15,30 +16,7 @@ system_bp = Blueprint("system", __name__)
 def systems(session):
     page = int(request.args.get("page", default=1))
     systems_list = System.all(session, page)
-    li = {
-        1,
-        2,
-        3,
-        4,
-        5,
-        systems_list.pages - 2,
-        systems_list.pages - 1,
-        systems_list.pages,
-    }
-    li.add(page)
-    if page > min(li):
-        li.add(page - 1)
-    if page < max(li):
-        li.add(page + 1)
-    li = list(li)
-    li.sort()
-    new_li = []
-    prev = 0
-    for i in li:
-        if i != (prev + 1):
-            new_li.append("..")
-        new_li.append(i)
-        prev = i
+    new_li = paginated_return(systems_list, page)
     return render_template("map/systems.html", systems=systems_list, li=new_li)
 
 
@@ -47,36 +25,22 @@ def systems(session):
 @token_required
 def system(symbol, session):
     page = int(request.args.get("page", default=1))
-    waypoints_list = Waypoint.all(session, symbol, page=page)
-    li = {
-        1,
-        2,
-        3,
-        4,
-        5,
-        waypoints_list.pages - 2,
-        waypoints_list.pages - 1,
-        waypoints_list.pages,
-    }
-    li.add(page)
-    if page > min(li):
-        li.add(page - 1)
-    if page < max(li):
-        li.add(page + 1)
-    li = list(li)
-    li.sort()
-    new_li = []
-    prev = 0
-    for i in li:
-        if i != (prev + 1):
-            new_li.append("..")
-        new_li.append(i)
-        prev = i
+    query = str(request.args.get("query", default=""))
+    if query.strip() == "":  # TODO: Add support for traits
+        query = None
+    if query is not None:
+        waypoints_list = Waypoint.all(session, symbol, waypoint_type=query.upper(), page=page)
+    else:
+        waypoints_list = Waypoint.all(session, symbol, page=page)
+    new_li = paginated_return(waypoints_list, page)
+    if query is None:
+        query = ""
     return render_template(
         "map/system.html",
         system=System(symbol, session),
         waypoints=waypoints_list,
-        li=new_li
+        li=new_li,
+        query=query
     )
 
 

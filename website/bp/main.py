@@ -53,7 +53,7 @@ def map_v4():
 
 
 def rich_format(s):
-    if "https://" in s:
+    if "https://" in s:  # TODO: Fix hack
         splt = s.split("https://")
         new_s = f'{splt[0]}<a target="_blank" href="https://{splt[1]}">https://{splt[1]}</a>'
         return new_s

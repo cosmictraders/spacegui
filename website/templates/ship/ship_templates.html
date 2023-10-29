@@ -127,7 +127,8 @@
             {% else %}
                 <li class="list-group-item">{{ ship.nav.status.name }}, Arrival: {{ macros.time_display(ship.nav.route.arrival) }}</li>
                 <li class="list-group-item">
-                    <a href="/waypoint/{{ ship.nav.route.departure }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.departure }}</a>
+                    {# TODO: Origin not showing ??? #}
+                    <a href="/waypoint/{{ ship.nav.route.origin }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.origin }}</a>
                     <i class="bi bi-arrow-right squiggle-icon"></i>
                     <a href="/waypoint/{{ ship.nav.route.destination }}"><i class="bi bi-geo-alt-fill"></i> {{ ship.nav.route.destination }}</a>
                 </li>
@@ -214,6 +215,20 @@
     </div>
 {%- endmacro %}
 {% macro ship_display(ship, waypoint_options, now) -%}
+    <script>
+        function timer(element, start, on_end, original) {
+            if (start <= 0) {
+                element.innerHTML = original
+                on_end()
+            } else {
+                element.innerHTML = start
+                setTimeout(function () {
+                        timer(element, start - 1, on_end, original);
+                    }, 1000
+                )
+            }
+        }
+    </script>
     <div class="container p-3">
         <div class="row justify-content-center text-center">
             <h1 class="col"><i class="bi bi-rocket-takeoff-fill"></i> {{ ship.symbol }}
@@ -242,31 +257,21 @@
                         <p>Status: {{ ship.nav.status.name }} with flight mode {{ ship.nav.flight_mode.name }}</p>
                     </div>
                     <div class="row py-3">
-                        <p>ETA: <span id="eta"></span> seconds</p>
+                        <p><b>ETA</b> <span id="eta"></span> seconds</p>
                     </div>
                     <script>
-                        function timer(element, start, on_end, original) {
-                            if (start <= 0) {
-                                element.innerHTML = original
-                                on_end()
-                            } else {
-                                element.innerHTML = start
-                                setTimeout(function () {
-                                        timer(element, start - 1, on_end, original);
-                                    }, 1000
-                                )
-                            }
-                        }
-
                         timer(document.getElementById("eta"), {{ -(now - ship.nav.route.arrival).total_seconds() // 1 }}, refresh, "");
                     </script>
                     <div class="row py-3">
                         <p>{{ macros.waypoint_link(ship.nav.route.departure) }} <i class="bi bi-arrow-right squiggle-icon"></i> {{ macros.waypoint_link(ship.nav.route.destination) }}</p>
                     </div>
                 {% endif %}
-                {% if ship.cooldown != None and ship.cooldown.active  %}
+                {% if ship.cooldown != None and ship.cooldown.active %}
                     <div class="row py-3">
-                        <p>Cooldown active ... refresh for updates for now.</p>
+                        <p>Cooldown active for <span id="cooldown"></span> seconds.</p>
+                        <script>
+                            timer(document.getElementById("cooldown"), {{ -(now - ship.cooldown.expiration).total_seconds() // 1 }}, refresh, "");
+                        </script>
                     </div>
                 {% endif %}
                 <div class="row py-3">

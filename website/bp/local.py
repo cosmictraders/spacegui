@@ -4,8 +4,10 @@ from typing import Any
 import autotraders
 from autotraders.agent import Agent
 from autotraders.faction import Faction
+from autotraders.faction.contract import Contract
 from autotraders.map.system import System
 from autotraders.session import AutoTradersSession
+from autotraders.ship import Ship
 from flask import Blueprint, render_template, request, jsonify, flash, redirect, url_for
 import json
 from website.model import db, User
@@ -165,3 +167,13 @@ def update_local_data(session):
         }
     json.dump(data_dict, open("./website/static/systems.json", "w"), indent=4)
     return "Success<br><a href=\"/\">Back to the home page</a>"
+
+
+@local_bp.route("/auth-sandbox/")
+@token_required
+def auth_sandbox(session):
+    ship = Ship("STARSTAR-1", session)
+    ship.buy("IRON_ORE", 35)
+    contract: Contract = Contract.all(session)[1][0]
+    contract.deliver("STARSTAR-1", "IRON_ORE", 35)
+    return "Done"

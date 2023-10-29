@@ -24,7 +24,7 @@
             <h1 class="col"><i class="bi bi-geo-alt-fill"></i> {{ waypoint.symbol }}</h1>
         </div>
         <div class="row justify-content-center text-center">
-            <div class="col"><p>{{ waypoint.waypoint_type }} of <a href="/system/{{ waypoint.symbol.system }}"><i class="bi bi-stars"></i> {{ waypoint.symbol.system }}</a></p></div>
+            <div class="col"><p>{{ waypoint.waypoint_type }} of <a href="/system/{{ waypoint.symbol.system }}"><i class="bi bi-stars"></i> {{ waypoint.symbol.system }}</a> {% if waypoint.orbits != None %}orbiting <a href="/system/{{ waypoint.orbits }}"><i class="bi bi-geo-alt-fill"></i> {{ waypoint.orbits }}</a>{% endif %}</p></div>
         </div>
         <div class="row gx-5 gy-3">
             <div class="col-12">
@@ -41,6 +41,7 @@
             <div class="col-12">
                 {% if waypoint.orbitals.__len__() != 0 %}
                     <p>{{ waypoint.orbitals.__len__() }} orbitals: {{ macros.pretty_list(waypoint.orbitals) }}</p>
+{#                    TODO: linkify #}
                 {% else %}
                     <p>No Orbitals</p>
                 {% endif %}
@@ -98,19 +99,27 @@
                         <h3>Trades</h3>
                         <table class="table">
                             <tr>
+                                <th>Type</th>
                                 <th>Symbol</th>
                                 <th>Buy Price</th>
                                 <th>Sell Price</th>
                                 <th>Quantity</th>
                                 <th>Volume</th>
+                                <th>Abundance</th>
                             </tr>
                             {% for good in marketplace.trade_goods %}
                                 <tr>
+                                    <td>{{ good.good_type.name }}</td>
                                     <td>{{ good.symbol }}</td>
                                     <td>{{ good.purchase_price }}</td>
                                     <td>{{ good.sell_price }}</td>
-                                    <td>{{ good.supply }}</td>
+                                    <td>{{ good.supply.name }}</td>
                                     <td>{{ good.trade_volume }}</td>
+                                    {% if good.good_type != "EXCHANGE" %}
+                                        <td>{{ good.activity.name }}</td>
+                                    {% else %}
+                                        <td>N/A</td>
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
                         </table>

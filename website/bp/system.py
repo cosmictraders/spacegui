@@ -46,11 +46,37 @@ def systems(session):
 @minify_html
 @token_required
 def system(symbol, session):
-    waypoints = Waypoint.all(session, symbol)
+    page = int(request.args.get("page", default=1))
+    waypoints_list = Waypoint.all(session, symbol, page=page)
+    li = {
+        1,
+        2,
+        3,
+        4,
+        5,
+        waypoints_list.pages - 2,
+        waypoints_list.pages - 1,
+        waypoints_list.pages,
+    }
+    li.add(page)
+    if page > min(li):
+        li.add(page - 1)
+    if page < max(li):
+        li.add(page + 1)
+    li = list(li)
+    li.sort()
+    new_li = []
+    prev = 0
+    for i in li:
+        if i != (prev + 1):
+            new_li.append("..")
+        new_li.append(i)
+        prev = i
     return render_template(
         "map/system.html",
         system=System(symbol, session),
-        waypoints=waypoints[1],
+        waypoints=waypoints_list,
+        li=new_li
     )
 
 

@@ -15,7 +15,7 @@
         </div>
     </a>
 {%- endmacro %}
-{% macro system_display(system, waypoints) -%}
+{% macro system_display(system) -%}
     <div class="container p-3">
         <div class="row justify-content-center text-center">
             <h1 class="col"><i class="bi bi-stars"></i> {{ system.symbol }}</h1>
@@ -37,20 +37,6 @@
                     <p>No Factions</p>
                 </div>
             {% endif %}
-            <div class="col-12">
-                <div class="row justify-content-center text-center">
-                    <h2>Waypoints</h2>
-                </div>
-                {% if system.waypoints.__len__() != 0 %}
-                    <div class="list-group list-group-flush">
-                        {% for waypoint in waypoints %}
-                            {{ display.waypoint_list(waypoint) }}
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p>No Waypoints</p>
-                {% endif %}
-            </div>
         </div>
     </div>
 {%- endmacro %}

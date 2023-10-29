@@ -1,9 +1,53 @@
 {% extends 'base.html' %}
-{% import "map/system_templates.html" as display %}
+{% import "map/system_templates.html" as system_display %}
+{% import "map/waypoint_templates.html" as waypoint_display %}
 {% block title %}
 System - {{ system.symbol }}
 {% endblock %}
 {% block body %}
-    {{ display.system_display(system, waypoints) }}
+    {{ system_display.system_display(system) }}
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <h2>Waypoints</h2>
+        </div>
+        <form class="row">
+            <div class="input-group">
+                <input class="form-control" type="search" placeholder="Filter (WIP)" id="filter-box" aria-label="Filter" value="" disabled>
+                <button class="btn btn-success" onclick="search()" id="filterbutton" type="button" disabled><i class="bi bi-funnel-fill"></i></button>
+            </div>
+        </form>
+        {% if waypoints.current().__len__() != 0 %}
+            <div class="list-group list-group-flush">
+                {% for waypoint in waypoints.current() %}
+                    {{ waypoint_display.waypoint_list(waypoint) }}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No Waypoints</p>
+        {% endif %}
+        <nav aria-label="Pagination">
+            <ul class="pagination p-3">
+                {% if waypoints.page > 1 %}
+                    <li class="page-item"><a class="page-link" href="/system/{{ system.symbol }}/?page={{ waypoints.page-1 }}">Previous</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="/system/{{ system.symbol }}/#">Previous</a></li>
+                {% endif %}
+                {% for i in li %}
+                    {% if i == waypoints.page %}
+                        <li class="page-item"><a class="page-link active" href="/system/{{ system.symbol }}/?page={{ i }}">{{ i }}</a></li>
+                    {% elif i == ".." %}
+                        <li class="page-item disabled"><a class="page-link" href="/system/{{ system.symbol }}/?page={{ i }}">{{ i }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="/system/{{ system.symbol }}/?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if waypoints.page < waypoints.pages %}
+                    <li class="page-item"><a class="page-link" href="/system/{{ system.symbol }}/?page={{ waypoints.page+1 }}">Next</a></li>
+                {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="/system/{{ system.symbol }}/#">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
 {% endblock %}
 {% block navid %}systems{% endblock %}

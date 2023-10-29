@@ -62,6 +62,7 @@ def ships_json_api():
         })
     return jsonify(li_json)
 
+
 @ship_bp.route("/ship/<name>/")
 @minify_html
 @token_required
@@ -184,6 +185,17 @@ def extract(name):
         return jsonify({})
     except SpaceTradersException as e:
         return jsonify({"error": "Failed to extract: " + str(e)})
+
+
+@ship_bp.route("/ship/<name>/siphon/")
+def siphon(name):
+    s = get_session()
+    ship = Ship(name, s)  # TODO: Fix extra api request
+    try:
+        ship.siphon()
+        return jsonify({})
+    except SpaceTradersException as e:
+        return jsonify({"error": "Failed to siphon: " + str(e)})
 
 
 @ship_bp.route("/ship/<name>/chart/")

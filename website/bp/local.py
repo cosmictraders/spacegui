@@ -118,7 +118,7 @@ def update_local_data(session):
     print("Getting Systems")
     try:
         all_systems = []
-        data: list[dict[str, Any]] = session.get(session.b_url + "systems.json").json()
+        data: list[dict[str, Any]] = session.get(str(session.base_url) + "systems.json").json()
         for jsys in data:
             all_systems.append(System(jsys["symbol"], session, jsys))
         sanitized = all_systems

@@ -28,21 +28,21 @@ System - {{ system.symbol }}
         <nav aria-label="Pagination">
             <ul class="pagination p-3">
                 {% if waypoints.page > 1 %}
-                    <li class="page-item"><a class="page-link" href="/system/{{ system.symbol }}/?page={{ waypoints.page-1 }}">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="/system/{{ system.symbol }}/?page={{ waypoints.page-1 }}&query={{ query }}">Previous</a></li>
                 {% else %}
                     <li class="page-item disabled"><a class="page-link" href="/system/{{ system.symbol }}/#">Previous</a></li>
                 {% endif %}
                 {% for i in li %}
                     {% if i == waypoints.page %}
-                        <li class="page-item"><a class="page-link active" href="/system/{{ system.symbol }}/?page={{ i }}">{{ i }}</a></li>
+                        <li class="page-item"><a class="page-link active" href="/system/{{ system.symbol }}/?page={{ i }}&query={{ query }}">{{ i }}</a></li>
                     {% elif i == ".." %}
-                        <li class="page-item disabled"><a class="page-link" href="/system/{{ system.symbol }}/?page={{ i }}">{{ i }}</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="/system/{{ system.symbol }}/?page={{ i }}&query={{ query }}">{{ i }}</a></li>
                     {% else %}
-                        <li class="page-item"><a class="page-link" href="/system/{{ system.symbol }}/?page={{ i }}">{{ i }}</a></li>
+                        <li class="page-item"><a class="page-link" href="/system/{{ system.symbol }}/?page={{ i }}&query={{ query }}">{{ i }}</a></li>
                     {% endif %}
                 {% endfor %}
                 {% if waypoints.page < waypoints.pages %}
-                    <li class="page-item"><a class="page-link" href="/system/{{ system.symbol }}/?page={{ waypoints.page+1 }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="/system/{{ system.symbol }}/?page={{ waypoints.page+1 }}&query={{ query }}">Next</a></li>
                 {% else %}
                     <li class="page-item disabled"><a class="page-link" href="/system/{{ system.symbol }}/#">Next</a></li>
                 {% endif %}

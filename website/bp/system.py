@@ -1,3 +1,5 @@
+from autotraders.map.waypoint_types.construction import Construction
+from autotraders.map.waypoint_types.jumpgate import JumpGate
 from autotraders.map.waypoint_types.marketplace import Marketplace
 from autotraders.map.waypoint_types.shipyard import Shipyard
 from autotraders.map.system import System
@@ -76,7 +78,15 @@ def waypoint(symbol, session):
         s = Shipyard(symbol, session)
     else:
         s = None
-    return render_template("map/waypoint.html", waypoint=w, marketplace=m, shipyard=s)
+    if w.waypoint_type == "JUMPGATE":
+        j = JumpGate(symbol, session)
+    else:
+        j = None
+    if w.is_under_construction:
+        c = Construction(symbol, session)
+    else:
+        c = None
+    return render_template("map/waypoint.html", waypoint=w, marketplace=m, shipyard=s, jumpgate=j, construction=c)
 
 
 @system_bp.route("/waypoint/<symbol>/buy-ship/")

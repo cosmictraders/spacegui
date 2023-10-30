@@ -10,7 +10,7 @@
             <div class="col-md-auto"><p>{{ waypoint.waypoint_type }}</p></div>
         </div>
         <div class="row gx-5 justify-content-between">
-            <div class="col-md-auto">{{ waypoint.orbitals.__len__() }} orbitals</div>
+            <div class="col-md-auto"><b>Orbitals</b> {{ waypoint.orbitals.__len__() }}</div>
             {% if waypoint.traits != None and waypoint.traits.__len__() != 0 %}
                 <div class="col-md-auto">{{ macros.pretty_list(waypoint.traits, "name") }}</div>
             {% endif %}
@@ -18,7 +18,7 @@
         </div>
     </a>
 {%- endmacro %}
-{% macro waypoint_display(waypoint, marketplace, shipyard) -%}
+{% macro waypoint_display(waypoint, marketplace, shipyard, jumpgate, construction) -%}
     <div class="container p-3">
         <div class="row justify-content-center text-center">
             <h1 class="col"><i class="bi bi-geo-alt-fill"></i> {{ waypoint.symbol }}</h1>
@@ -32,18 +32,16 @@
             </div>
             <div class="col-12">
                 {% if waypoint.faction != None %}
-                    {# TODO: make link #}
-                    <p>Faction: {{ waypoint.faction }}</p>
+                    <p><b>Faction</b> {{ macros.faction_link(waypoint.faction, waypoint.faction) }}</p>
                 {% else %}
-                    <p>No Faction</p>
+                    <p><b>No Faction</b></p>
                 {% endif %}
             </div>
             <div class="col-12">
                 {% if waypoint.orbitals.__len__() != 0 %}
-                    <p><b>{{ waypoint.orbitals.__len__() }} orbitals</b>
-                        {% for orbital in waypoint.orbitals %}{{ macros.waypoint_link(orbital) }} {% endfor %}</p>
+                    <p><b>Orbitals</b> {% for orbital in waypoint.orbitals %}{{ macros.waypoint_link(orbital) }} {% endfor %}</p>
                 {% else %}
-                    <p>No Orbitals</p>
+                    <p><b>No Orbitals</b></p>
                 {% endif %}
             </div>
             <div class="col-12">
@@ -62,11 +60,46 @@
                     <p>No Traits</p>
                 {% endif %}
             </div>
+            <div class="col-12">
+                {% if waypoint.modifiers.__len__() > 0 %}
+                    <div class="list-group" id="traits">
+                        {% for modifier in waypoint.modifiers %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ modifier.name }}</h5>
+                                </div>
+                                <p class="mb-1">{{ modifier.description }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            {% if waypoint.is_under_construction %}
+                <div class="col-12">
+                    Waypoint is still being constructed.
+                    <ul class="list-group">
+                        {% for item in construction.materials %}
+                            <li class="list-group-item">{{ item.symbol }} ({{ item.fulfilled }}/{{ item.required }})</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% elif construction != None %}
+                <div class="col-12">
+                    Waypoint construction has finished.
+                    <ul class="list-group">
+                        {% for item in construction.materials %}
+                            <li class="list-group-item">{{ item.symbol }} ({{ item.fulfilled }}/{{ item.required }})</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
             {# TODO: Center headers #}
             {% if waypoint.marketplace %}
                 {% if marketplace.imports != [] and marketplace.imports != None %}
                     <div class="col">
-                        <h3>Imports</h3>
+                        <div class="row justify-content-center text-center">
+                            <h3 class="col">Imports</h3>
+                        </div>
                         <ul class="list-group">
                             {% for good in marketplace.imports %}
                                 <li class="list-group-item">{{ good }}</li>
@@ -76,7 +109,9 @@
                 {% endif %}
                 {% if marketplace.exports != [] and marketplace.exports != None %}
                     <div class="col">
-                        <h3>Exports</h3>
+                        <div class="row justify-content-center text-center">
+                            <h3 class="col">Exports</h3>
+                        </div>
                         <ul class="list-group">
                             {% for good in marketplace.exports %}
                                 <li class="list-group-item">{{ good }}</li>
@@ -86,7 +121,9 @@
                 {% endif %}
                 {% if marketplace.exchange != [] and marketplace.exchange != None %}
                     <div class="col">
-                        <h3>Exchange</h3>
+                        <div class="row justify-content-center text-center">
+                            <h3 class="col">Exchange</h3>
+                        </div>
                         <ul class="list-group">
                             {% for good in marketplace.exchange %}
                                 <li class="list-group-item">{{ good }}</li>
@@ -96,7 +133,9 @@
                 {% endif %}
                 {% if marketplace.trade_goods != [] and marketplace.trade_goods != None %}
                     <div class="col">
-                        <h3>Trades</h3>
+                        <div class="row justify-content-center text-center">
+                            <h3 class="col">Trades</h3>
+                        </div>
                         <table class="table">
                             <tr>
                                 <th>Type</th>
@@ -127,7 +166,9 @@
                 {% endif %}
                 {% if marketplace.transactions != [] and marketplace.transactions != None %}
                     <div class="col">
-                        <h3>Recent Transactions</h3>
+                        <div class="row justify-content-center text-center">
+                            <h3 class="col">Recent Market Transactions</h3>
+                        </div>
                         {# <ul class="list-group">#}
                         {#     {% for transaction in marketplace.transactions %}#}
                         {#         <li class="list-group-item">{{ transaction.ship_symbol.split("-")[0] }}'s ship#}
@@ -164,7 +205,9 @@
             {% if waypoint.shipyard %}
                 <div class="col-12">
                     <div class="row justify-content-center text-center">
-                        <h2>Shipyard</h2>
+                        <div class="row justify-content-center text-center">
+                            <h3 class="col">Shipyard</h3>
+                        </div>
                     </div>
                     {% if shipyard.ships != None and shipyard.ships != [] %}
                         <table class="table">
@@ -241,7 +284,9 @@
                     {% endif %}
                     {% if shipyard.transactions != [] and shipyard.transactions != None %}
                         <div class="col">
-                            <h3>Recent Transactions</h3>
+                            <div class="row justify-content-center text-center">
+                                <h3 class="col">Recent Shipyard Transactions</h3>
+                            </div>
                             {# <ul class="list-group">#}
                             {#     {% for transaction in marketplace.transactions %}#}
                             {#         <li class="list-group-item">{{ transaction.ship_symbol.split("-")[0] }}'s ship#}
@@ -263,7 +308,7 @@
                                     <tr>
                                         <td>{{ macros.agent_link(transaction.agent_symbol) }}</td>
                                         <td><i class="bi bi-rocket-takeoff-fill"></i> {{ transaction.ship_symbol }}</td>
-                                        <td><i class="bi bi-credit-card"></i> {{ transaction.price }}</td>
+                                        <td><i class="bi bi-credit-card"></i> {{ transaction.total_price }}</td>
                                         <td>{{ macros.time_display(transaction.timestamp) }}</td>
                                     </tr>
                                 {% endfor %}

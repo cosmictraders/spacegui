@@ -9,7 +9,7 @@
             </div>
             <div class="row gx-5 justify-content-between">
                 <div class="col-md-auto text-truncate">{{ faction.description }}</div>
-                <div class="col-md-auto"><a href="/waypoint/{{ faction.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ faction.headquarters }}</a></div>
+                <div class="col-md-auto"><a href="/system/{{ faction.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ faction.headquarters }}</a></div>
             </div>
         </a>
     </div>
@@ -24,10 +24,10 @@
         </div>
         <div class="row gx-5 gy-3">
             <div class="col-12">
-                <p><a href="/waypoint/{{ faction.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ faction.headquarters }}</a></p>
+                <p><a href="/system/{{ faction.headquarters }}"><i class="bi bi-geo-alt-fill"></i> {{ faction.headquarters }}</a></p>
             </div>
             <div class="col-12">
-                <p>Recruiting: {{ faction.is_recruiting }}</p>
+                <p><b>Recruiting</b> {{ faction.is_recruiting }}</p>
             </div>
             <div class="col-12">
                 <p>{{ faction.description }}</p>

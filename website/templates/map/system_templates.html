@@ -29,12 +29,11 @@
             </div>
             {% if system.factions.__len__() != 0 %}
                 <div class="col-12">
-                    {# TODO: make link #}
-                    <p><b>Faction</b> {% for faction in system.factions %}{{ faction["symbol"] }} {% endfor %}</p>
+                    <p><b>Faction</b> {% for faction in system.factions %}{{ macros.faction_link(faction["symbol"], faction["name"]) }}{% endfor %}</p>
                 </div>
             {% else %}
                 <div class="col-12">
-                    <p>No Factions</p>
+                    <p><b>No Factions</b></p>
                 </div>
             {% endif %}
         </div>

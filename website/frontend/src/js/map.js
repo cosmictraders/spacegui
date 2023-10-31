@@ -8,6 +8,16 @@ import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
 import {GUI} from "three/addons/libs/lil-gui.module.min";
 
 
+// gui variables
+const guiInterface = {
+    waypoint: '',
+    maxLabelDistance: 1500,
+    path: '',
+};
+
+// Ray casting
+const raycaster = new THREE.Raycaster();
+
 const mouse = new THREE.Vector2(1, 1);
 let mouseDown = false;
 window.onmousedown = (event) => {
@@ -24,20 +34,20 @@ window.onmouseup = (event) => {
     mouseDown = false;
 }
 
-const guiInterface = {
-    waypoint: '',
-    maxLabelDistance: 1500,
-    showLabels: true,
-    path: '',
-};
+function onPointerMove(event) {
 
-const raycaster = new THREE.Raycaster();
+    // calculate pointer position in normalized device coordinates
+    // (-1 to +1) for both components
 
-var prevInstanceId = -1;
-var highlightColor = new THREE.Color("pink");
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
+}
+
+window.addEventListener('pointermove', onPointerMove);
+// random height parameters
 let peakValue = 900;
-let spread = 4000;
+let spread = 2000;
 
 const data = getData();
 
@@ -71,8 +81,7 @@ function initGui() { // TODO: Create own gui with autocomplete etc.
     gui.add(controls, 'zoomToCursor').name('Zoom to cursor');
     gui.add(controls, 'screenSpacePanning').name('Screen space panning');
     gui.add(controls, 'enableDamping').name('Enable damping');
-    gui.add(guiInterface, 'showLabels').name('Show labels');
-    gui.add(guiInterface, 'maxLabelDistance', 500, 5000).name('Max label distance');
+    gui.add(guiInterface, 'maxLabelDistance', 0, 5000).name('Max label distance');
     gui.add(guiInterface, 'waypoint').name('Waypoint').onChange(function (value) {
         if (Object.keys(systemCoords).includes(value.toUpperCase())) {
             const waypoint = systemCoords[value.toUpperCase()];
@@ -93,10 +102,9 @@ function initGui() { // TODO: Create own gui with autocomplete etc.
                 coordList.push(new THREE.Vector3(system.x, system.y, system.z));
             }
         }
-        path.geometry = new THREE.BufferGeometry().setFromPoints(coordList);
+        path.geometry = new THREE.BufferGeometry().setFromPoints(coordList); // TODO: Finish
     });
 }
-
 
 
 console.log(meshInt);
@@ -288,7 +296,7 @@ function initLabels(font) {
     for (const system of Object.keys(systemCoords)) {
         setTimeout(() => {
             addLabel(system, systemCoords[system].x, systemCoords[system].y, systemCoords[system].z, font);
-        }, count / 3);
+        }, count / 10);
         count++;
     }
 }
@@ -391,6 +399,7 @@ function detailSystem(system) {
     }
     let sysData = systemData[symbol];
     // Display system data
+    console.log(sysData);
 }
 
 function animate() {  // TODO: Add zooming into a system to view it's waypoints
@@ -408,5 +417,34 @@ function animate() {  // TODO: Add zooming into a system to view it's waypoints
 }
 
 function render(renderer) {
+
+    // update the picking ray with the camera and pointer position
+    raycaster.setFromCamera(mouse, camera);
+
+    // calculate objects intersecting the picking ray
+    const intersects = raycaster.intersectObjects(scene.children);
+    if (intersects.length > 0) {
+        let intersect = intersects[0];
+        console.log(mouseDown);
+        if (mouseDown) { // TODO: Add max distance
+            let intersectPos = intersect.point;
+            // search systems for closest system
+            let closestSystem = null;
+            let closestSystemDistance = null;
+            let closestSystemCoords = null;
+            for (const system of Object.keys(systemCoords)) {
+                let distance = Math.sqrt(Math.pow(systemCoords[system].x - intersectPos.x, 2) + Math.pow(systemCoords[system].y - intersectPos.y, 2) + Math.pow(systemCoords[system].z - intersectPos.z, 2));
+                if (closestSystem === null || distance < closestSystemDistance) {
+                    closestSystem = system;
+                    closestSystemDistance = distance;
+                    closestSystemCoords = systemCoords[system];
+                }
+            }
+            if (closestSystem != null) {
+                console.log(closestSystem);  // TODO: Do something
+                detailSystem(closestSystem);
+            }
+        }
+    }
     renderer.render(scene, camera);
 }

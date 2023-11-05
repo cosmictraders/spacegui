@@ -6,6 +6,7 @@ from autotraders.faction.contract import Contract
 from flask import *
 
 from website.paginated_return import paginated_return
+from website.session import get_session, anonymous_session
 from website.wrappers import token_required, minify_html
 
 faction_bp = Blueprint("faction", __name__)
@@ -13,8 +14,10 @@ faction_bp = Blueprint("faction", __name__)
 
 @faction_bp.route("/factions/")
 @minify_html
-@token_required
-def factions(session):
+def factions():
+    session = get_session()
+    if session is None:
+        session = anonymous_session()
     page = int(request.args.get("page", default=1))
     factions = Faction.all(session)
     new_li = paginated_return(factions, page)
@@ -23,8 +26,10 @@ def factions(session):
 
 @faction_bp.route("/faction/<symbol>/")
 @minify_html
-@token_required
-def faction(symbol, session):
+def faction(symbol):
+    session = get_session()
+    if session is None:
+        session = anonymous_session()
     light_background = {}.get(symbol, "")
     dark_background = {}.get(symbol, "")
     force_dark = {"VOID": True}.get(symbol, False)

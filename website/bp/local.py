@@ -16,10 +16,10 @@ from website.wrappers import token_required, minify_html, login_required
 local_bp = Blueprint("local", __name__)
 
 
-@local_bp.route("/create-user/")
+@local_bp.route("/add-token/")
 @minify_html
 @login_required
-def create_user(user):
+def add_token(user):
     return render_template("local/create_user.html")
 
 
@@ -41,13 +41,13 @@ def create_user_with_token_api(user):
     return jsonify({})
 
 
-@local_bp.route("/select-user/")
+@local_bp.route("/select-token/")
 @minify_html
 @login_required
-def select_user(user):
+def select_token(user):
     if db.session.query(User).count() == 0:
-        flash("No users found, please create one", "info")
-        return redirect(url_for("local.create_user"))
+        flash("No tokens found, please create one", "info")
+        return redirect(url_for("local.add_token"))
 
     class MockAgent:
         def __init__(self, token, id, active):
@@ -64,7 +64,7 @@ def select_user(user):
             users.append(a)
         except Exception as e:
             users.append(MockAgent(user.token, user.id, user.active))
-    return render_template("local/select_user.html", users=users)
+    return render_template("local/select_token.html", users=users)
 
 
 @local_bp.route("/select-user-api/<token_id>")

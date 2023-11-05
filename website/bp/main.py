@@ -19,6 +19,7 @@ from website.search import (
     check_filters_contract,
     check_filters_faction, quick_weight,
 )
+from website.session import get_session, anonymous_session
 from website.wrappers import token_required, minify_html
 
 main_bp = Blueprint("main", __name__)
@@ -106,8 +107,10 @@ def automation(i):
 
 @main_bp.route("/agents/")
 @minify_html
-@token_required
-def agents(session):
+def agents():
+    session = get_session()
+    if session is None:
+        session = anonymous_session()
     page = int(request.args.get("page", default=1))
     agents_list = Agent.all(session, page)
     li = {1}
@@ -144,8 +147,10 @@ def agents(session):
 
 @main_bp.route("/agent/<symbol>/")
 @minify_html
-@token_required
-def agent(symbol, session):
+def agent(symbol):
+    session = get_session()
+    if session is None:
+        session = anonymous_session()
     return render_template("agent/agent.html", agent=Agent(session, symbol))
 
 

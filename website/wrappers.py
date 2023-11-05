@@ -40,7 +40,7 @@ def token_required(func):
                 flash("No active token found", "danger")
             else:
                 flash(str(type(e)) + " - " + str(e), "danger")
-            return redirect(url_for("local.select_user"))
+            return redirect(url_for("local.select_token"))
         result = func(*args, **kwargs, session=session)
         return result
 
@@ -51,10 +51,11 @@ def token_required(func):
 
 def login_required(func):
     def wrap(*args, **kwargs):
-        if "username" not in session:
+        user = get_user()
+        if user is None:
             flash("Not logged in", "danger")
             return redirect(url_for("auth.login"))
-        result = func(*args, **kwargs, user=get_user())
+        result = func(*args, **kwargs, user=user)
         return result
 
     wrap.__name__ = func.__name__

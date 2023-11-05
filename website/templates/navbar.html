@@ -4,15 +4,17 @@
             <li class="nav-item">
                 <a id="home" class="nav-link" href="{{ url_for('main.index') }}"><i class="bi bi-house-fill"></i> Home</a>
             </li>
-            <li class="nav-item">
-                <a id="contracts" class="nav-link" href="{{ url_for('faction.contracts') }}"><i class="bi bi-file-earmark-text-fill"></i> Contracts</a>
-            </li>
-            <li class="nav-item">
-                <a id="ships" class="nav-link" href="/ships/"><i class="bi bi-rocket-takeoff-fill"></i> Ships</a>
-            </li>
-            <li class="nav-item">
-                <a id="systems" class="nav-link" href="/systems/"><i class="bi bi-stars"></i> Systems</a>
-            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a id="contracts" class="nav-link" href="{{ url_for('faction.contracts') }}"><i class="bi bi-file-earmark-text-fill"></i> Contracts</a>
+                </li>
+                <li class="nav-item">
+                    <a id="ships" class="nav-link" href="/ships/"><i class="bi bi-rocket-takeoff-fill"></i> Ships</a>
+                </li>
+                <li class="nav-item">
+                    <a id="systems" class="nav-link" href="/systems/"><i class="bi bi-stars"></i> Systems</a>
+                </li>
+            {% endif %}
             <li class="nav-item">
                 <a id="factions" class="nav-link" href="{{ url_for('faction.factions') }}"><i class="bi bi-building-fill"></i> Factions</a>
             </li>
@@ -58,9 +60,13 @@
                         </li>
                     </ul>
                 </div>
-                <a id="select-user" class="nav-link" href="/select-user/"><i class="bi bi-person-lines-fill"></i> Select Token</a>
-                <a id="login" class="nav-link"></a>
-                <a id="register" class="nav-link"></a>
+                {% if user.is_authenticated %}
+                    <a id="select-token" class="nav-link" href="/select-token/"><i class="bi bi-person-lines-fill"></i> Select Token</a>
+                    <a id="logout" class="nav-link" href="/logout/"><i class="bi bi-person-lines-fill"></i> Logout</a>
+                {% else %}
+                    <a id="login" class="nav-link" href="/login/"><i class="bi bi-person-lines-fill"></i> Login</a>
+                    <a id="register" class="nav-link" href="/register/"><i class="bi bi-person-lines-fill"></i> Register</a>
+                {% endif %}
                 <a id="settings" class="nav-link" href="/settings/"><i class="bi bi-gear-fill"></i> Settings</a>
             </li>
         </ul>

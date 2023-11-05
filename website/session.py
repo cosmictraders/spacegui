@@ -6,24 +6,24 @@ from website.model import db, Token
 
 def get_session():
     if "username" in session:
-        user = db.session.query(Token).filter_by(active=True, username=session["username"]).first()
+        user = db.session.query(Token).filter_by(active=True, user=session["username"]).first()
         if user is None:
-            user = db.session.query(Token, username=session["username"]).first()
+            user = db.session.query(Token).filter_by(user=session["username"]).first()
             if user is None:
-                raise ValueError("No token not found")
+                return None
             user.active = True
             db.session.commit()
         return asession.AutoTradersSession(user.token)
     else:
-        raise ValueError("User not logged in")
+        return None
 
 
 def get_user():
     if "username" in session:
-        user = db.session.query(Token).filter_by(username=session["username"]).first()
+        user = db.session.query(Token).filter_by(user=session["username"]).first()
         return user
     else:
-        raise ValueError("User not logged in")
+        return None
 
 
 def login_session(username):
@@ -34,3 +34,7 @@ def login_session(username):
 def logout_session():
     del session["username"]
     session["logged_in"] = False
+
+
+def anonymous_session():
+    return asession.AutoTradersSession()

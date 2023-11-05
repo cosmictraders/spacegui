@@ -12,6 +12,7 @@ from website.bp.ship import ship_bp
 from website.bp.system import system_bp
 from website.config import BaseConfig
 from website.model import db
+from website.session import get_user
 
 
 def create_app():
@@ -38,5 +39,18 @@ def create_app():
             "favicon.ico",
             mimetype="image/vnd.microsoft.icon",
         )
+
+    class UserTemplate:
+        def __init__(self, auth):
+            self.is_authenticated = auth
+
+    @app.context_processor
+    def inject_user():
+        user = get_user()
+        if user is not None:
+            user = UserTemplate(True)
+        else:
+            user = UserTemplate(False)
+        return dict(user=user)
 
     return app

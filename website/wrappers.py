@@ -51,7 +51,7 @@ def token_required(func):
 
 def login_required(func):
     def wrap(*args, **kwargs):
-        if session["username"] is None:
+        if "username" not in session:
             flash("Not logged in", "danger")
             return redirect(url_for("auth.login"))
         result = func(*args, **kwargs, user=get_user())

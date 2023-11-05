@@ -5,7 +5,7 @@ from website.model import db, Token
 
 
 def get_session():
-    if session["username"] is not None:
+    if "username" in session:
         user = db.session.query(Token).filter_by(active=True, username=session["username"]).first()
         if user is None:
             user = db.session.query(Token, username=session["username"]).first()
@@ -19,7 +19,7 @@ def get_session():
 
 
 def get_user():
-    if session["username"] is not None:
+    if "username" in session:
         user = db.session.query(Token).filter_by(username=session["username"]).first()
         return user
     else:

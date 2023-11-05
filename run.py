@@ -44,17 +44,13 @@ elif autotraders_minor_version in warning_autotraders_minor_versions:
 @click.command()
 @click.option("--debug", is_flag=True)
 @click.option("--port", default=5000)
-@click.option("--host")
 @click.option("--threaded", is_flag=True)
 @click.option("--db", default="sqlite:///local.db")
 @click.option("--secret-key", default="secret@!%(@!%!@)*(#$)*$@!)*@!%)*@!)*&%@!132509831207549035213028579674138")
-def cmd(debug, port, host, threaded, db, secret_key):
+def cmd(debug, port, threaded, db, secret_key):
     BaseConfig.SECRET_KEY = secret_key
     BaseConfig.SQLALCHEMY_DATABASE_URI = db
-    if host is None:
-        create_app().run(debug=debug, port=port, threaded=threaded)
-    else:
-        create_app().run(debug=debug, host=host, threaded=threaded)
+    create_app().run(debug=debug, port=port, threaded=threaded)
 
 
 if __name__ == "__main__":

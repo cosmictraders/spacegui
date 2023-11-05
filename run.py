@@ -14,7 +14,8 @@ autotraders_major_version = int(autotraders.__version__.split(".")[0])
 autotraders_minor_version = int(autotraders.__version__.split(".")[1])
 
 if autotraders.__version__ in blacklisted_versions:
-    raise ValueError(f"Please upgrade autotraders to v{accepted_autotraders_major_version}.{max(accepted_autotraders_minor_versions)}, your version has been blacklisted, which means it is likely no longer supported by the server.")
+    raise ValueError(
+        f"Please upgrade autotraders to v{accepted_autotraders_major_version}.{max(accepted_autotraders_minor_versions)}, your version has been blacklisted, which means it is likely no longer supported by the server.")
 
 if autotraders_major_version > accepted_autotraders_major_version:
     raise ValueError(
@@ -36,19 +37,24 @@ elif autotraders_minor_version not in accepted_autotraders_minor_versions:
     raise ValueError(
         f"Please install autotraders v{accepted_autotraders_major_version}.{max(accepted_autotraders_minor_versions)}")
 elif autotraders_minor_version in warning_autotraders_minor_versions:
-    print(f" * Warning: Autotraders v{autotraders.__version__} is not officially supported, but limited functionality might be available, proceed at your own risk.")
+    print(
+        f" * Warning: Autotraders v{autotraders.__version__} is not officially supported, but limited functionality might be available, proceed at your own risk.")
 
 
 @click.command()
 @click.option("--debug", is_flag=True)
 @click.option("--port", default=5000)
+@click.option("--host")
 @click.option("--threaded", is_flag=True)
 @click.option("--db", default="sqlite:///local.db")
 @click.option("--secret-key", default="secret@!%(@!%!@)*(#$)*$@!)*@!%)*@!)*&%@!132509831207549035213028579674138")
-def cmd(debug, port, threaded, db, secret_key):
+def cmd(debug, port, host, threaded, db, secret_key):
     BaseConfig.SECRET_KEY = secret_key
     BaseConfig.SQLALCHEMY_DATABASE_URI = db
-    create_app().run(debug=debug, port=port, threaded=threaded)
+    if host is None:
+        create_app().run(debug=debug, port=port, threaded=threaded)
+    else:
+        create_app().run(debug=debug, host=host, threaded=threaded)
 
 
 if __name__ == "__main__":

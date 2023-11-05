@@ -1,12 +1,9 @@
-import inspect
 import pickle
 import time
 from datetime import datetime, timezone
 from functools import cache
 
 import autotraders
-import requests
-from autotraders import SpaceTradersException
 from autotraders.agent import Agent
 from autotraders.faction.contract import Contract
 from autotraders.ship import Ship
@@ -38,18 +35,6 @@ def index(session):
         ships=Ship.all(session),
         contracts=Contract.all(session),
     )
-
-
-@main_bp.route("/map/")
-@minify_html
-def map_v3():
-    return render_template("map/map.html")
-
-
-@main_bp.route("/map-v4/")
-@minify_html
-def map_v4():
-    return render_template("map/map_v4.html")
 
 
 def rich_format(s):
@@ -119,132 +104,6 @@ def automation(i):
     return render_template("automation.html", automation=db.session.query(Automation).filter_by(id=i).first())
 
 
-@cache
-def load_system_data():
-    return pickle.load(open("./data.pickle", "rb"))
-
-
-@cache
-def load_faction_data():
-    return pickle.load(open("./factions.pickle", "rb"))
-
-
-@main_bp.route("/search/")
-@token_required
-def search(session):
-    page = int(request.args.get("page", default=1))
-    t1 = time.time()
-    query, filters = read_query(request.args.get("query"))
-    should_query_systems = True
-    should_query_waypoints = True  # TODO: Contracts
-    should_query_factions = True
-    should_query_ships = True
-    for is_filter in filters:
-        if is_filter.name == "is":
-            if is_filter.value == "ship":
-                should_query_factions = False
-                should_query_systems = False
-                should_query_waypoints = False
-            elif is_filter.value == "faction":
-                should_query_systems = False
-                should_query_waypoints = False
-                should_query_ships = False
-            elif is_filter.value == "map":
-                should_query_factions = False
-                should_query_ships = False
-            elif is_filter.value == "system":
-                should_query_waypoints = False
-                should_query_ships = False
-                should_query_factions = False
-    if should_query_systems:
-        system_data = load_system_data()
-    else:
-        system_data = []
-    t1_2 = time.time()
-    if should_query_factions:
-        faction_data = load_faction_data()
-    else:
-        faction_data = []
-    t1_3 = time.time()
-    unweighted_map = []
-    ship_data = Ship.all(session)[1]
-    contract_data = Contract.all(session)[1]
-    t1_4 = time.time()
-    if should_query_systems:
-        for item in system_data:
-            if quick_weight(query, str(item.symbol)) > -0.1:
-                if check_filters_system(item, filters):
-                    unweighted_map.append((item, weight(query, str(item.symbol))))
-            if should_query_waypoints:
-                for waypoint in item.waypoints:
-                    if quick_weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
-                            waypoint, filters
-                    ):
-                        unweighted_map.append(
-                            (waypoint, weight(query, str(waypoint.symbol)))
-                        )
-    t1_5 = time.time()
-    if should_query_factions:
-        for item in faction_data:
-            if (
-                    quick_weight(query, item.symbol) > -0.25 or quick_weight(query, item.name) > -0.25
-            ) and check_filters_faction(item, filters):
-                unweighted_map.append((item, weight(query, str(item.symbol))))
-    t1_6 = time.time()
-    if should_query_ships:
-        for item in ship_data:
-            if quick_weight(query, item.symbol) > -0.25 and check_filters_ship(item, filters):
-                unweighted_map.append((item, weight(query, item.symbol)))
-    for item in contract_data:
-        if quick_weight(query, item.contract_id) > -0.7 and check_filters_contract(
-                item, filters
-        ):
-            unweighted_map.append((item, weight(query, str(item.contract_id))))
-    amap = [
-        item for item, c in sorted(unweighted_map, key=lambda x: x[1], reverse=True) if c > -0.5
-    ]
-    t2 = time.time()
-    print(t1_2 - t1, t1_3 - t1_2, t1_4 - t1_3, t1_5 - t1_4, t1_6 - t1_5, t2 - t1_6)  # TODO: port to paginated list fn
-    li = {1}
-    if len(amap) // 100 > 1:
-        li.add(2)
-        if len(amap) // 100 > 2:
-            li.add(3)
-            if len(amap) // 100 > 3:
-                li.add(4)
-                if len(amap) // 100 > 4:
-                    li.add(5)
-    if len(amap) // 100 - 2 > 0:
-        li.add(len(amap) // 100 - 2)
-    if len(amap) // 100 - 1 > 0:
-        li.add(len(amap) // 100 - 1)
-    if len(amap) // 100 > 0:
-        li.add(len(amap) // 100)
-    li.add(page)
-    if page > min(li):
-        li.add(page - 1)
-    if page < max(li):
-        li.add(page + 1)
-    li = list(li)
-    li.sort()
-    new_li = []
-    prev = 0
-    for i in li:
-        if i != (prev + 1):
-            new_li.append("..")
-        new_li.append(i)
-        prev = i
-    return render_template(
-        "search.html",
-        query=request.args.get("query"),
-        map=amap[(page - 1) * 100: page * 100],
-        time=str(t2 - t1),
-        li=new_li,
-        page=page,
-        pages=len(amap) // 100,
-    )
-
-
 @main_bp.route("/agents/")
 @minify_html
 @token_required
@@ -293,21 +152,3 @@ def agent(symbol, session):
 @main_bp.route("/leaderboard/")
 def leaderboard():
     return render_template("leaderboard.html", status=autotraders.get_status())
-
-
-@main_bp.app_errorhandler(404)
-def not_found(e):
-    resp = Response(render_template("error/not_found.html"))
-    resp.status_code = 404
-    return resp
-
-
-@main_bp.app_errorhandler(500)
-def error_500(e):
-    original_exception = e.original_exception
-    if isinstance(original_exception, SpaceTradersException):  # TODO: Not for every issue though
-        flash(str(original_exception), "danger")
-        return redirect(url_for("local.select_user"))
-    resp = Response(render_template("error/500.html"))
-    resp.status_code = 500
-    return resp

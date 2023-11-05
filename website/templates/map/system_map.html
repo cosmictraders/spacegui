@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}
+    Map
+{% endblock %}
+{% block head %}
+    <style>
+        {# Places gui-container at bottom of screen #}
+        {##gui-container {#}
+        {#    position: absolute;#}
+        {#    bottom: 0;#}
+        {#    top: 100px;#}
+        {#    z-index: 99;#}
+        {# } #}
+    </style>
+{% endblock %}
+{% block body %}
+    <script type="module" src="/static/system_map.js" async></script>
+{% endblock %}
+{% block navid %}map{% endblock %}

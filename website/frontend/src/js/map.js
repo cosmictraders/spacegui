@@ -7,6 +7,12 @@ import {FontLoader} from 'three/addons/loaders/FontLoader.js';
 import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
 import {GUI} from "three/addons/libs/lil-gui.module.min";
 
+function onWindowResize() {
+    camera.aspect = window.innerWidth / (window.innerHeight - 100);
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, (window.innerHeight - 100));
+}
 
 // gui variables
 const guiInterface = {
@@ -46,8 +52,8 @@ function onPointerMove(event) {
 
 window.addEventListener('pointermove', onPointerMove);
 // random height parameters
-let peakValue = 900;
-let spread = 2000;
+let peakValue = 800;
+let spread = 2750;
 
 const data = getData();
 
@@ -125,7 +131,7 @@ init().then(() => {
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 
 function initMap(scene, data, textures) {
-    const geometry = new THREE.SphereGeometry();
+    const geometry = new THREE.SphereGeometry(1, 64, 64);
     const material = new THREE.MeshStandardMaterial({color: 0x65F550, emissive: 0x317527});
     const redStarMaterial = new THREE.MeshStandardMaterial({
         map: textures["red_star"],
@@ -360,13 +366,6 @@ function onMouseMove(event) {
     mouse.y = (y / canvas.clientHeight) * -2 + 1
 }
 
-function onWindowResize() {
-    camera.aspect = window.innerWidth / (window.innerHeight - 100);
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(window.innerWidth, (window.innerHeight - 100));
-}
-
 function updateLabels() {
     for (const label of labels) {
         let distance = camera.position.distanceTo(label.position);
@@ -427,23 +426,23 @@ function render(renderer) {
         let intersect = intersects[0];
         console.log(mouseDown);
         if (mouseDown) { // TODO: Add max distance
-            let intersectPos = intersect.point;
-            // search systems for closest system
-            let closestSystem = null;
-            let closestSystemDistance = null;
-            let closestSystemCoords = null;
-            for (const system of Object.keys(systemCoords)) {
-                let distance = Math.sqrt(Math.pow(systemCoords[system].x - intersectPos.x, 2) + Math.pow(systemCoords[system].y - intersectPos.y, 2) + Math.pow(systemCoords[system].z - intersectPos.z, 2));
-                if (closestSystem === null || distance < closestSystemDistance) {
-                    closestSystem = system;
-                    closestSystemDistance = distance;
-                    closestSystemCoords = systemCoords[system];
-                }
-            }
-            if (closestSystem != null) {
-                console.log(closestSystem);  // TODO: Do something
-                detailSystem(closestSystem);
-            }
+            // let intersectPos = intersect.point;
+            // // search systems for closest system
+            // let closestSystem = null;
+            // let closestSystemDistance = null;
+            // let closestSystemCoords = null;
+            // for (const system of Object.keys(systemCoords)) {
+            //     let distance = Math.sqrt(Math.pow(systemCoords[system].x - intersectPos.x, 2) + Math.pow(systemCoords[system].y - intersectPos.y, 2) + Math.pow(systemCoords[system].z - intersectPos.z, 2));
+            //     if (closestSystem === null || distance < closestSystemDistance) {
+            //         closestSystem = system;
+            //         closestSystemDistance = distance;
+            //         closestSystemCoords = systemCoords[system];
+            //     }
+            // }
+            // if (closestSystem != null) {
+            //     console.log(closestSystem);  // TODO: Do something
+            //     detailSystem(closestSystem);
+            // }
         }
     }
     renderer.render(scene, camera);

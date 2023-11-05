@@ -1,8 +1,8 @@
 import autotraders.token
-from flask import redirect, url_for, flash
+from flask import redirect, url_for, flash, session
 from minify_html import minify
 
-from website.session import get_session, get_token
+from website.session import get_session, get_user
 
 
 def minify_html(func):
@@ -37,11 +37,24 @@ def token_required(func):
             session = get_session()
         except Exception as e:
             if type(e) == AttributeError:
-                flash("No active user found", "danger")
+                flash("No active token found", "danger")
             else:
                 flash(str(type(e)) + " - " + str(e), "danger")
             return redirect(url_for("local.select_user"))
         result = func(*args, **kwargs, session=session)
+        return result
+
+    wrap.__name__ = func.__name__
+    wrap.__doc__ = func.__doc__
+    return wrap
+
+
+def login_required(func):
+    def wrap(*args, **kwargs):
+        if session["username"] is None:
+            flash("Not logged in", "danger")
+            return redirect(url_for("auth.login"))
+        result = func(*args, **kwargs, user=get_user())
         return result
 
     wrap.__name__ = func.__name__

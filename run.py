@@ -2,6 +2,7 @@ import autotraders
 import click
 
 from website.app import create_app
+from website.config import BaseConfig
 
 print(f" * Running autotraders version check for version v{autotraders.__version__}")
 accepted_autotraders_major_version = 2
@@ -42,7 +43,11 @@ elif autotraders_minor_version in warning_autotraders_minor_versions:
 @click.option("--debug", is_flag=True)
 @click.option("--port", default=5000)
 @click.option("--threaded", is_flag=True)
-def cmd(debug, port, threaded):
+@click.option("--db", default="sqlite:///local.db")
+@click.option("--secret-key", default="secret@!%(@!%!@)*(#$)*$@!)*@!%)*@!)*&%@!132509831207549035213028579674138")
+def cmd(debug, port, threaded, db, secret_key):
+    BaseConfig.SECRET_KEY = secret_key
+    BaseConfig.SQLALCHEMY_DATABASE_URI = db
     create_app().run(debug=debug, port=port, threaded=threaded)
 
 

@@ -17,6 +17,10 @@ class Condition(Enum):
 class Filter:
     def __init__(self, name, condition):
         self.name = name.strip()
+        self.negated = False
+        if name[0] == "!":
+            self.negated = not self.negated
+            self.name = name[1:]
         self.condition_split = [c for c in condition if c != " "]
         self.raw_condition = "".join(self.condition_split)
         if self.raw_condition[0:2] == "<=":
@@ -36,56 +40,66 @@ class Filter:
         elif self.raw_condition[0:1] == "=":
             self.condition = Condition.EQ
             self.condition_split.pop(0)
+        elif self.raw_condition[0:2] == "!=":
+            self.condition = Condition.EQ
+            self.condition_split.pop(0)
+            self.negated = not self.negated  # TODO: Make own condition in enum
         else:
             self.condition = Condition.EQ
         self.value = "".join(self.condition_split).lower()
 
     def validate(self, value):
-        if type(value) is str:
-            if self.condition == Condition.EQ:
-                return value.lower() == self.value.lower()
-        elif type(value) is int:
-            try:
-                if self.condition == Condition.LE:
-                    return value < int(self.value)
-                elif self.condition == Condition.LEQ:
-                    return value <= int(self.value)
-                elif self.condition == Condition.EQ:
-                    return value == int(self.value)
-                elif self.condition == Condition.GEQ:
-                    return value >= int(self.value)
-                elif self.condition == Condition.GE:
-                    return value > int(self.value)
-            except ValueError:
+        def validate_inner():
+            if type(value) is str:
+                if self.condition == Condition.EQ:
+                    return value.lower() == self.value.lower()
+            elif type(value) is int:
+                try:
+                    if self.condition == Condition.LE:
+                        return value < int(self.value)
+                    elif self.condition == Condition.LEQ:
+                        return value <= int(self.value)
+                    elif self.condition == Condition.EQ:
+                        return value == int(self.value)
+                    elif self.condition == Condition.GEQ:
+                        return value >= int(self.value)
+                    elif self.condition == Condition.GE:
+                        return value > int(self.value)
+                except ValueError:
+                    return False
+            elif type(value) is float:
+                try:
+                    if self.condition == Condition.LE:
+                        return value < float(self.value)
+                    elif self.condition == Condition.LEQ:
+                        return value <= float(self.value)
+                    elif self.condition == Condition.EQ:
+                        return value == float(self.value)
+                    elif self.condition == Condition.GEQ:
+                        return value >= float(self.value)
+                    elif self.condition == Condition.GE:
+                        return value > float(self.value)
+                except ValueError:
+                    return False
+            elif type(value) is list:
+                item_real = [str(item).lower().strip() for item in value]
+                if self.condition == Condition.EQ:
+                    return self.value in item_real or self.value.split(",") == item_real
+                elif self.condition == Condition.LE:
+                    return self.value in item_real or self.value.split(",") in item_real
+            elif type(value) is bool:
+                if self.condition == Condition.EQ:
+                    if value:
+                        return self.value.lower() == "true"
+                    else:
+                        return self.value.lower() == "false"
+            else:
                 return False
-        elif type(value) is float:
-            try:
-                if self.condition == Condition.LE:
-                    return value < float(self.value)
-                elif self.condition == Condition.LEQ:
-                    return value <= float(self.value)
-                elif self.condition == Condition.EQ:
-                    return value == float(self.value)
-                elif self.condition == Condition.GEQ:
-                    return value >= float(self.value)
-                elif self.condition == Condition.GE:
-                    return value > float(self.value)
-            except ValueError:
-                return False
-        elif type(value) is list:
-            item_real = [str(item).lower().strip() for item in value]
-            if self.condition == Condition.EQ:
-                return self.value in item_real or self.value.split(",") == item_real
-            elif self.condition == Condition.LE:
-                return self.value in item_real or self.value.split(",") in item_real
-        elif type(value) is bool:
-            if self.condition == Condition.EQ:
-                if value:
-                    return self.value.lower() == "true"
-                else:
-                    return self.value.lower() == "false"
+
+        if self.negated:
+            return not validate_inner()
         else:
-            return False
+            return validate_inner()
 
 
 def check_filter_system(system, f: Filter):

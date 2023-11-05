@@ -10,7 +10,7 @@ from website.config import BaseConfig
 def cmd(db, secret_key):
     BaseConfig.SECRET_KEY = secret_key
     BaseConfig.SQLALCHEMY_DATABASE_URI = db
-    create_app().run(debug=False, host="0.0.0.0", threaded=False)
+    create_app().run(debug=False, host="0.0.0.0", port=8000, threaded=False)
 
 
 if __name__ == "__main__":

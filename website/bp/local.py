@@ -23,16 +23,16 @@ def add_token(user):
     return render_template("local/add_token.html")
 
 
-@local_bp.route("/create-user-with-token/")
+@local_bp.route("/add-existing-token/")
 @minify_html
 @login_required
-def create_user_with_token(user):
-    return render_template("local/create_user_with_token.html")
+def add_existing_token(user):
+    return render_template("local/add_existing_token.html")
 
 
-@local_bp.route("/create-user-with-token-api/")
+@local_bp.route("/add-existing-token-api/")
 @login_required
-def create_user_with_token_api(user):
+def add_existing_token_api(user):
     db.create_all()
     user = User(token=request.args.get("token").strip(), active=False, user=user.id)
     db.session.add(user)
@@ -79,14 +79,14 @@ def select_user_api(token_id, user):
     return jsonify({})
 
 
-@local_bp.route("/create-user-no-token/")
+@local_bp.route("/create-token/")
 @minify_html
 @login_required
 def create_user_no_token(user):
-    return render_template("local/create_user_no_token.html")
+    return render_template("local/create_token.html")
 
 
-@local_bp.route("/create-user-no-token-api/")
+@local_bp.route("/create-token-api/")
 @login_required
 def create_user_no_token_api(user):
     db.create_all()
@@ -102,7 +102,7 @@ def create_user_no_token_api(user):
     return jsonify({})
 
 
-@local_bp.route("/delete-user-api/<token_id>")
+@local_bp.route("/delete-token-api/<token_id>")
 @login_required
 def delete_user_api(token_id, user):
     token = Token.query.filter_by(id=token_id).first()
@@ -176,9 +176,3 @@ def update_local_data(session):
         }
     json.dump(data_dict, open("./website/static/systems.json", "w"), indent=4)
     return "Success<br><a href=\"/\">Back to the home page</a>"
-
-
-@local_bp.route("/auth-sandbox/")
-@token_required
-def auth_sandbox(session):
-    return "Done"

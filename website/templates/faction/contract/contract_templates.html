@@ -1,7 +1,7 @@
 {% import "macros.html" as macros %}
 
 {% macro contract_card(contract) %}
-    {# TODO: Fix #}
+    {# TODO: Fix manual margin #}
     <div class="card shadow" style="width: fit-content; margin: 17px 10px">
         <div class="card-body">
             <h5 class="card-title">{{ macros.contract_link(contract.contract_id) }}</h5>
@@ -56,9 +56,7 @@
         <div class="row gx-5 gy-3">
             {% if contract.contract_type == "PROCUREMENT" %}
                 {% for delivery in contract.contract_data %}
-                    <p><b>Deliver</b> {{ delivery.item.symbol }} to <a
-                            href="/waypoint/{{ delivery.destination_symbol }}">{{ delivery.destination_symbol }}</a>
-                        {# TODO: Icon for waypoint (above) #}
+                    <p><b>Deliver</b> {{ delivery.item.symbol }} to {{ macros.waypoint_link(delivery.destination_symbol) }}
                         ({{ delivery.item.fulfilled }}/{{ delivery.item.required }}).</p>
                 {% endfor %}
             {% endif %}

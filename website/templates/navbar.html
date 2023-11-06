@@ -22,7 +22,7 @@
                 <a id="agents" class="nav-link" href="/agents/"><i class="bi bi-person-fill"></i> Agents</a>
             </li>
             <li class="nav-item">
-                <a id="map" class="nav-link" href="/map-v4/"><i class="bi bi-map-fill"></i> Map</a>
+                <a id="map" class="nav-link" href="{{ url_for('map.map_v4') }}"><i class="bi bi-map-fill"></i> Map</a>
             </li>
             <li class="nav-item">
                 <a id="leaderboard" class="nav-link" href="/leaderboard/"><i class="bi bi-boxes"></i> Leaderboard</a>
@@ -33,33 +33,35 @@
         </ul>
         <ul class="navbar-nav d-flex">
             <li class="d-flex nav-item" style="float: right">
-                <form role="search" class="d-flex">
-                    <div class="input-group">
-                        <input class="form-control" type="search" placeholder="Search" id="search-box" aria-label="Search" value="">
-                        <button class="btn btn-success" onclick="search()" id="searchbutton" type="button"><i class="bi bi-search"></i></button>
+                {% if user.is_authenticated %}
+                    <form role="search" class="d-flex">
+                        <div class="input-group">
+                            <input class="form-control" type="search" placeholder="Search" id="search-box" aria-label="Search" value="">
+                            <button class="btn btn-success" onclick="search()" id="searchbutton" type="button"><i class="bi bi-search"></i></button>
+                        </div>
+                    </form>
+                    <div class="dropdown-menu d-block pt-0 mt-5 shadow w-280px" id="suggestions">
+                        <ul class="list-unstyled mb-0">
+                            <li>
+                                <button class="dropdown-item d-flex align-items-center gap-2 py-2" onclick="search_filter('ship')">
+                                    Ships
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                        onclick="search_filter('system')">
+                                    Systems
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                        onclick="search_filter('map')">
+                                    Map Items
+                                </button>
+                            </li>
+                        </ul>
                     </div>
-                </form>
-                <div class="dropdown-menu d-block pt-0 mt-5 shadow w-280px" id="suggestions">
-                    <ul class="list-unstyled mb-0">
-                        <li>
-                            <button class="dropdown-item d-flex align-items-center gap-2 py-2" onclick="search_filter('ship')">
-                                Ships
-                            </button>
-                        </li>
-                        <li>
-                            <button class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                    onclick="search_filter('system')">
-                                Systems
-                            </button>
-                        </li>
-                        <li>
-                            <button class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                    onclick="search_filter('map')">
-                                Map Items
-                            </button>
-                        </li>
-                    </ul>
-                </div>
+                {% endif %}
                 {% if user.is_authenticated %}
                     <a id="select-token" class="nav-link" href="/select-token/"><i class="bi bi-person-lines-fill"></i> Select Token</a>
                     <a id="logout" class="nav-link" href="/logout/"><i class="bi bi-person-lines-fill"></i> Logout</a>
@@ -73,6 +75,7 @@
     </div>
 </nav>
 <script>
+    // TODO: Make this work without error if not authenticated
     document.getElementById("suggestions").classList.add("visually-hidden");
     $("#search-box").keypress(function (event) {
         if (event.keyCode === 13 || event.which === 13) {

@@ -37,10 +37,12 @@ Settings
                     <h2>Client Settings</h2>
                 </div>
                 <form class="row py-3 g-3">
-                    <div class="col-md-6">
-                        <label for="token" class="form-label">Token</label>
-                        <input type="text" class="form-control" id="token" value="{{ token }}">
-                    </div>
+                    {% if user.is_authenticated %}
+                        <div class="col-md-6">
+                            <label for="token" class="form-label">Token</label>
+                            <input type="text" class="form-control" id="token" value="{{ token }}">
+                        </div>
+                    {% endif %}
                     <div class="col-md-6">
                         <p>Theme</p>
                         <div class="form-check">
@@ -62,9 +64,11 @@ Settings
                             </label>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <button type="button" class="btn btn-primary" onclick="save()">Save Token</button>
-                    </div>
+                    {% if user.is_authenticated %}
+                        <div class="col-12">
+                            <button type="button" class="btn btn-primary" onclick="save()">Save Token</button>
+                        </div>
+                    {% endif %}
                 </form>
                 <p><b>Timezone</b> {{ tz }}</p>
                 <p><b>Dev Options (Causes changes to files)</b></p>

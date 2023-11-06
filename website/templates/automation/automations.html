@@ -14,7 +14,8 @@ Automations
         </div>
         <div class="row">
             {% for automation in automations %}
-                <a href="/automation/{{ automation.id }}" class="card" style="width: 18rem;">
+                {# TODO: Fix manual margin #}
+                <a href="/automation/{{ automation.id }}" class="card" style="width: fit-content; margin: 17px 10px">
                     <div class="card-body">
                         <h5 class="card-title">{{ automation.name }}</h5>
                         <p class="card-text">{{ automation.description }}</p>

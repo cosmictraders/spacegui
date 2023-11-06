@@ -10,7 +10,7 @@ map_bp = Blueprint("map", __name__)
 @map_bp.route("/map/")
 @minify_html
 def map_v3():
-    return render_template("map/map.html")
+    return render_template("map/map_v3.html")
 
 
 @map_bp.route("/map-v4/")
@@ -28,7 +28,7 @@ def system_map(system, session):
 
 @map_bp.route("/system-map-api/<system>")
 @token_required
-def system_map_api(system, session):
+def system_map_api(system, session):  # TODO: Allow no token
     system_data = System(system, session)
     j = {
         "symbol": str(system_data.symbol),

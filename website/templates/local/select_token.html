@@ -68,7 +68,7 @@ Select Token
         }
 
         function deleteUser(user_id) {
-            fetch("/delete-user-api/" + user_id).then(
+            fetch("/delete-token-api/" + user_id).then(
                 (_) => {
                     document.location.href = "/";
                 }

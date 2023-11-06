@@ -6,7 +6,7 @@ from autotraders.faction.contract import Contract
 from autotraders.ship import Ship
 from flask import *
 
-from website.model import db, User, Automation
+from website.model import db, User, Automation, Token
 from website.session import get_session, anonymous_session
 from website.wrappers import token_required, minify_html
 
@@ -27,7 +27,7 @@ def index(session):
 
 
 def rich_format(s):
-    if "https://" in s:  # TODO: Fix hack
+    if "https://" in s:
         splt = s.split("https://")
         new_s = f'{splt[0]}<a target="_blank" href="https://{splt[1]}">https://{splt[1]}</a>'
         return new_s
@@ -38,7 +38,8 @@ def rich_format(s):
 @minify_html
 def settings():
     db.create_all()
-    users = db.session.execute(db.select(User)).first()
+    # token = db.session.query(Token).filter_by().first()  # TODO: Filter by user id
+    token = None
     status = autotraders.get_status()
     server_announcements = status.announcements
     announcements = []
@@ -46,8 +47,8 @@ def settings():
         announcements.append(
             server_announcement.title + " - " + rich_format(server_announcement.body)
         )
-    if users is not None:
-        t = users[0].token
+    if token is not None:
+        t = token.token
     else:
         t = ""
     return render_template(
@@ -60,22 +61,22 @@ def settings():
 
 
 @main_bp.route("/settings-api/")
-def settings_api():
-    users = db.session.query(User).filter_by(active=True).first()
-    if users is None:
-        resp = jsonify({"error": "No active user found."})
-        return resp
-    t = users[0].token
-    updated = []
-    input_token = request.args.get("token", t).strip(" ").strip('"').strip("'")
-    if input_token not in [t, "", " "]:
-        if len(input_token) < 5:
-            return jsonify({"error": "Token too short"})
-        else:
-            users[0].token = request.args.get("token", t)
-            db.session.commit()
-            updated.append("token")
-    return jsonify({"updated": updated})
+def settings_api(): # TODO: This is a security risk, need to filter tokens instead (make sure to filter by current user id)
+    # users = db.session.query(User).filter_by(active=True).first()
+    # if users is None:
+    #     resp = jsonify({"error": "No active user found."})
+    #     return resp
+    # t = users[0].token
+    # updated = []
+    # input_token = request.args.get("token", t).strip(" ").strip('"').strip("'")
+    # if input_token not in [t, "", " "]:
+    #     if len(input_token) < 5:
+    #         return jsonify({"error": "Token too short"})
+    #     else:
+    #         users[0].token = request.args.get("token", t)
+    #         db.session.commit()
+    #         updated.append("token")
+    # return jsonify({"updated": updated})
 
 
 @main_bp.route("/automations/")

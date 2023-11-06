@@ -35,50 +35,39 @@ def search(session):
     if raw_query is None:
         raw_query = ""
     query, filters = read_query(raw_query)
-    should_query_systems = True
-    should_query_waypoints = True  # TODO: Contracts
-    should_query_factions = True
-    should_query_ships = True
+    to_query = ["system", "waypoint", "faction", "ship", "contract"]
     for is_filter in filters:
         if is_filter.name == "is":
             if is_filter.value == "ship":
-                should_query_factions = False
-                should_query_systems = False
-                should_query_waypoints = False
+                to_query = ["ship"]
             elif is_filter.value == "faction":
-                should_query_systems = False
-                should_query_waypoints = False
-                should_query_ships = False
+                to_query = ["faction"]
             elif is_filter.value == "map":
-                should_query_factions = False
-                should_query_ships = False
+                to_query = ["system", "waypoint"]
             elif is_filter.value == "system":
-                should_query_waypoints = False
-                should_query_ships = False
-                should_query_factions = False
-    if should_query_systems:
+                to_query = ["system"]
+            elif is_filter.value == "waypoint":
+                to_query = ["waypoint", "system"]
+            elif is_filter.value == "contract":
+                to_query = ["contract"]
+    if "system" in to_query:
         system_data = load_system_data()
     else:
         system_data = []
     t1_2 = time.time()
-    if should_query_factions:
+    if "faction" in to_query:
         faction_data = load_faction_data()
     else:
         faction_data = []
     t1_3 = time.time()
     unweighted_map = []
-    if should_query_ships:
-        ship_data = Ship.all(session)[1]
-    else:
-        ship_data = []
-    contract_data = Contract.all(session)[1]
     t1_4 = time.time()
-    if should_query_systems:
+    if "system" in to_query:
         for item in system_data:
             if quick_weight(query, str(item.symbol)) > -0.1:
                 if check_filters_system(item, filters):
                     unweighted_map.append((item, weight(query, str(item.symbol))))
-            if should_query_waypoints:
+            if "waypoint" in to_query:
                 for waypoint in item.waypoints and (not fast_search or quick_weight(query, str(item.symbol)) > -0.1):
                     if quick_weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
                             waypoint, filters
@@ -87,22 +76,25 @@ def search(session):
                             (waypoint, weight(query, str(waypoint.symbol)))
                         )
     t1_5 = time.time()
-    if should_query_factions:
+    if "faction" in to_query:
         for item in faction_data:
             if (
                     quick_weight(query, item.symbol) > -0.25 or quick_weight(query, item.name) > -0.25
             ) and check_filters_faction(item, filters):
                 unweighted_map.append((item, weight(query, str(item.symbol))))
     t1_6 = time.time()
-    if should_query_ships:
+    if "ship" in to_query:
+        ship_data = Ship.all(session)[1]
         for item in ship_data:
             if quick_weight(query, item.symbol) > -0.25 and check_filters_ship(item, filters):
                 unweighted_map.append((item, weight(query, item.symbol)))
-    for item in contract_data:
-        if quick_weight(query, item.contract_id) > -0.7 and check_filters_contract(
+    if "contract" in to_query:
+        contract_data = Contract.all(session)[1]
+        for item in contract_data:
+            if quick_weight(query, item.contract_id) > -0.7 and check_filters_contract(
                 item, filters
-        ):
-            unweighted_map.append((item, weight(query, str(item.contract_id))))
+            ):
+                unweighted_map.append((item, weight(query, str(item.contract_id))))
     amap = [
         item for item, c in sorted(unweighted_map, key=lambda x: x[1], reverse=True) if c > -0.5
     ]

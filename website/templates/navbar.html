@@ -33,41 +33,39 @@
         </ul>
         <ul class="navbar-nav d-flex">
             <li class="d-flex nav-item" style="float: right">
-                {% if user.is_authenticated %}
-                    <form role="search" class="d-flex">
-                        <div class="input-group">
-                            <input class="form-control" type="search" placeholder="Search" id="search-box" aria-label="Search" value="">
-                            <button class="btn btn-success" onclick="search()" id="searchbutton" type="button"><i class="bi bi-search"></i></button>
-                        </div>
-                    </form>
-                    <div class="dropdown-menu d-block pt-0 mt-5 shadow w-280px" id="suggestions">
-                        <ul class="list-unstyled mb-0">
-                            <li>
-                                <button class="dropdown-item d-flex align-items-center gap-2 py-2" onclick="search_filter('ship')">
-                                    Ships
-                                </button>
-                            </li>
-                            <li>
-                                <button class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                        onclick="search_filter('system')">
-                                    Systems
-                                </button>
-                            </li>
-                            <li>
-                                <button class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                        onclick="search_filter('map')">
-                                    Map Items
-                                </button>
-                            </li>
-                        </ul>
+                <form role="search" class="d-flex">
+                    <div class="input-group">
+                        <input class="form-control" type="search" placeholder="Search" id="search-box" aria-label="Search" value="">
+                        <button class="btn btn-success" onclick="search()" id="searchbutton" type="button"><i class="bi bi-search"></i></button>
                     </div>
-                {% endif %}
+                </form>
+                <div class="dropdown-menu d-block pt-0 mt-5 shadow w-280px" id="suggestions">
+                    <ul class="list-unstyled mb-0">
+                        <li>
+                            <button class="dropdown-item d-flex align-items-center gap-2 py-2" onclick="search_filter('ship')">
+                                Ships
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                    onclick="search_filter('system')">
+                                Systems
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                    onclick="search_filter('map')">
+                                Map Items
+                            </button>
+                        </li>
+                    </ul>
+                </div>
                 {% if user.is_authenticated %}
                     <a id="select-token" class="nav-link" href="/select-token/"><i class="bi bi-person-lines-fill"></i> Select Token</a>
-                    <a id="logout" class="nav-link" href="/logout/"><i class="bi bi-person-lines-fill"></i> Logout</a>
+                    <a id="logout" class="nav-link" href="/logout/"><i class="bi bi-person-dash-fill"></i> Logout</a>
                 {% else %}
-                    <a id="login" class="nav-link" href="/login/"><i class="bi bi-person-lines-fill"></i> Login</a>
-                    <a id="register" class="nav-link" href="/register/"><i class="bi bi-person-lines-fill"></i> Register</a>
+                    <a id="login" class="nav-link" href="/login/"><i class="bi bi-person-check-fill"></i> Login</a>
+                    <a id="register" class="nav-link" href="/register/"><i class="bi bi-person-fill-add"></i> Register</a>
                 {% endif %}
                 <a id="settings" class="nav-link" href="/settings/"><i class="bi bi-gear-fill"></i> Settings</a>
             </li>
@@ -75,7 +73,6 @@
     </div>
 </nav>
 <script>
-    // TODO: Make this work without error if not authenticated
     document.getElementById("suggestions").classList.add("visually-hidden");
     $("#search-box").keypress(function (event) {
         if (event.keyCode === 13 || event.which === 13) {

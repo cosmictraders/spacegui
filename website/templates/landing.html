@@ -5,6 +5,7 @@ Home
 {% block body %}
     <style>
         .colored-background {
+            min-height: 100%;
             --bd-violet-rgb: 108, 20, 240;
             --bd-accent-rgb: 255,228,132;
             --bd-pink-rgb: 214,51,132;
@@ -18,19 +19,53 @@ Home
         }
     </style>
     <div class="colored-background">
-        <div class="container-fluid">
-            <div class="row justify-content-center py-4">
-                <div class="shadow-lg card" style="width: fit-content;">
-                    <div class="card-body">
-                        <div class="row justify-content-center text-center">
-                            <h1>Homepage</h1>
-                        </div>
-                        <div class="row justify-content-center text-center">
-                            <p></p>
-                        </div>
+    <div class="container-fluid">
+        <div class="row justify-content-center py-4">
+            <div class="shadow-lg card" style="width: fit-content;">
+                <div class="card-body">
+                    <div class="row justify-content-center text-center">
+                        <h1>SpaceGui</h1>
+                    </div>
+                    <div class="row justify-content-center text-center">
+                        <p class="text-primary">A <a href="https://spacetraders.io/">SpaceTraders</a> GUI</p>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row justify-content-center py-4">
+            {% if user.is_authenticated %}
+                <div class="card text-bg-info m-3" style="width: 18rem;">
+                    <a href="/create-user-no-token/" style="color: inherit; text-decoration: none;">
+                        <div class="card-body">
+                            <h5 class="card-title">No Token</h5>
+                            <p class="card-text">If you haven't already created an agent and would like to create one.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="card text-bg-info m-3" style="width: 18rem;">
+                    <a href="/create-user-with-token/" style="color: inherit; text-decoration: none;">
+                        <div class="card-body">
+                            <h5 class="card-title">Token</h5>
+                            <p class="card-text">If you already have an agent and would like to use it.</p>
+                        </div>
+                    </a>
+                </div>
+            {% else %}
+                <div class="shadow card" style="width: 20rem;">
+                    <div class="card-body">
+                        <div class="row justify-content-center text-center">
+                            <h5>Get Started</h5>
+                        </div>
+                        <div class="row justify-content-center text-center">
+                            <p>Manage all your tokens with a unified interface</p>
+                            <span>
+                                <a href="/login" class="btn btn-primary">Login</a>
+                                <a href="/signup" class="btn btn-primary">Signup</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

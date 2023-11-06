@@ -10,6 +10,7 @@ from flask import Blueprint, render_template, request
 from website.paginated_return import paginated_return
 from website.search import read_query, quick_weight, check_filters_waypoint, weight, check_filters_system, \
     check_filters_faction, check_filters_ship, check_filters_contract
+from website.session import get_session
 from website.wrappers import token_required
 
 search_bp = Blueprint("search", __name__)
@@ -26,8 +27,8 @@ def load_faction_data():
 
 
 @search_bp.route("/search/")
-@token_required
-def search(session):
+def search():
+    session = get_session()
     page = int(request.args.get("page", default=1))
     fast_search = bool(request.args.get("fast", default=False))
     t1 = time.time()
@@ -67,8 +68,8 @@ def search(session):
             if quick_weight(query, str(item.symbol)) > -0.1:
                 if check_filters_system(item, filters):
                     unweighted_map.append((item, weight(query, str(item.symbol))))
-            if "waypoint" in to_query:
-                for waypoint in item.waypoints and (not fast_search or quick_weight(query, str(item.symbol)) > -0.1):
+            if "waypoint" in to_query and (not fast_search or quick_weight(query, str(item.symbol)) > -0.1):
+                for waypoint in item.waypoints:
                     if quick_weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
                             waypoint, filters
                     ):
@@ -83,12 +84,12 @@ def search(session):
             ) and check_filters_faction(item, filters):
                 unweighted_map.append((item, weight(query, str(item.symbol))))
     t1_6 = time.time()
-    if "ship" in to_query:
+    if "ship" in to_query and session is not None:
         ship_data = Ship.all(session)[1]
         for item in ship_data:
             if quick_weight(query, item.symbol) > -0.25 and check_filters_ship(item, filters):
                 unweighted_map.append((item, weight(query, item.symbol)))
-    if "contract" in to_query:
+    if "contract" in to_query and session is not None:
         contract_data = Contract.all(session)[1]
         for item in contract_data:
             if quick_weight(query, item.contract_id) > -0.7 and check_filters_contract(

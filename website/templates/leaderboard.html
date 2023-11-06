@@ -19,11 +19,15 @@ Leaderboard
                 <div class="row justify-content-center text-center">
                     <h1 class="col">Top Charters</h1>
                 </div>
-                <ul class="list-group">
-                    {% for agent in status.leaderboards["mostSubmittedCharts"] %}
-                        <a class="list-group-item list-group-item-action" href="/agent/{{ agent["agentSymbol"] }}"><b class="float-start">{{ agent["agentSymbol"] }}</b> <span class="float-end">{{ agent["chartCount"] }}</span></a></li>
-                    {% endfor %}
-                </ul>
+                {% if status.leaderboards["mostSubmittedCharts"].__len__() != 0 %}
+                    <ul class="list-group">
+                        {% for agent in status.leaderboards["mostSubmittedCharts"] %}
+                            <a class="list-group-item list-group-item-action" href="/agent/{{ agent["agentSymbol"] }}"><b class="float-start">{{ agent["agentSymbol"] }}</b> <span class="float-end">{{ agent["chartCount"] }}</span></a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p><b>No Charters</b></p>
+                {% endif %}
             </div>
         </div>
     </div>

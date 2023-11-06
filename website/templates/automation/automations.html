@@ -7,11 +7,13 @@ Automations
         <div class="row justify-content-center text-center">
             <h1>Automations <span class="badge bg-warning">WIP</span></h1>
         </div>
-        <div class="row">
-            <div>
-                <a class="btn btn-primary" href="/new-automation"><i class="bi bi-filetype-yml"></i> New Automation</a>
+        {% if user.is_authenticated %}
+            <div class="row">
+                <div>
+                    <a class="btn btn-primary" href="/new-automation"><i class="bi bi-filetype-yml"></i> New Automation</a>
+                </div>
             </div>
-        </div>
+        {% endif %}
         <div class="row">
             {% for automation in automations %}
                 {# TODO: Fix manual margin #}

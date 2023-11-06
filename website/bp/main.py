@@ -15,8 +15,10 @@ main_bp = Blueprint("main", __name__)
 
 @main_bp.route("/", methods=["GET"])
 @minify_html
-@token_required
-def index(session):
+def index():
+    session = get_session()
+    if session is None:
+        return render_template("landing.html")
     agent = Agent(session)
     return render_template(
         "index.html",
@@ -62,6 +64,7 @@ def settings():
 
 @main_bp.route("/settings-api/")
 def settings_api(): # TODO: This is a security risk, need to filter tokens instead (make sure to filter by current user id)
+    pass
     # users = db.session.query(User).filter_by(active=True).first()
     # if users is None:
     #     resp = jsonify({"error": "No active user found."})
@@ -81,17 +84,17 @@ def settings_api(): # TODO: This is a security risk, need to filter tokens inste
 
 @main_bp.route("/automations/")
 def automations():
-    return render_template("automations.html", automations=db.session.query(Automation).all())
+    return render_template("automation/automations.html", automations=db.session.query(Automation).all())
 
 
 @main_bp.route("/new-automation/")
 def new_automation():
-    return render_template("new_automation.html")
+    return render_template("automation/new_automation.html")
 
 
 @main_bp.route("/automation/<i>/")
 def automation(i):
-    return render_template("automation.html", automation=db.session.query(Automation).filter_by(id=i).first())
+    return render_template("automation/automation.html", automation=db.session.query(Automation).filter_by(id=i).first())
 
 
 @main_bp.route("/agents/")

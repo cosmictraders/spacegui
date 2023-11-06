@@ -33,13 +33,8 @@ def minify_html(func):
 
 def token_required(func):
     def wrap(*args, **kwargs):
-        try:
-            session = get_session()
-        except Exception as e:
-            if type(e) == AttributeError:
-                flash("No active token found", "danger")
-            else:
-                flash(str(type(e)) + " - " + str(e), "danger")
+        session = get_session()
+        if session is None:
             return redirect(url_for("local.select_token"))
         result = func(*args, **kwargs, session=session)
         return result

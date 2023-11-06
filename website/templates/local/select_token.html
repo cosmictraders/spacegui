@@ -8,7 +8,7 @@ Select Token
             <h1>Select User</h1>
         </div>
         <div class="list-group">
-            {% for user in users %}
+            {% for user in tokens %}
                 <div id="{{ user.id }}" class="list-group-item {% if user.active %}active{% endif %}">
                     {% if user.__class__.__name__ == "Agent" %}
                         <p class="text-truncate">
@@ -26,7 +26,7 @@ Select Token
                     </div>
                 </div>
             {% endfor %}
-            {% if users.__len__() == 0 %}
+            {% if tokens.__len__() == 0 %}
                 <p>No users saved, you should create one ...</p>
             {% endif %}
         </div>
@@ -76,4 +76,4 @@ Select Token
         }
     </script>
 {% endblock %}
-{% block navid %}select-user{% endblock %}
+{% block navid %}select-token{% endblock %}

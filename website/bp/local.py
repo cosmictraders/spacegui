@@ -20,7 +20,7 @@ local_bp = Blueprint("local", __name__)
 @minify_html
 @login_required
 def add_token(user):
-    return render_template("local/create_user.html")
+    return render_template("local/add_token.html")
 
 
 @local_bp.route("/create-user-with-token/")
@@ -45,7 +45,7 @@ def create_user_with_token_api(user):
 @minify_html
 @login_required
 def select_token(user):
-    if db.session.query(User).count() == 0:
+    if db.session.query(Token).filter_by(user=user.id).count() == 0:
         flash("No tokens found, please create one", "info")
         return redirect(url_for("local.add_token"))
 
@@ -55,25 +55,25 @@ def select_token(user):
             self.id = id
             self.active = active
 
-    users = []
-    for user in db.session.query(User).filter_by(user=user.id).all():
+    tokens = []
+    for token in db.session.query(Token).filter_by(user=user.id).all():
         try:
-            a = Agent(AutoTradersSession(user.token))
-            a.active = user.active
-            a.id = user.id
-            users.append(a)
+            a = Agent(AutoTradersSession(token.token))
+            a.active = token.active
+            a.id = token.id
+            tokens.append(a)
         except Exception as e:
-            users.append(MockAgent(user.token, user.id, user.active))
-    return render_template("local/select_token.html", users=users)
+            tokens.append(MockAgent(token.token, token.id, token.active))
+    return render_template("local/select_token.html", tokens=tokens)
 
 
 @local_bp.route("/select-user-api/<token_id>")
 @login_required
 def select_user_api(token_id, user):
-    active_previous = db.session.query(User).filter_by(active=True, user=user.id).first()
+    active_previous = db.session.query(Token).filter_by(active=True, user=user.id).first()
     if active_previous is not None:
         active_previous.active = False
-    current = db.session.query(User).filter_by(id=token_id, user=user.id).first()
+    current = db.session.query(Token).filter_by(id=token_id, user=user.id).first()
     current.active = True
     db.session.commit()
     return jsonify({})

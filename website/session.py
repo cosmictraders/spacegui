@@ -1,26 +1,28 @@
 from autotraders import session as asession
 from flask import session
 
-from website.model import db, Token
+from website.model import db, Token, User
 
 
 def get_session():
     if "username" in session:
-        user = db.session.query(Token).filter_by(active=True, user=session["username"]).first()
-        if user is None:
-            user = db.session.query(Token).filter_by(user=session["username"]).first()
-            if user is None:
+        user = db.session.query(User).filter_by(username=session["username"]).first()
+        user_id = user.id
+        token = db.session.query(Token).filter_by(active=True, user=user_id).first()
+        if token is None:
+            token = db.session.query(Token).filter_by(user=user_id).first()
+            if token is None:
                 return None
-            user.active = True
+            token.active = True
             db.session.commit()
-        return asession.AutoTradersSession(user.token)
+        return asession.AutoTradersSession(token.token)
     else:
         return None
 
 
 def get_user():
     if "username" in session:
-        user = db.session.query(Token).filter_by(user=session["username"]).first()
+        user = db.session.query(User).filter_by(username=session["username"]).first()
         return user
     else:
         return None

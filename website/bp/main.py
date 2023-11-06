@@ -1,7 +1,4 @@
-import pickle
-import time
 from datetime import datetime, timezone
-from functools import cache
 
 import autotraders
 from autotraders.agent import Agent
@@ -10,15 +7,6 @@ from autotraders.ship import Ship
 from flask import *
 
 from website.model import db, User, Automation
-from website.search import (
-    weight,
-    read_query,
-    check_filters_system,
-    check_filters_waypoint,
-    check_filters_ship,
-    check_filters_contract,
-    check_filters_faction, quick_weight,
-)
 from website.session import get_session, anonymous_session
 from website.wrappers import token_required, minify_html
 

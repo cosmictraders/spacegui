@@ -1,6 +1,14 @@
 from autotraders import SpaceTradersException
 from autotraders.map.system import System
-from flask import Blueprint, render_template, Response, redirect, flash, url_for, jsonify
+from flask import (
+    Blueprint,
+    render_template,
+    Response,
+    redirect,
+    flash,
+    url_for,
+    jsonify,
+)
 
 from website.wrappers import minify_html, token_required
 
@@ -35,6 +43,9 @@ def system_map_api(system, session):  # TODO: Allow no token
         "x": system_data.x,
         "y": system_data.y,
         "type": system_data.star_type,
-        "waypoints": [{"symbol": str(w.symbol), "x": w.x, "y": w.y, "type": w.waypoint_type} for w in system_data.waypoints]
+        "waypoints": [
+            {"symbol": str(w.symbol), "x": w.x, "y": w.y, "type": w.waypoint_type}
+            for w in system_data.waypoints
+        ],
     }
     return jsonify(j)

@@ -1,7 +1,5 @@
 def paginated_return(result_list, page: int):
-    li = {
-        result_list.pages
-    }
+    li = {result_list.pages}
     for i in range(1, 6):
         if result_list.pages >= i:
             li.add(i)

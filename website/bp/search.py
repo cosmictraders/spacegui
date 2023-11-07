@@ -8,8 +8,16 @@ from autotraders.ship import Ship
 from flask import Blueprint, render_template, request
 
 from website.paginated_return import paginated_return
-from website.search import read_query, quick_weight, check_filters_waypoint, weight, check_filters_system, \
-    check_filters_faction, check_filters_ship, check_filters_contract
+from website.search import (
+    read_query,
+    quick_weight,
+    check_filters_waypoint,
+    weight,
+    check_filters_system,
+    check_filters_faction,
+    check_filters_ship,
+    check_filters_contract,
+)
 from website.session import get_session
 from website.wrappers import token_required
 
@@ -68,11 +76,13 @@ def search():
             if quick_weight(query, str(item.symbol)) > -0.1:
                 if check_filters_system(item, filters):
                     unweighted_map.append((item, weight(query, str(item.symbol))))
-            if "waypoint" in to_query and (not fast_search or quick_weight(query, str(item.symbol)) > -0.1):
+            if "waypoint" in to_query and (
+                not fast_search or quick_weight(query, str(item.symbol)) > -0.1
+            ):
                 for waypoint in item.waypoints:
-                    if quick_weight(query, str(waypoint.symbol)) > 0 and check_filters_waypoint(
-                            waypoint, filters
-                    ):
+                    if quick_weight(
+                        query, str(waypoint.symbol)
+                    ) > 0 and check_filters_waypoint(waypoint, filters):
                         unweighted_map.append(
                             (waypoint, weight(query, str(waypoint.symbol)))
                         )
@@ -80,14 +90,17 @@ def search():
     if "faction" in to_query:
         for item in faction_data:
             if (
-                    quick_weight(query, item.symbol) > -0.25 or quick_weight(query, item.name) > -0.25
+                quick_weight(query, item.symbol) > -0.25
+                or quick_weight(query, item.name) > -0.25
             ) and check_filters_faction(item, filters):
                 unweighted_map.append((item, weight(query, str(item.symbol))))
     t1_6 = time.time()
     if "ship" in to_query and session is not None:
         ship_data = Ship.all(session)[1]
         for item in ship_data:
-            if quick_weight(query, item.symbol) > -0.25 and check_filters_ship(item, filters):
+            if quick_weight(query, item.symbol) > -0.25 and check_filters_ship(
+                item, filters
+            ):
                 unweighted_map.append((item, weight(query, item.symbol)))
     if "contract" in to_query and session is not None:
         contract_data = Contract.all(session)[1]
@@ -97,14 +110,16 @@ def search():
             ):
                 unweighted_map.append((item, weight(query, str(item.contract_id))))
     amap = [
-        item for item, c in sorted(unweighted_map, key=lambda x: x[1], reverse=True) if c > -0.5
+        item
+        for item, c in sorted(unweighted_map, key=lambda x: x[1], reverse=True)
+        if c > -0.5
     ]
     t2 = time.time()
 
     # print(t1_2 - t1, t1_3 - t1_2, t1_4 - t1_3, t1_5 - t1_4, t1_6 - t1_5, t2 - t1_6)
 
     def paginate(p, num_per_page):  # TODO: test properly
-        return amap[(p - 1) * num_per_page: p * num_per_page], len(amap)
+        return amap[(p - 1) * num_per_page : p * num_per_page], len(amap)
 
     paginated_list = PaginatedList(paginate, page, 100)
     new_li = paginated_return(paginated_list, page)
@@ -116,5 +131,5 @@ def search():
         results=paginated_list,
         page=page,
         time=str(t2 - t1),
-        li=new_li
+        li=new_li,
     )

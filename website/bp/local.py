@@ -70,7 +70,9 @@ def select_token(user):
 @local_bp.route("/select-user-api/<token_id>")
 @login_required
 def select_user_api(token_id, user):
-    active_previous = db.session.query(Token).filter_by(active=True, user=user.id).first()
+    active_previous = (
+        db.session.query(Token).filter_by(active=True, user=user.id).first()
+    )
     if active_previous is not None:
         active_previous.active = False
     current = db.session.query(Token).filter_by(id=token_id, user=user.id).first()
@@ -128,7 +130,9 @@ def update_local_data(session):
     print("Getting Systems")
     try:
         all_systems = []
-        data: list[dict[str, Any]] = session.get(str(session.base_url) + "systems.json").json()
+        data: list[dict[str, Any]] = session.get(
+            str(session.base_url) + "systems.json"
+        ).json()
         for jsys in data:
             all_systems.append(System(jsys["symbol"], session, jsys))
         sanitized = all_systems
@@ -136,7 +140,9 @@ def update_local_data(session):
             system.session = None
             for waypoint in system.waypoints:
                 waypoint.session = None
-        pickle.dump(all_systems, open("data.pickle", "wb"), protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(
+            all_systems, open("data.pickle", "wb"), protocol=pickle.HIGHEST_PROTOCOL
+        )
     except Exception as e:
         print("Error getting systems from systems.json, getting from api: " + str(e))
         all_systems = System.all(session)
@@ -149,7 +155,9 @@ def update_local_data(session):
             for waypoint in system.waypoints:
                 waypoint.session = None
 
-        pickle.dump(sanitized, open("data.pickle", "wb"), protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(
+            sanitized, open("data.pickle", "wb"), protocol=pickle.HIGHEST_PROTOCOL
+        )
 
     data: list[System] = sanitized
     data_dict = {}
@@ -175,4 +183,4 @@ def update_local_data(session):
             "num_waypoints": len(waypoints),
         }
     json.dump(data_dict, open("./website/static/systems.json", "w"), indent=4)
-    return "Success<br><a href=\"/\">Back to the home page</a>"
+    return 'Success<br><a href="/">Back to the home page</a>'

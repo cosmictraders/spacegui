@@ -21,7 +21,10 @@ def register_api():
     password = request.form["password"]
     requested_user = db.session.query(User).filter_by(username=username).first()
     if requested_user is None:
-        user = User(username=username, password=werkzeug.security.generate_password_hash(password))
+        user = User(
+            username=username,
+            password=werkzeug.security.generate_password_hash(password),
+        )
         db.session.add(user)
         db.session.commit()
         login_session(user.username)

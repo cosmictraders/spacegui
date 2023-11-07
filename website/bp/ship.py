@@ -28,15 +28,17 @@ def ships_json_api():
     ships = Ship.all(s, 1)[1]
     li_json = []
     for ship in ships:
-        li_json.append({
-            "symbol": ship.symbol,
-            "role": ship.registration.role,
-            "nav": {
-                "location": str(ship.nav.location),
-                "status": ship.nav.status,
-                "flight_mode": ship.nav.flight_mode,
+        li_json.append(
+            {
+                "symbol": ship.symbol,
+                "role": ship.registration.role,
+                "nav": {
+                    "location": str(ship.nav.location),
+                    "status": ship.nav.status,
+                    "flight_mode": ship.nav.flight_mode,
+                },
             }
-        })
+        )
     return jsonify(li_json)
 
 
@@ -178,10 +180,7 @@ def siphon(name):
 @ship_bp.route("/ship/<name>/chart/")
 def chart(name):
     s = get_session()
-    ship = Ship(
-        name,
-        s
-    )  # TODO: Fix extra api request
+    ship = Ship(name, s)  # TODO: Fix extra api request
     try:
         ship.chart()
         return jsonify({})

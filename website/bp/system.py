@@ -31,7 +31,9 @@ def system(symbol, session):
     if query.strip() == "":  # TODO: Add support for traits
         query = None
     if query is not None:
-        waypoints_list = Waypoint.all(session, symbol, waypoint_type=query.upper(), page=page)
+        waypoints_list = Waypoint.all(
+            session, symbol, waypoint_type=query.upper(), page=page
+        )
     else:
         waypoints_list = Waypoint.all(session, symbol, page=page)
     new_li = paginated_return(waypoints_list, page)
@@ -42,7 +44,7 @@ def system(symbol, session):
         system=System(symbol, session),
         waypoints=waypoints_list,
         li=new_li,
-        query=query
+        query=query,
     )
 
 
@@ -55,12 +57,15 @@ def system_api_json(symbol, session):
         "type": system.star_type,
         "x": system.x,
         "y": system.y,
-        "waypoints": [{
-            "symbol": str(waypoint.symbol),
-            "type": waypoint.waypoint_type,
-            "x": waypoint.x,
-            "y": waypoint.y,
-        } for waypoint in system.waypoints]
+        "waypoints": [
+            {
+                "symbol": str(waypoint.symbol),
+                "type": waypoint.waypoint_type,
+                "x": waypoint.x,
+                "y": waypoint.y,
+            }
+            for waypoint in system.waypoints
+        ],
     }
     return jsonify(json_dict)
 
@@ -86,7 +91,14 @@ def waypoint(symbol, session):
         c = Construction(symbol, session)
     else:
         c = None
-    return render_template("map/waypoint.html", waypoint=w, marketplace=m, shipyard=s, jumpgate=j, construction=c)
+    return render_template(
+        "map/waypoint.html",
+        waypoint=w,
+        marketplace=m,
+        shipyard=s,
+        jumpgate=j,
+        construction=c,
+    )
 
 
 @system_bp.route("/waypoint/<symbol>/buy-ship/")

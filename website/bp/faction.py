@@ -21,7 +21,9 @@ def factions():
     page = int(request.args.get("page", default=1))
     factions = Faction.all(session)
     new_li = paginated_return(factions, page)
-    return render_template("faction/factions.html", factions=factions, page=page, li=new_li)
+    return render_template(
+        "faction/factions.html", factions=factions, page=page, li=new_li
+    )
 
 
 @faction_bp.route("/faction/<symbol>/")

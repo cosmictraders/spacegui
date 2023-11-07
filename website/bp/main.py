@@ -154,3 +154,9 @@ def agent(symbol):
 @main_bp.route("/leaderboard/")
 def leaderboard():
     return render_template("leaderboard.html", status=autotraders.get_status())
+
+
+@main_bp.route("/create-all/")
+def create_all():
+    db.create_all()
+    return "Created all tables"

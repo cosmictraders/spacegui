@@ -77,11 +77,11 @@ def search():
                 if check_filters_system(item, filters):
                     unweighted_map.append((item, weight(query, str(item.symbol))))
             if "waypoint" in to_query and (
-                not fast_search or quick_weight(query, str(item.symbol)) > -0.1
+                    not fast_search or quick_weight(query, str(item.symbol)) > -0.1
             ):
                 for waypoint in item.waypoints:
                     if quick_weight(
-                        query, str(waypoint.symbol)
+                            query, str(waypoint.symbol)
                     ) > 0 and check_filters_waypoint(waypoint, filters):
                         unweighted_map.append(
                             (waypoint, weight(query, str(waypoint.symbol)))
@@ -90,8 +90,8 @@ def search():
     if "faction" in to_query:
         for item in faction_data:
             if (
-                quick_weight(query, item.symbol) > -0.25
-                or quick_weight(query, item.name) > -0.25
+                    quick_weight(query, item.symbol) > -0.25
+                    or quick_weight(query, item.name) > -0.25
             ) and check_filters_faction(item, filters):
                 unweighted_map.append((item, weight(query, str(item.symbol))))
     t1_6 = time.time()
@@ -99,14 +99,14 @@ def search():
         ship_data = Ship.all(session)[1]
         for item in ship_data:
             if quick_weight(query, item.symbol) > -0.25 and check_filters_ship(
-                item, filters
+                    item, filters
             ):
                 unweighted_map.append((item, weight(query, item.symbol)))
     if "contract" in to_query and session is not None:
         contract_data = Contract.all(session)[1]
         for item in contract_data:
             if quick_weight(query, item.contract_id) > -0.7 and check_filters_contract(
-                item, filters
+                    item, filters
             ):
                 unweighted_map.append((item, weight(query, str(item.contract_id))))
     amap = [
@@ -119,7 +119,7 @@ def search():
     # print(t1_2 - t1, t1_3 - t1_2, t1_4 - t1_3, t1_5 - t1_4, t1_6 - t1_5, t2 - t1_6)
 
     def paginate(p, num_per_page):  # TODO: test properly
-        return amap[(p - 1) * num_per_page : p * num_per_page], len(amap)
+        return amap[(p - 1) * num_per_page: p * num_per_page], len(amap)
 
     paginated_list = PaginatedList(paginate, page, 100)
     new_li = paginated_return(paginated_list, page)

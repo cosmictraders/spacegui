@@ -5,5 +5,6 @@ import os
 
 def app():
     BaseConfig.SECRET_KEY = os.environ.get("SECRET_KEY")
-    BaseConfig.SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
+    if os.environ.get("DATABASE_URL") is not None:
+        BaseConfig.SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     return create_app()

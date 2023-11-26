@@ -7,7 +7,7 @@ from autotraders.ship import Ship
 from flask import *
 
 from website.model import db, User, Automation, Token
-from website.session import get_session, anonymous_session
+from website.session import get_session, anonymous_session, get_user
 from website.wrappers import token_required, minify_html
 
 main_bp = Blueprint("main", __name__)
@@ -40,8 +40,10 @@ def rich_format(s):
 @minify_html
 def settings():
     db.create_all()
-    # token = db.session.query(Token).filter_by().first()  # TODO: Filter by user id
+    user = get_user()
     token = None
+    if user is not None:
+        token = db.session.query(Token).filter_by(user=user.id).first()  # TODO: Filter by user id
     status = autotraders.get_status()
     server_announcements = status.announcements
     announcements = []

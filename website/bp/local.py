@@ -61,6 +61,7 @@ def select_token(user):
             a = Agent(AutoTradersSession(token.token))
             a.active = token.active
             a.id = token.id
+            a.token = token.token
             tokens.append(a)
         except Exception as e:
             tokens.append(MockAgent(token.token, token.id, token.active))

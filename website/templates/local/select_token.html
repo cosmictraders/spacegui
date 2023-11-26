@@ -12,7 +12,7 @@ Select Token
                 <div id="{{ user.id }}" class="list-group-item {% if user.active %}active{% endif %}">
                     {% if user.__class__.__name__ == "Agent" %}
                         <p class="text-truncate">
-                            <i class="bi bi-person-fill"></i> {{ user.symbol }} - <i class="bi bi-credit-card"></i> {{ user.credits }} - {{ user.session.auth.token }}
+                            <i class="bi bi-person-fill"></i> {{ user.symbol }} - <i class="bi bi-credit-card"></i> {{ user.credits }} - {{ user.token }}
                         </p>
                     {% else %}
                         <p class="text-truncate">{{ user.token }}</p>

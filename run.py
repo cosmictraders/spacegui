@@ -6,12 +6,14 @@ from website.config import BaseConfig
 
 print(f" * Running autotraders version check for version v{autotraders.__version__}")
 accepted_autotraders_major_version = 2
-accepted_autotraders_minor_versions = [2, 3]
-warning_autotraders_minor_versions = [2]
-blacklisted_versions = ["2.2.0", "2.2.1", "2.2.3", "2.2.4"]
+accepted_autotraders_minor_versions = [3]
+warning_autotraders_minor_versions = []
+min_server_support_patch = 3  # TODO: Minor version too
+blacklisted_versions = []
 
 autotraders_major_version = int(autotraders.__version__.split(".")[0])
 autotraders_minor_version = int(autotraders.__version__.split(".")[1])
+autotraders_patch_version = int(autotraders.__version__.split(".")[2])
 
 if autotraders.__version__ in blacklisted_versions:
     raise ValueError(
@@ -45,6 +47,9 @@ elif autotraders_minor_version in warning_autotraders_minor_versions:
     print(
         f" * Warning: Autotraders v{autotraders.__version__} is not officially supported, but limited functionality might be available, proceed at your own risk."
     )
+
+if autotraders_patch_version < min_server_support_patch:
+    print(f" * Warning: Autotraders v{autotraders.__version__} is not officially supported because it is not compatible with the latest server version, but limited functionality might be available, proceed at your own risk.")
 
 
 @click.command()

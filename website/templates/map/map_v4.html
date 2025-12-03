@@ -1,8 +1,8 @@
-{#{% extends 'base.html' %}#}
-{#{% block title %}#}
-{#    Map#}
-{#{% endblock %}#}
-{#{% block head %}#}
+{% extends 'base.html' %}
+{% block title %}
+    Map
+{% endblock %}
+{% block head %}
 {#    <style>#}
         {# Places gui-container at bottom of screen #}
         {##gui-container {#}
@@ -96,11 +96,11 @@
 {#            }#}
 {#        }#}
 {#    </style>#}
-{#{% endblock %}#}
-{#{% block body %}#}
-{#    <section id="loading-screen">#}
-{#        <div id="loader"></div>#}
-{#    </section>#}
-{#    <script type="module" src="/static/map.js" async></script>#}
-{#{% endblock %}#}
-{#{% block navid %}map{% endblock %}#}
+{% endblock %}
+{% block body %}
+    <section id="loading-screen">
+        <div id="loader"></div>
+    </section>
+    <script type="module" src="/static/map.js" async></script>
+{% endblock %}
+{% block navid %}map{% endblock %}

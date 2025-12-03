@@ -34,8 +34,8 @@ def add_existing_token(user):
 @login_required
 def add_existing_token_api(user):
     db.create_all()
-    user = User(token=request.args.get("token").strip(), active=False, user=user.id)
-    db.session.add(user)
+    token = Token(token=request.args.get("token").strip(), active=False, user=user.id)
+    db.session.add(token)
     db.session.commit()
     flash("Added User", "success")
     return jsonify({})

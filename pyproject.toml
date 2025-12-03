@@ -1,0 +1,16 @@
+[project]
+name = "spacegui"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "autotraders>=2.3",
+    "click>=8.3",
+    "flask>=3.1",
+    "flask-sqlalchemy>=3.1",
+    "gunicorn>=23.0.0",
+]
+
+#[tool.uv.sources]
+#autotraders = { path = "../autotraders" }

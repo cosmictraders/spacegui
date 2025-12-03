@@ -54,7 +54,7 @@ if autotraders_patch_version < min_server_support_patch:
 
 @click.command()
 @click.option("--debug", is_flag=True)
-@click.option("--port", default=5000)
+@click.option("--port", default=5500)
 @click.option("--threaded", is_flag=True)
 @click.option("--db", default="sqlite:///local.db")
 @click.option(
